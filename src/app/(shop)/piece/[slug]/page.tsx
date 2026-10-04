@@ -9,6 +9,10 @@ import { HallmarkPlate } from '@/components/pdp/HallmarkPlate'
 import { StickyActions } from '@/components/pdp/StickyActions'
 import { RateNote } from '@/components/site/RateNote'
 import { PieceCard } from '@/components/tray/PieceCard'
+import { WorldWindow } from '@/components/world/WorldMount'
+import { WorldStation } from '@/components/world/WorldStation'
+import { LightMoods } from '@/components/world/LightMoods'
+import { toPieceRef } from '@/lib/world-data'
 import { STONE_LABEL, getCurrentRates, getProduct, isSold, listProducts, metalLine, priceProduct } from '@/lib/catalogue'
 import { formatGrams, formatINRWhole } from '@/lib/pricing/format'
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld'
@@ -52,9 +56,10 @@ export default async function PiecePage({ params, searchParams }: Props) {
   const rates = await getCurrentRates()
   const pricing = priceProduct(product, rates)
   const sold = isSold(product)
-  const metal = product.finish?.toLowerCase().includes('gold') ? 'champagne' : 'argent'
+  const metal = product.finish?.toLowerCase().includes('gold') ? 'gold' : 'argent'
   const priced = pricing.state === 'PRICED'
   const oneOfOne = product.stock === 1 && product.availability === 'IN_STOCK'
+  const pieceRef = toPieceRef(product, pricing)
 
   const related = (await listProducts({ category: product.category.slug }))
     .filter((p) => p.id !== product.id)
@@ -102,19 +107,20 @@ export default async function PiecePage({ params, searchParams }: Props) {
         </nav>
       </div>
 
-      {/* The Lamp: the piece, lit. Phase 2 adds the turntable and the movable light. */}
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-[var(--gutter)] pt-6 lg:grid-cols-12">
-        <section aria-label="Photographs" className="lg:col-span-7">
-          <ul className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] lg:mx-0 lg:grid lg:gap-6 lg:overflow-visible lg:px-0">
-            {product.images.map((image, i) => (
-              <li key={image.id} className="w-[86vw] shrink-0 snap-center lg:w-auto">
-                <PieceImage image={image} sizes="(min-width: 1024px) 56vw, 86vw" priority={i === 0} />
-              </li>
-            ))}
-          </ul>
-          {product.images.length > 1 && (
-            <p className="mt-3 text-step--1 text-ink-muted lg:hidden">Swipe for {product.images.length - 1} more {product.images.length === 2 ? 'view' : 'views'}</p>
-          )}
+      {/* The Lamp: the piece on a velvet pad in the 3D house. The visitor moves the light. */}
+      {pieceRef && <WorldStation station={{ kind: 'lamp', piece: pieceRef, weight: product.weightVerified && product.netWeightMg ? formatGrams(product.netWeightMg) : null }} />}
+      <div data-world-section="0" className="over-world mx-auto grid max-w-[1440px] gap-10 px-[var(--gutter)] pt-4 lg:grid-cols-12">
+        <section aria-label="The piece under the lamp" className="lg:col-span-7">
+          <WorldWindow
+            className="-mx-[var(--gutter)] h-[58svh] lg:mx-0 lg:h-[72svh]"
+            poster={product.images[0] ? <PieceImage image={product.images[0]} sizes="(min-width: 1024px) 56vw, 100vw" priority className="block h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-contain [&_img]:!bg-transparent" /> : null}
+          />
+          <p className="text-step--1 text-ink-muted">
+            <span className="hidden sm:inline">Move your pointer across the piece to move the lamp.</span>
+            <span className="sm:hidden">Tilt your phone to move the lamp.</span>{' '}
+            <a href="#photographs" className="link text-ink">See the photographs</a>
+          </p>
+          <div className="mt-5"><LightMoods slug={product.slug} /></div>
         </section>
 
         <section aria-labelledby="piece-name" className="lg:col-span-5 lg:col-start-8">
@@ -150,7 +156,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
 
             <div className="mt-8" id="actions">
               {unavailable && (
-                <p role="alert" className="mb-4 text-step--1 text-garnet-bright">That piece couldn’t be added. It may have just sold, or it is still being weighed.</p>
+                <p role="alert" className="mb-4 text-step--1 text-ruby-bright">That piece couldn’t be added. It may have just sold, or it is still being weighed.</p>
               )}
               {!sold && priced && <BagButtons productId={product.id} />}
               <div className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -173,7 +179,38 @@ export default async function PiecePage({ params, searchParams }: Props) {
         </section>
       </div>
 
+
+      {/* The Weighing: the camera turns to the balance; the piece is weighed; the book opens. */}
+      {priced && pricing.state === 'PRICED' && (
+        <section data-world-section="1" aria-labelledby="weighing-heading" className="over-world relative min-h-[160svh]">
+          <div className="sticky top-16 mx-auto flex min-h-[calc(100svh-4rem)] max-w-[1440px] items-end px-[var(--gutter)] pb-10 lg:items-center lg:pb-0">
+            <div className="w-full max-w-md rounded-[2px] bg-velvet/80 p-6 backdrop-blur-[1px] lg:bg-transparent lg:p-0">
+              <h2 id="weighing-heading" className="text-step-4">Weighed, then priced</h2>
+              <p className="mt-3 text-ink-muted">
+                {product.netWeightMg && product.weightVerified
+                  ? `This piece weighs ${formatGrams(product.netWeightMg)} of silver. That weight, at today’s rate, is where its price begins.`
+                  : 'Every piece is weighed before it is priced.'}
+              </p>
+              <div className="mt-6"><Ledger breakdown={pricing.breakdown} metal={metal} compact title="The working" /></div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <StickyActions productId={product.id} name={product.name} price={priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : null} enquiry={enquiry} />
+
+      <div className="ground-solid mt-24 pt-20">
+      <section id="photographs" aria-label="Photographs" className="mx-auto max-w-[1440px] px-[var(--gutter)]">
+        <h2 className="text-step-3">Photographs</h2>
+        <ul className="-mx-[var(--gutter)] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0">
+          {product.images.map((image) => (
+            <li key={image.id} className="w-[86vw] shrink-0 snap-center bg-velvet-raised md:w-auto">
+              <PieceImage image={image} sizes="(min-width: 768px) 46vw, 86vw" />
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 max-w-2xl text-step--1 text-ink-muted">Photographed at the store. A new set of studio photographs is being made; the piece is exactly as shown.</p>
+      </section>
 
       {/* The Ledger: the book, open. */}
       <section id="ledger" aria-label="Price, weight and certification" className="mx-auto mt-28 grid max-w-[1440px] gap-16 px-[var(--gutter)] lg:grid-cols-12">
@@ -227,7 +264,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
       </section>
 
       {related.length > 0 && (
-        <section aria-labelledby="related-heading" className="mx-auto mt-32 max-w-[1440px] px-[var(--gutter)]">
+        <section aria-labelledby="related-heading" className="mx-auto max-w-[1440px] px-[var(--gutter)] pb-32 pt-32">
           <MetalRule metal={metal} />
           <h2 id="related-heading" className="mt-12 text-step-4">Also on the tray</h2>
           <ul className="mt-12 grid gap-12 sm:grid-cols-3">
@@ -239,6 +276,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
           </ul>
         </section>
       )}
+      </div>
     </>
   )
 }

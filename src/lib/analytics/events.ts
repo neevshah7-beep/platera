@@ -20,6 +20,8 @@ export const EVENTS = {
   certificate_viewed: 'A certificate was opened.',
   hallmark_explained: 'The hallmark explainer was opened.',
   rate_page_viewed: 'The silver rate page was viewed.',
+  light_mood_changed: 'A Light Mood (daylight, diya, evening, mandap) was chosen on a piece.',
+  piece_picked_in_3d: 'A piece was chosen from a tray inside the 3D house.',
   // Phase 2 and 3, listed now so the dictionary is complete
   loupe_used: 'The loupe was used on a photograph (Phase 2).',
   vault_shared: 'A saved shortlist was shared (Phase 3).',

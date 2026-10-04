@@ -11,10 +11,12 @@ const dev = process.env.NODE_ENV !== 'production'
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${dev ? "'unsafe-eval'" : ''} https://checkout.razorpay.com https://www.googletagmanager.com https://connect.facebook.net`,
+  `script-src 'self' blob: 'unsafe-inline' ${dev ? "'unsafe-eval'" : ''} https://checkout.razorpay.com https://www.googletagmanager.com https://connect.facebook.net`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.razorpay.com",
   "font-src 'self'",
+  // The 3D text renderer (troika) and the image decoder build their workers from blob: URLs.
+  "worker-src 'self' blob:",
   "connect-src 'self' https://*.razorpay.com https://www.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net",
   'frame-src https://api.razorpay.com https://checkout.razorpay.com https://www.google.com',
   "form-action 'self'",

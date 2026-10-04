@@ -36,7 +36,7 @@ export default async function AdminToday({ searchParams }: { searchParams: Promi
 
   return (
     <div className="space-y-16">
-      {denied && <p role="alert" className="border-l-2 border-garnet pl-4">That page is for the owner only.</p>}
+      {denied && <p role="alert" className="border-l-2 border-ruby pl-4">That page is for the owner only.</p>}
 
       {user.role === 'OWNER' && (
         <section aria-labelledby="rate-h" className="max-w-2xl">
@@ -46,7 +46,7 @@ export default async function AdminToday({ searchParams }: { searchParams: Promi
               <>
                 Now <span className="num">{formatINR(silver.paisePerGram)}</span> per gram, set {when.format(silver.effectiveAt)}
                 {lastRate?.setBy ? ` by ${lastRate.setBy.name}` : ''}.{' '}
-                {!setToday && <strong className="font-medium text-garnet">Not yet updated today.</strong>}
+                {!setToday && <strong className="font-medium text-ruby">Not yet updated today.</strong>}
               </>
             ) : (
               'No rate set yet. Pieces can’t be priced until you set one.'
@@ -62,8 +62,8 @@ export default async function AdminToday({ searchParams }: { searchParams: Promi
         <h2 id="today-h" className="text-step-3">{user.role === 'OWNER' ? 'Waiting for you' : `Good day, ${user.name.split(' ')[0]}`}</h2>
         <ul className="mt-6 grid grid-cols-2 gap-px bg-rule-light sm:grid-cols-3">
           {tiles.map((t) => (
-            <li key={t.href} className="bg-alabaster">
-              <Link href={t.href} className="block p-5 hover:bg-[rgb(14_13_12/0.03)]">
+            <li key={t.href} className="bg-ivory">
+              <Link href={t.href} className="block p-5 hover:bg-[rgb(11_36_32/0.04)]">
                 <span className={`num block font-display text-step-5 ${t.n ? '' : 'text-ink-light-muted'}`}>{t.n}</span>
                 <span className="text-step--1 text-ink-light-muted">{t.label}</span>
               </Link>

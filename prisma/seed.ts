@@ -121,8 +121,8 @@ async function main() {
     buyback: { deductionPct: null, text: 'Buyback is available under Platera’s buyback policy. Ask us for the current terms.' },
     hero: {
       productSku: 'PLT-NKS-005',
-      heading: 'Silver, chosen piece by piece.',
-      body: 'Every piece in the house is 925 sterling silver, hallmarked, weighed and priced in the open, the way a good jeweller shows you the book.',
+      heading: 'Enter the House of Platera.',
+      body: 'Hallmarked 925 silver, chosen piece by piece, weighed and priced in the open. Scroll to walk through the rooms.',
     },
   }
   for (const [key, value] of Object.entries(settings)) {

@@ -8,7 +8,11 @@ const [, , path = '/', outDir = 'shots', ...flags] = process.argv
 const base = process.env.SHOT_BASE ?? 'http://localhost:3000'
 mkdirSync(outDir, { recursive: true })
 
-const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' })
+const browser = await chromium.launch({
+  executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  // Use the real GPU so the 3D house renders as it would for a visitor.
+  args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-webgl'],
+})
 const runs = [
   { name: 'desktop', viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 },
   { name: 'phone', viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
@@ -26,7 +30,13 @@ for (const run of runs) {
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 })
   }
   const t0 = Date.now()
-  await page.goto(base + path, { waitUntil: 'networkidle' })
+  await page.goto(base + path, { waitUntil: 'load', timeout: 90_000 })
+  // Wait for the 3D world to draw this page's scene (or give up after 25 s and capture the HTML).
+  const worldReady = await page
+    .waitForFunction(() => document.documentElement.dataset.worldReady === '1', null, { timeout: 25_000 })
+    .then(() => true)
+    .catch(() => false)
+  await page.waitForTimeout(1800)
   const lcp = await page.evaluate(
     () =>
       new Promise((resolve) => {
@@ -53,10 +63,22 @@ for (const run of runs) {
     }
     window.scrollTo(0, 0)
   })
-  await page.waitForLoadState('networkidle')
+  await page.waitForTimeout(1500)
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
-  await page.screenshot({ path: `${outDir}/${slug}-${run.name}.png`, fullPage: true })
-  console.log(JSON.stringify({ run: run.name, loadMs: Date.now() - t0, lcp, cls, horizontalOverflowPx: overflow, errors }))
+  if (flags.includes('--frames')) {
+    // The 3D world is fixed behind the page, so a full-page capture can't show it.
+    // Instead, capture the viewport at several scroll positions as the camera moves.
+    const h = await page.evaluate(() => document.body.scrollHeight)
+    const n = 6
+    for (let i = 0; i < n; i++) {
+      await page.evaluate((y) => window.scrollTo(0, y), Math.round(((h - run.viewport.height) * i) / (n - 1)))
+      await page.waitForTimeout(2200)
+      await page.screenshot({ path: `${outDir}/${slug}-${run.name}-f${i}.png` })
+    }
+  } else {
+    await page.screenshot({ path: `${outDir}/${slug}-${run.name}.png`, fullPage: true })
+  }
+  console.log(JSON.stringify({ run: run.name, worldReady, loadMs: Date.now() - t0, lcp, cls, horizontalOverflowPx: overflow, errors }))
   await ctx.close()
 }
 await browser.close()

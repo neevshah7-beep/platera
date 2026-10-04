@@ -29,8 +29,8 @@ export function RateForm({ currentRupees }: { currentRupees: string }) {
         </div>
       </div>
       <button className="btn btn-primary sm:min-w-44" disabled={pending}>{pending ? 'Updating…' : needsConfirm ? 'Yes, update' : 'Update rate'}</button>
-      <p id="rate-msg" role="status" aria-live="polite" className={`sm:hidden ${state?.ok ? '' : 'text-garnet'}`}>{state?.message}</p>
-      <p role="status" aria-live="polite" className={`hidden basis-full sm:block ${state?.ok ? '' : 'text-garnet'}`}>{state?.message}</p>
+      <p id="rate-msg" role="status" aria-live="polite" className={`sm:hidden ${state?.ok ? '' : 'text-ruby'}`}>{state?.message}</p>
+      <p role="status" aria-live="polite" className={`hidden basis-full sm:block ${state?.ok ? '' : 'text-ruby'}`}>{state?.message}</p>
     </form>
   )
 }

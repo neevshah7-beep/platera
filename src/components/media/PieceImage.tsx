@@ -40,7 +40,7 @@ export function PieceImage({
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : 'auto'}
         decoding={priority ? 'sync' : 'async'}
-        className="block h-auto w-full bg-onyx object-cover"
+        className="block h-auto w-full bg-velvet object-cover"
         style={{ backgroundImage: `url(${image.lqip})`, backgroundSize: 'cover' }}
       />
     </picture>

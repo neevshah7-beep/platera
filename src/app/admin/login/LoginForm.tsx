@@ -29,7 +29,7 @@ export function LoginForm() {
         <label htmlFor="email" className="label">Email address</label>
         <input id="email" name="email" type="email" autoComplete="email" className="field" autoFocus />
       </div>
-      {state?.message && <p role="alert" className="text-step--1 text-garnet">{state.message}</p>}
+      {state?.message && <p role="alert" className="text-step--1 text-ruby">{state.message}</p>}
       <button className="btn btn-primary w-full" disabled={pending}>{pending ? 'Sending…' : 'Send me a code'}</button>
     </form>
   )

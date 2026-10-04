@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { CollectionView } from '@/components/tray/CollectionView'
-import { getCategories } from '@/lib/catalogue'
+import { RoomIntro } from '@/components/world/RoomIntro'
+import { getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
+import { toPieceRef } from '@/lib/world-data'
 import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
@@ -35,12 +37,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const c = await findCategory((await params).category)
   if (!c) notFound()
   const search = await searchParams
+  const [rates, products] = await Promise.all([getCurrentRates(), listProducts({ category: c.slug })])
+  const pieces = products.map((p) => toPieceRef(p, priceProduct(p, rates))).filter((x): x is NonNullable<typeof x> => x !== null)
 
   return (
-    <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-12">
+    <>
       <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: c.name, path: `/${c.slug}` }])} />
-      <h1 className="text-step-6">{c.name}</h1>
-      <p className="measure mt-5 text-step-1 text-ink-muted">{c.summary}</p>
+      <RoomIntro roomKey={c.slug} pieces={pieces} title={c.name} summary={c.summary} />
+      <div id="list" className="ground-solid">
+      <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-16">
+      <h2 className="text-step-4">Every piece in the room</h2>
       <CollectionView basePath={`/${c.slug}`} category={c.slug} search={search} />
 
       <section aria-labelledby="guide-heading" className="mt-40 grid gap-10 border-t border-rule pt-12 md:grid-cols-12">
@@ -51,6 +57,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           ))}
         </div>
       </section>
-    </div>
+      </div>
+      </div>
+    </>
   )
 }

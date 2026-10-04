@@ -16,7 +16,7 @@ export function Ledger({
 }: {
   breakdown: Breakdown
   title?: string
-  metal?: 'argent' | 'champagne'
+  metal?: 'argent' | 'gold'
   compact?: boolean
 }) {
   return (

@@ -28,7 +28,7 @@ export default async function OrderAdmin({ params }: { params: Promise<{ id: str
         <Link href="/admin/orders" className="link text-step--1">All orders</Link>
         <h1 className="num mt-3 text-step-4">{order.number}</h1>
         <p className="mt-2 text-ink-light-muted">{STATUS_LABEL[order.status]} · placed {date.format(order.createdAt)}{order.paidAt ? ` · paid ${date.format(order.paidAt)}` : ''}</p>
-        {order.adminNotes && <p className="mt-4 border-l-2 border-garnet pl-4">{order.adminNotes}</p>}
+        {order.adminNotes && <p className="mt-4 border-l-2 border-ruby pl-4">{order.adminNotes}</p>}
       </div>
 
       {next.length > 0 && <OrderButtons orderId={order.id} next={next} />}
@@ -45,7 +45,7 @@ export default async function OrderAdmin({ params }: { params: Promise<{ id: str
             ))}
             <li className="flex justify-between border-t border-rule-light py-3 text-ink-light-muted"><span>Of which GST</span><span>{formatINR(order.gstPaise)}</span></li>
             <li className="flex justify-between border-t border-rule-light py-3 text-ink-light-muted"><span>Delivery</span><span>{formatINR(order.shippingPaise)}</span></li>
-            <li className="flex justify-between border-t border-onyx py-3 font-display text-step-2"><span>Paid</span><span>{formatINR(order.totalPaise)}</span></li>
+            <li className="flex justify-between border-t border-velvet py-3 font-display text-step-2"><span>Paid</span><span>{formatINR(order.totalPaise)}</span></li>
           </ul>
           {order.giftMessage && <p className="mt-4">Gift card: “{order.giftMessage}”</p>}
           {order.hidePrices && <p className="mt-2 font-medium">Leave prices out of the parcel.</p>}

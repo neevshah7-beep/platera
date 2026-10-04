@@ -75,7 +75,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
                   </Link>
                 </td>
                 <td className="py-3 pr-3">{p.status === 'PUBLISHED' ? (p.stock > 0 ? 'Yes' : 'Yes, shown as sold') : p.status === 'DRAFT' ? 'No (draft)' : 'Hidden from lists'}</td>
-                <td className="py-3 pr-3">{pricing.state === 'PRICED' ? formatINRWhole(pricing.breakdown.totalPaise) : <span className="text-garnet">Needs weight</span>}</td>
+                <td className="py-3 pr-3">{pricing.state === 'PRICED' ? formatINRWhole(pricing.breakdown.totalPaise) : <span className="text-ruby">Needs weight</span>}</td>
                 <td className="py-3 pr-3">
                   <form action={quickUpdate} className="flex flex-wrap items-center gap-2">
                     <input type="hidden" name="id" value={p.id} />
@@ -84,7 +84,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
                     <label className="sr-only" htmlFor={`w-${p.id}`}>Net weight in grams</label>
                     <input id={`w-${p.id}`} name="netWeight" inputMode="decimal" defaultValue={p.netWeightMg ? (p.netWeightMg / 1000).toFixed(3) : ''} placeholder="grams" className="field min-h-9 w-24 py-1" />
                     <label className="flex items-center gap-1">
-                      <input type="checkbox" name="weightVerified" defaultChecked={p.weightVerified} className="accent-[var(--onyx)]" /> Weighed
+                      <input type="checkbox" name="weightVerified" defaultChecked={p.weightVerified} className="accent-[var(--velvet)]" /> Weighed
                     </label>
                     <button className="link">Save</button>
                   </form>

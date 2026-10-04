@@ -3,8 +3,8 @@
  * and, where the piece has one, the six-character HUID. We don't reproduce the BIS
  * logo itself (it's a certification mark); the text says what it is.
  */
-export function HallmarkPlate({ purity, huid, metal = 'argent' }: { purity: string; huid?: string | null; metal?: 'argent' | 'champagne' }) {
-  const edge = metal === 'champagne' ? 'var(--champagne)' : 'var(--argent)'
+export function HallmarkPlate({ purity, huid, metal = 'argent' }: { purity: string; huid?: string | null; metal?: 'argent' | 'gold' }) {
+  const edge = metal === 'gold' ? 'var(--gold)' : 'var(--argent)'
   return (
     <figure className="inline-flex items-stretch" aria-label={`BIS hallmark, purity ${purity}${huid ? `, HUID ${huid}` : ''}`}>
       <span className="num flex items-center border px-3 py-2 font-display text-step-1" style={{ borderColor: edge }}>

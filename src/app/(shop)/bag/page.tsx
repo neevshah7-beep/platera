@@ -69,7 +69,7 @@ export default async function BagPage({ searchParams }: { searchParams: Promise<
                     Was {formatINR(line.seenTotalPaise * line.qty)} when you added it, {line.deltaPaise > 0 ? 'up' : 'down'} {formatINR(Math.abs(line.deltaPaise))}.
                   </p>
                 )}
-                {line.unavailable && <p className="mt-2 text-step--1 text-garnet-bright">{UNAVAILABLE[line.unavailable]}</p>}
+                {line.unavailable && <p className="mt-2 text-step--1 text-ruby-bright">{UNAVAILABLE[line.unavailable]}</p>}
                 {line.product.returnNote && <p className="mt-2 text-step--1 text-ink-muted">{line.product.returnNote}</p>}
                 <form action={removeFromBag} className="mt-auto pt-3">
                   <input type="hidden" name="lineId" value={line.id} />

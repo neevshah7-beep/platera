@@ -1,6 +1,9 @@
 """
 Interim photo treatment until the reshoot (see SHOOT_GUIDE.md).
 
+Output is a transparent PNG per photo: the piece alone, so it can lie on the
+velvet of the site and on the trays of the 3D house without a rectangle around it.
+
 The supplied photos sit on five different backgrounds (royal blue, green felt,
 terracotta, black leather, grey). This puts every piece on the same onyx ground
 so the catalogue reads as one house:
@@ -11,7 +14,7 @@ so the catalogue reads as one house:
   are tone-mapped instead. Shadows are pulled down to onyx and the metal is left alone.
 
 Input:  assets/sorted/PLT-*.jpg     (originals, renamed)
-Output: assets/prepared/PLT-*.jpg   (2400 px long side, q92), plus a report line per file.
+Output: assets/prepared/PLT-*.png   (2400 px long side, RGBA), plus a report line per file.
 
 Usage:  python scripts/prepare-photos.py [--only PLT-NKS-001-01 ...]
 """
@@ -58,7 +61,7 @@ def colour_distance_mask(im: Image.Image, bg: np.ndarray) -> Image.Image:
     chroma = np.linalg.norm((a - a.mean(axis=2, keepdims=True)) - (bg - bg.mean()), axis=2)
     light = np.abs(a.mean(axis=2) - bg.mean())
     d = np.maximum(chroma * 1.6, light * 1.2)
-    m = np.clip((d - 0.16) / 0.12, 0, 1)
+    m = np.clip((d - 0.22) / 0.14, 0, 1)
     mask = Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.MedianFilter(5))
     return mask
 
@@ -74,18 +77,34 @@ def tone_to_onyx(im: Image.Image) -> Image.Image:
     return Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8))
 
 
-def cut_to_onyx(im: Image.Image, session, bg: np.ndarray, saturated: bool) -> Image.Image:
+def cut_out(im: Image.Image, session, bg: np.ndarray, bg_lum: float, bg_sat: float) -> Image.Image:
+    """
+    The piece on a transparent ground.
+
+    The segmentation model (rembg) finds the piece well on coloured backgrounds but
+    drops fine chain and pale strands. We add back only what is *near* what it found:
+    pixels that differ clearly from the background colour within ~30 px of the model's
+    mask. Far from the piece, a gradient in the backdrop can never be mistaken for metal.
+    On neutral dark backgrounds (black leather, grey card), where the model struggles,
+    bright metal is keyed by brightness instead.
+    """
     from rembg import remove
 
-    cut = remove(im, session=session)
-    alpha = cut.split()[3]
-    if saturated:
-        union = np.maximum(np.asarray(alpha), np.asarray(colour_distance_mask(im, bg)))
-        alpha = Image.fromarray(union)
-    alpha = alpha.filter(ImageFilter.GaussianBlur(0.6))
-    ground = Image.new('RGB', im.size, ONYX)
-    ground.paste(cut.convert('RGB'), mask=alpha)
-    return ground
+    model = np.asarray(remove(im, session=session).split()[3]).astype(np.float32) / 255
+    near = np.asarray(Image.fromarray((model > 0.4).astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(31))) > 0
+
+    if bg_lum < 70 and bg_sat < 0.12:
+        lum = np.asarray(im.convert('L')).astype(np.float32)
+        key = np.clip((lum - (bg_lum + 22)) / 40, 0, 1)
+        extra = key
+    else:
+        extra = np.asarray(colour_distance_mask(im, bg)).astype(np.float32) / 255 * near
+
+    alpha = np.maximum(model, extra)
+    alpha_img = Image.fromarray((alpha * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6))
+    out = im.convert('RGBA')
+    out.putalpha(alpha_img)
+    return out
 
 
 def main() -> None:
@@ -97,18 +116,14 @@ def main() -> None:
             continue
         im = Image.open(path).convert('RGB')
         im.thumbnail((LONG_SIDE, LONG_SIDE), Image.LANCZOS)
-        bg = border_luminance(im)
         colour, sat = border_colour(im)
-        saturated = sat > 0.12
-        if bg < 70 and not saturated:
-            result, method = tone_to_onyx(im), 'tone'
-        else:
-            if session is None:
-                from rembg import new_session
-                session = new_session('isnet-general-use')
-            result, method = cut_to_onyx(im, session, colour, saturated), 'cutout+colour' if saturated else 'cutout'
-        result.save(OUT / path.name, quality=92, optimize=True)
-        print(f'{path.stem}\t{method}\tbg={bg:.0f}\tsat={sat:.2f}\t{result.width}x{result.height}')
+        if session is None:
+            from rembg import new_session
+            session = new_session('isnet-general-use')
+        result = cut_out(im, session, colour, border_luminance(im), sat)
+        out = OUT / f'{path.stem}.png'
+        result.save(out, optimize=True)
+        print(f'{path.stem}	cutout	bg-sat={sat:.2f}	{result.width}x{result.height}')
 
 
 if __name__ == '__main__':

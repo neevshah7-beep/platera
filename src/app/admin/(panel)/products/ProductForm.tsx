@@ -31,7 +31,7 @@ function F({
       <label htmlFor={`p-${name}`} className="label">{label}</label>
       <input id={`p-${name}`} name={name} type={type} defaultValue={value} className="field" aria-invalid={Boolean(err)} {...rest} />
       {hint && !err && <p className="mt-1 text-step--1 text-ink-light-muted">{hint}</p>}
-      {err && <p className="mt-1 text-step--1 text-garnet">{err}</p>}
+      {err && <p className="mt-1 text-step--1 text-ruby">{err}</p>}
     </div>
   )
 }
@@ -40,7 +40,7 @@ function Check({ name, label, defaults, state }: { name: string; label: string; 
   const checked = state?.values ? state.values[name] === 'on' : Boolean(defaults[name])
   return (
     <label className="flex items-start gap-3">
-      <input type="checkbox" name={name} defaultChecked={checked} className="mt-1.5 size-4 accent-[var(--onyx)]" />
+      <input type="checkbox" name={name} defaultChecked={checked} className="mt-1.5 size-4 accent-[var(--velvet)]" />
       <span>{label}</span>
     </label>
   )
@@ -54,7 +54,7 @@ function Select({ name, label, options, defaults, state }: { name: string; label
       <select id={`p-${name}`} name={name} defaultValue={value} key={value} className="field">
         {options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
       </select>
-      {state?.errors[name] && <p className="mt-1 text-step--1 text-garnet">{state.errors[name]}</p>}
+      {state?.errors[name] && <p className="mt-1 text-step--1 text-ruby">{state.errors[name]}</p>}
     </div>
   )
 }
@@ -126,9 +126,9 @@ export function ProductForm({ categories, defaults }: { categories: Category[]; 
         <F name="seoDescription" label="Search description (under 155 characters)" maxLength={155} {...props} className="sm:col-span-2" />
       </fieldset>
 
-      <div className="sticky bottom-0 -mx-[var(--gutter)] flex items-center gap-4 border-t border-rule-light bg-alabaster px-[var(--gutter)] py-4">
+      <div className="sticky bottom-0 -mx-[var(--gutter)] flex items-center gap-4 border-t border-rule-light bg-ivory px-[var(--gutter)] py-4">
         <button className="btn btn-primary" disabled={pending}>{pending ? 'Saving…' : 'Save'}</button>
-        <p role="status" aria-live="polite" className={state && Object.keys(state.errors).length ? 'text-garnet' : ''}>{state?.message}</p>
+        <p role="status" aria-live="polite" className={state && Object.keys(state.errors).length ? 'text-ruby' : ''}>{state?.message}</p>
       </div>
     </form>
   )

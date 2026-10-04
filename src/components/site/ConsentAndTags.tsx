@@ -72,7 +72,7 @@ export function ConsentAndTags({ gaId, pixelId }: { gaId?: string; pixelId?: str
         `}</Script>
       )}
       {!asked && (
-        <div role="region" aria-label="Cookie choice" className="fixed inset-x-0 bottom-0 z-50 border-t border-rule bg-onyx px-[var(--gutter)] py-4">
+        <div role="region" aria-label="Cookie choice" className="fixed inset-x-0 bottom-0 z-50 border-t border-rule bg-velvet px-[var(--gutter)] py-4">
           <div className="mx-auto flex max-w-[1440px] flex-col gap-3 text-step--1 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-ink-muted">
               We’d like to measure visits to improve the site. Nothing is sold or shared for others’ advertising.{' '}

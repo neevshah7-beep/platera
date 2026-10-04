@@ -7,3 +7,4 @@ assets/sorted/
 *.log
 .pgdata/
 assets/prepared/
+assets/adobe/

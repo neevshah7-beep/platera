@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { CollectionView } from '@/components/tray/CollectionView'
+import { RoomIntro } from '@/components/world/RoomIntro'
+import { getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
+import { toPieceRef } from '@/lib/world-data'
 
 export const revalidate = 300
 
@@ -19,13 +22,22 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function CollectionPage({ searchParams }: Props) {
   const search = await searchParams
+  const [rates, products] = await Promise.all([getCurrentRates(), listProducts()])
+  const pieces = products.map((p) => toPieceRef(p, priceProduct(p, rates))).filter((x): x is NonNullable<typeof x> => x !== null)
   return (
-    <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-12">
-      <h1 className="text-step-6">The collection</h1>
-      <p className="measure mt-5 text-step-1 text-ink-muted">
-        Everything in the house, laid out on one tray. Every piece is 925 sterling silver, hallmarked, and priced by its own weight at today’s rate.
-      </p>
-      <CollectionView basePath="/collection" search={search} />
-    </div>
+    <>
+      <RoomIntro
+        roomKey="all"
+        pieces={pieces}
+        title="The collection"
+        summary="Everything in the house, laid out on one long tray. Every piece is 925 sterling silver, hallmarked, and priced by its own weight at today’s rate."
+      />
+      <div id="list" className="ground-solid">
+        <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-16">
+          <h2 className="text-step-4">Every piece, as a list</h2>
+          <CollectionView basePath="/collection" search={search} />
+        </div>
+      </div>
+    </>
   )
 }

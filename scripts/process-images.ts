@@ -42,7 +42,7 @@ async function main() {
       const target = Math.min(w, width)
       const avif = path.join(OUT, `${name}-${w}.avif`)
       const webp = path.join(OUT, `${name}-${w}.webp`)
-      if (force || !existsSync(avif)) await input.clone().resize({ width: target }).avif({ quality: 58, effort: 6 }).toFile(avif)
+      if (force || !existsSync(avif)) await input.clone().resize({ width: target }).avif({ quality: 58, effort: 4 }).toFile(avif)
       if (force || !existsSync(webp)) await input.clone().resize({ width: target }).webp({ quality: 80 }).toFile(webp)
     }
 

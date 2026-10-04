@@ -17,7 +17,7 @@ const POLICIES = [
 export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
   const a = STORE.address
   return (
-    <footer className="mt-32">
+    <footer className="ground-solid">
       <MetalRule />
       <div className="mx-auto grid max-w-[1440px] gap-12 px-[var(--gutter)] py-16 md:grid-cols-12">
         <div className="md:col-span-5">

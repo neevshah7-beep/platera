@@ -33,7 +33,7 @@ export function OrderButtons({ orderId, next }: { orderId: string; next: OrderSt
           </form>
         ))}
       </div>
-      {state && <p role="status" className={`mt-3 ${state.ok ? '' : 'text-garnet'}`}>{state.message}</p>}
+      {state && <p role="status" className={`mt-3 ${state.ok ? '' : 'text-ruby'}`}>{state.message}</p>}
     </div>
   )
 }
@@ -55,7 +55,7 @@ export function ShipmentForm({ orderId, connected }: { orderId: string; connecte
       </div>
       {!connected && <button className="btn btn-primary" disabled={pending}>Save tracking</button>}
       {connected && <button className="btn btn-quiet" disabled={pending}>Save these instead</button>}
-      {state && <p role="status" className={state.ok ? '' : 'text-garnet'}>{state.message}</p>}
+      {state && <p role="status" className={state.ok ? '' : 'text-ruby'}>{state.message}</p>}
     </form>
   )
 }
@@ -67,7 +67,7 @@ export function RefundButton({ orderId, amount }: { orderId: string; amount: num
       <input type="hidden" name="orderId" value={orderId} />
       <input type="hidden" name="confirmAmount" value={amount} />
       <button className="btn btn-primary num" disabled={pending}>Refund {formatINR(amount)}</button>
-      {state && <p role="status" className={`mt-3 ${state.ok ? '' : 'text-garnet'}`}>{state.message}</p>}
+      {state && <p role="status" className={`mt-3 ${state.ok ? '' : 'text-ruby'}`}>{state.message}</p>}
     </form>
   )
 }

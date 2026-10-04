@@ -79,7 +79,7 @@ export default async function EditProduct({ params, searchParams }: { params: Pr
             <Link href={`/piece/${product.slug}`} target="_blank" className="link">See it on the website</Link>
           </p>
         )}
-        {created && <p role="status" className="mt-4 border-l-2 border-onyx pl-4">Saved. Now add its photographs below.</p>}
+        {created && <p role="status" className="mt-4 border-l-2 border-velvet pl-4">Saved. Now add its photographs below.</p>}
       </div>
       {product && <ImageManager productId={product.id} sku={product.sku} images={product.images} />}
       <ProductForm categories={categories} defaults={defaults} />

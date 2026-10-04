@@ -22,7 +22,7 @@ function Field({
     <div className={className}>
       <label htmlFor={id} className="label">{label}</label>
       <input id={id} name={name} defaultValue={values?.[name]} className="field" aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-err` : undefined} {...rest} />
-      {error && <p id={`${id}-err`} className="mt-1 text-step--1 text-garnet-bright">{error}</p>}
+      {error && <p id={`${id}-err`} className="mt-1 text-step--1 text-ruby-bright">{error}</p>}
     </div>
   )
 }
@@ -58,10 +58,10 @@ export function CheckoutForm({ summary, conditions }: { summary: Summary; condit
               <label htmlFor="f-state" className="label">State</label>
               <select id="f-state" name="state" className="field" key={v?.state} defaultValue={v?.state ?? 'Maharashtra'} aria-invalid={Boolean(e['address.state'])}>
                 {INDIAN_STATES.map((s) => (
-                  <option key={s} value={s} className="bg-onyx">{s}</option>
+                  <option key={s} value={s} className="bg-velvet">{s}</option>
                 ))}
               </select>
-              {e['address.state'] && <p className="mt-1 text-step--1 text-garnet-bright">{e['address.state']}</p>}
+              {e['address.state'] && <p className="mt-1 text-step--1 text-ruby-bright">{e['address.state']}</p>}
             </div>
           </div>
         </fieldset>
@@ -91,7 +91,7 @@ export function CheckoutForm({ summary, conditions }: { summary: Summary; condit
             <input type="checkbox" name="acceptPolicy" required defaultChecked={v?.acceptPolicy === 'on'} className="mt-1.5 size-4 accent-[var(--argent)]" aria-invalid={Boolean(e.acceptPolicy)} />
             <span>I’ve read these conditions and the <a href="/policies/returns" target="_blank" className="link">returns policy</a>.</span>
           </label>
-          {e.acceptPolicy && <p className="mt-1 text-step--1 text-garnet-bright">{e.acceptPolicy}</p>}
+          {e.acceptPolicy && <p className="mt-1 text-step--1 text-ruby-bright">{e.acceptPolicy}</p>}
         </fieldset>
       </div>
 
@@ -114,7 +114,7 @@ export function CheckoutForm({ summary, conditions }: { summary: Summary; condit
           <p className="num mt-4 flex justify-between font-display text-step-2"><span>To pay</span><span>{formatINR(summary.totalPaise)}</span></p>
           <p className="mt-1 text-step--1 text-ink-muted">GST included. When you continue, this price is held for your payment.</p>
           <div className="mt-8"><PayButton total={summary.totalPaise} /></div>
-          <p role="status" aria-live="polite" className="mt-3 text-step--1 text-garnet-bright">{state?.message}</p>
+          <p role="status" aria-live="polite" className="mt-3 text-step--1 text-ruby-bright">{state?.message}</p>
           <p className="mt-4 text-step--1 text-ink-muted">You’ll pay on Razorpay’s secure page by UPI, card or net banking. Cash on delivery isn’t offered.</p>
         </div>
       </aside>

@@ -50,7 +50,7 @@ export default async function OrdersAdmin({ searchParams }: { searchParams: Prom
         <ul className="mt-6">
           {orders.map((o) => (
             <li key={o.id} className="border-b border-rule-light">
-              <Link href={`/admin/orders/${o.id}`} className="grid gap-1 py-4 hover:bg-[rgb(14_13_12/0.03)] sm:grid-cols-[10rem_1fr_8rem_9rem] sm:items-baseline sm:gap-4">
+              <Link href={`/admin/orders/${o.id}`} className="grid gap-1 py-4 hover:bg-[rgb(11_36_32/0.04)] sm:grid-cols-[10rem_1fr_8rem_9rem] sm:items-baseline sm:gap-4">
                 <span className="num">{o.number}</span>
                 <span>
                   {o.name} <span className="text-ink-light-muted">· {o.items.map((i) => i.name).join(', ')}</span>

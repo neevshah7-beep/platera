@@ -34,6 +34,6 @@ export function LightSource() {
   return null
 }
 
-export function MetalRule({ metal = 'argent', className = '' }: { metal?: 'argent' | 'champagne'; className?: string }) {
+export function MetalRule({ metal = 'argent', className = '' }: { metal?: 'argent' | 'gold'; className?: string }) {
   return <div role="presentation" className={`metal-rule ${className}`} data-metal={metal} />
 }

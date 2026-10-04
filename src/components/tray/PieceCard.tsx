@@ -25,7 +25,7 @@ export function PieceCard({
   return (
     <article className="group">
       <Link href={`/piece/${product.slug}`} className="block" aria-label={product.name}>
-        <div className="overflow-hidden bg-onyx-raised">
+        <div className="overflow-hidden bg-velvet-raised">
           {image && (
             <PieceImage
               image={image}

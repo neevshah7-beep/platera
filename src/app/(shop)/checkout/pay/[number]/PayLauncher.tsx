@@ -53,7 +53,7 @@ export function PayLauncher(p: Props) {
       name: 'Platera Jewellers',
       description: `Order ${p.orderNumber}`,
       prefill: p.prefill,
-      theme: { color: '#0e0d0c' },
+      theme: { color: '#0b2420' },
       handler: (r: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => void verify(r),
       modal: { ondismiss: () => setStatus('Payment window closed. Nothing has been charged. You can open it again.') },
     })
@@ -62,7 +62,7 @@ export function PayLauncher(p: Props) {
   }, [p, verify])
 
   if (p.mode === 'unavailable') {
-    return <p className="mt-10 text-garnet-bright">Online payment isn’t switched on yet. Please call or WhatsApp us to complete this order.</p>
+    return <p className="mt-10 text-ruby-bright">Online payment isn’t switched on yet. Please call or WhatsApp us to complete this order.</p>
   }
 
   if (p.mode === 'simulate') {

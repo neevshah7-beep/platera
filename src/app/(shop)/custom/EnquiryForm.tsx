@@ -27,17 +27,17 @@ export function EnquiryForm({ kind, productSlug }: { kind: 'PIECE' | 'CUSTOM_ORD
         <div key={name}>
           <label htmlFor={`e-${name}`} className="label">{label}</label>
           <input id={`e-${name}`} name={name} type={type} autoComplete={ac} defaultValue={v?.[name]} className="field" aria-invalid={Boolean(e[name])} />
-          {e[name] && <p className="mt-1 text-step--1 text-garnet-bright">{e[name]}</p>}
+          {e[name] && <p className="mt-1 text-step--1 text-ruby-bright">{e[name]}</p>}
         </div>
       ))}
       <div className="sm:col-span-2">
         <label htmlFor="e-message" className="label">What would you like made? Size, length, occasion, budget</label>
         <textarea id="e-message" name="message" rows={4} defaultValue={v?.message} className="field resize-none" aria-invalid={Boolean(e.message)} />
-        {e.message && <p className="mt-1 text-step--1 text-garnet-bright">{e.message}</p>}
+        {e.message && <p className="mt-1 text-step--1 text-ruby-bright">{e.message}</p>}
       </div>
       <div className="sm:col-span-2">
         <Submit />
-        <p role="status" aria-live="polite" className="mt-2 text-step--1 text-garnet-bright">{state && !state.ok ? state.message : ''}</p>
+        <p role="status" aria-live="polite" className="mt-2 text-step--1 text-ruby-bright">{state && !state.ok ? state.message : ''}</p>
       </div>
     </form>
   )

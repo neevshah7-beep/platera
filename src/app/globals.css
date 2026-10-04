@@ -2,35 +2,50 @@
 
 /* ─── Tokens. The only place a colour value is written. ──────────────── */
 :root {
-  /* Grounds */
-  --onyx: #0e0d0c;
-  --onyx-raised: #171614;
-  --alabaster: #ede8e0;
+  /* Grounds: Emerald Vault. Deep green velvet, like the inside of a jewellery box. */
+  --velvet: #0b2420;
+  --velvet-raised: #12332d;
+  --ivory: #f3ede2;
 
   /* Type */
-  --ink-on-dark: #ede8e0;
-  --ink-on-dark-muted: #a19c93;
-  --ink-on-light: #0e0d0c;
-  --ink-on-light-muted: #5c5750;
+  --ink-on-dark: #f3ede2;
+  --ink-on-dark-muted: #a9b8b0;
+  --ink-on-light: #0b2420;
+  --ink-on-light-muted: #4f5f58;
 
-  /* Metal. Silver is the house metal; champagne appears only on gold and gold-plated pieces.
+  /* Metal. Silver is the house metal; gold appears only on gold and gold-plated pieces.
      Neither is ever used as a flat fill: only as a hairline or a moving three-stop surface. */
-  --argent: #b9bcbd;
-  --argent-shadow: #6e7173;
-  --argent-light: #eef0f0;
-  --champagne: #c8a878;
-  --champagne-shadow: #7d6440;
-  --champagne-light: #f1e2c4;
+  --argent: #c9cdd0;
+  --argent-shadow: #7c8287;
+  --argent-light: #f4f6f7;
+  --gold: #c2a06a;
+  --gold-shadow: #7a5f33;
+  --gold-light: #ebd6a8;
 
-  /* Accent: bridal and critical UI only. */
-  --garnet: #5a1f2b;
-  --garnet-bright: #d07a8b;
+  /* Ruby: bridal and critical UI only. ruby-bright is the readable form on velvet. */
+  --ruby: #7a1f2e;
+  --ruby-bright: #f0a3ae;
 
   /* Hairlines */
-  --rule-on-dark: rgb(185 188 189 / 0.22);
-  --rule-on-light: rgb(14 13 12 / 0.16);
+  --rule-on-dark: rgb(201 205 208 / 0.2);
+  --rule-on-light: rgb(11 36 32 / 0.16);
 
-  --focus: #e9d9b4;
+  --focus: #ebd6a8;
+
+  /* The 3D house. Read by the WebGL world at runtime (components/world/palette.ts). */
+  --lamp: #fff4e3;            /* warm jeweller's lamp */
+  --spec-silver: #eef2f5;     /* highlight tint on silver */
+  --spec-gold: #e2c48c;       /* highlight tint on gold plating */
+  --stone: #0f2b26;           /* green marble of the plinths and counter */
+  --velvet-sheen: #2c5c50;    /* the soft lighter green velvet shows at grazing angles */
+  --shadow-ink: #020a08;      /* contact shadows on velvet */
+
+  /* Light Moods: the lamp's colour for each occasion (product page). */
+  --mood-daylight: #f4f7ff;   /* north window, late morning */
+  --mood-diya: #ffb25e;       /* oil lamp flame, about 1800 K */
+  --mood-evening: #ffd9b8;    /* warm room light at a party */
+  --mood-mandap: #ffc36b;     /* marigold-filtered wedding light */
+  --mood-mandap-rose: #ff8a7a;/* the rose fill under a mandap canopy */
 
   /* Motion: one easing set, ~30% slower than a product UI. */
   --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
@@ -54,17 +69,17 @@
 }
 
 @theme inline {
-  --color-onyx: var(--onyx);
-  --color-onyx-raised: var(--onyx-raised);
-  --color-alabaster: var(--alabaster);
+  --color-velvet: var(--velvet);
+  --color-velvet-raised: var(--velvet-raised);
+  --color-ivory: var(--ivory);
   --color-ink: var(--ink-on-dark);
   --color-ink-muted: var(--ink-on-dark-muted);
   --color-ink-light: var(--ink-on-light);
   --color-ink-light-muted: var(--ink-on-light-muted);
   --color-argent: var(--argent);
-  --color-champagne: var(--champagne);
-  --color-garnet: var(--garnet);
-  --color-garnet-bright: var(--garnet-bright);
+  --color-gold: var(--gold);
+  --color-ruby: var(--ruby);
+  --color-ruby-bright: var(--ruby-bright);
   --color-rule: var(--rule-on-dark);
   --color-rule-light: var(--rule-on-light);
   --color-focus: var(--focus);
@@ -87,7 +102,7 @@
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
 html {
-  background: var(--onyx);
+  background: var(--velvet);
   color: var(--ink-on-dark);
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
@@ -97,7 +112,7 @@ body {
   font-size: var(--step-0);
   line-height: 1.6;
   font-weight: 400;
-  background: var(--onyx);
+  background: var(--velvet);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -110,22 +125,22 @@ h1, h2, h3, .display {
 }
 p { text-wrap: pretty; }
 
-::selection { background: var(--argent); color: var(--onyx); }
+::selection { background: var(--argent); color: var(--velvet); }
 
 :focus-visible {
   outline: 1.5px solid var(--focus);
   outline-offset: 3px;
   border-radius: 1px;
 }
-.ground-light :focus-visible { outline-color: var(--onyx); }
+.ground-light :focus-visible { outline-color: var(--velvet); }
 
 /* Every price, weight, purity and measurement. */
 .num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 
 .measure { max-width: var(--measure); }
 
-/* A light section: alabaster ground, onyx type. */
-.ground-light { background: var(--alabaster); color: var(--ink-on-light); }
+/* A light section: ivory ground, velvet type. */
+.ground-light { background: var(--ivory); color: var(--ink-on-light); }
 
 /* ─── Metal ──────────────────────────────────────────────────────────────
    A hairline that behaves like polished metal: three tonal stops with a highlight
@@ -142,14 +157,14 @@ p { text-wrap: pretty; }
     var(--argent-shadow) 100%
   );
 }
-.metal-rule[data-metal='champagne'] {
+.metal-rule[data-metal='gold'] {
   background: linear-gradient(
     90deg,
-    var(--champagne-shadow) 0%,
-    var(--champagne) calc(var(--sheen-x, 50%) - 22%),
-    var(--champagne-light) var(--sheen-x, 50%),
-    var(--champagne) calc(var(--sheen-x, 50%) + 22%),
-    var(--champagne-shadow) 100%
+    var(--gold-shadow) 0%,
+    var(--gold) calc(var(--sheen-x, 50%) - 22%),
+    var(--gold-light) var(--sheen-x, 50%),
+    var(--gold) calc(var(--sheen-x, 50%) + 22%),
+    var(--gold-shadow) 100%
   );
 }
 
@@ -182,7 +197,7 @@ p { text-wrap: pretty; }
 }
 .link:hover { background-size: 0% 1px; background-position: 100% 100%; }
 
-/* Buttons. Primary is alabaster on onyx; there is no gold button. */
+/* Buttons. Primary is ivory on velvet; there is no gold button. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -202,11 +217,11 @@ p { text-wrap: pretty; }
   cursor: pointer;
   text-align: center;
 }
-.btn-primary { background: var(--alabaster); color: var(--onyx); }
+.btn-primary { background: var(--ivory); color: var(--velvet); }
 .btn-primary:hover { background: var(--argent-light); }
 .btn-quiet { border-color: var(--rule-on-dark); color: var(--ink-on-dark); }
 .btn-quiet:hover { border-color: var(--argent); }
-.ground-light .btn-primary { background: var(--onyx); color: var(--alabaster); }
+.ground-light .btn-primary { background: var(--velvet); color: var(--ivory); }
 .ground-light .btn-quiet { border-color: var(--rule-on-light); color: var(--ink-on-light); }
 .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
@@ -236,4 +251,36 @@ p { text-wrap: pretty; }
     scroll-behavior: auto !important;
   }
   .light-pass::after { display: none; }
+}
+
+/* ─── The 3D house ──────────────────────────────────────────────────────── */
+
+/* With the world on, the page ground is the 3D velvet behind it. */
+html[data-world='on'] body { background: transparent; }
+
+/* A section drawn over the world that needs a calm, solid ground (long text, forms). */
+.ground-solid { background: var(--velvet); position: relative; }
+
+/* Text set over the 3D scene: a soft pool of velvet behind it keeps it readable
+   wherever the camera is, without a visible box. */
+.over-world {
+  text-shadow: 0 1px 18px color-mix(in srgb, var(--velvet) 90%, transparent), 0 0 2px color-mix(in srgb, var(--velvet) 60%, transparent);
+}
+
+/* The page transition: one pass of light across the screen. */
+@keyframes sheen-wipe {
+  0% { transform: translateX(-110%) skewX(-12deg); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: translateX(110%) skewX(-12deg); opacity: 0; }
+}
+.sheen-wipe {
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--argent-light) 5%, transparent) 42%,
+    color-mix(in srgb, var(--argent-light) 22%, transparent) 50%,
+    color-mix(in srgb, var(--gold-light) 8%, transparent) 56%,
+    transparent 70%
+  );
+  animation: sheen-wipe 1.15s var(--ease-turn) both;
 }

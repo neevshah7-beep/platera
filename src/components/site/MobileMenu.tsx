@@ -42,7 +42,7 @@ export function MobileMenu() {
       <dialog
         ref={dialog}
         onClose={() => setOpen(false)}
-        className="m-0 h-dvh max-h-none w-full max-w-none bg-onyx p-0 text-ink backdrop:bg-onyx/80"
+        className="m-0 h-dvh max-h-none w-full max-w-none bg-velvet p-0 text-ink backdrop:bg-velvet/80"
         aria-label="Menu"
       >
         <div className="flex h-16 items-center justify-between px-[var(--gutter)]">
