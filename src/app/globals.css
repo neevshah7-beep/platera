@@ -1,26 +1,239 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/* ─── Tokens. The only place a colour value is written. ──────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Grounds */
+  --onyx: #0e0d0c;
+  --onyx-raised: #171614;
+  --alabaster: #ede8e0;
+
+  /* Type */
+  --ink-on-dark: #ede8e0;
+  --ink-on-dark-muted: #a19c93;
+  --ink-on-light: #0e0d0c;
+  --ink-on-light-muted: #5c5750;
+
+  /* Metal. Silver is the house metal; champagne appears only on gold and gold-plated pieces.
+     Neither is ever used as a flat fill: only as a hairline or a moving three-stop surface. */
+  --argent: #b9bcbd;
+  --argent-shadow: #6e7173;
+  --argent-light: #eef0f0;
+  --champagne: #c8a878;
+  --champagne-shadow: #7d6440;
+  --champagne-light: #f1e2c4;
+
+  /* Accent: bridal and critical UI only. */
+  --garnet: #5a1f2b;
+  --garnet-bright: #d07a8b;
+
+  /* Hairlines */
+  --rule-on-dark: rgb(185 188 189 / 0.22);
+  --rule-on-light: rgb(14 13 12 / 0.16);
+
+  --focus: #e9d9b4;
+
+  /* Motion: one easing set, ~30% slower than a product UI. */
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-turn: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-quick: 260ms;
+  --dur-calm: 560ms;
+  --dur-slow: 980ms;
+
+  /* Modular scale, ratio 1.25, fluid between 360px and 1440px. */
+  --step--1: clamp(0.8rem, 0.78rem + 0.08vw, 0.85rem);
+  --step-0: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --step-1: clamp(1.2rem, 1.15rem + 0.22vw, 1.33rem);
+  --step-2: clamp(1.44rem, 1.35rem + 0.42vw, 1.66rem);
+  --step-3: clamp(1.73rem, 1.57rem + 0.72vw, 2.08rem);
+  --step-4: clamp(2.07rem, 1.8rem + 1.2vw, 2.6rem);
+  --step-5: clamp(2.49rem, 2.03rem + 2vw, 3.25rem);
+  --step-6: clamp(2.99rem, 2.2rem + 3.6vw, 4.9rem);
+
+  --measure: 66ch;
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-onyx: var(--onyx);
+  --color-onyx-raised: var(--onyx-raised);
+  --color-alabaster: var(--alabaster);
+  --color-ink: var(--ink-on-dark);
+  --color-ink-muted: var(--ink-on-dark-muted);
+  --color-ink-light: var(--ink-on-light);
+  --color-ink-light-muted: var(--ink-on-light-muted);
+  --color-argent: var(--argent);
+  --color-champagne: var(--champagne);
+  --color-garnet: var(--garnet);
+  --color-garnet-bright: var(--garnet-bright);
+  --color-rule: var(--rule-on-dark);
+  --color-rule-light: var(--rule-on-light);
+  --color-focus: var(--focus);
+
+  --font-display: var(--font-gambetta), 'Iowan Old Style', Georgia, serif;
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+
+  --text-step--1: var(--step--1);
+  --text-step-0: var(--step-0);
+  --text-step-1: var(--step-1);
+  --text-step-2: var(--step-2);
+  --text-step-3: var(--step-3);
+  --text-step-4: var(--step-4);
+  --text-step-5: var(--step-5);
+  --text-step-6: var(--step-6);
+
+  --ease-settle: var(--ease-settle);
+  --ease-turn: var(--ease-turn);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ───────────────────────────────────────────────────────────── */
+html {
+  background: var(--onyx);
+  color: var(--ink-on-dark);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-weight: 400;
+  background: var(--onyx);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-gambetta), Georgia, serif;
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+
+::selection { background: var(--argent); color: var(--onyx); }
+
+:focus-visible {
+  outline: 1.5px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+.ground-light :focus-visible { outline-color: var(--onyx); }
+
+/* Every price, weight, purity and measurement. */
+.num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+
+.measure { max-width: var(--measure); }
+
+/* A light section: alabaster ground, onyx type. */
+.ground-light { background: var(--alabaster); color: var(--ink-on-light); }
+
+/* ─── Metal ──────────────────────────────────────────────────────────────
+   A hairline that behaves like polished metal: three tonal stops with a highlight
+   that follows the pointer (--sheen-x is set by <MetalRule>). It's the highlight
+   of a light source travelling along a polished edge, not decoration. */
+.metal-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--argent-shadow) 0%,
+    var(--argent) calc(var(--sheen-x, 50%) - 22%),
+    var(--argent-light) var(--sheen-x, 50%),
+    var(--argent) calc(var(--sheen-x, 50%) + 22%),
+    var(--argent-shadow) 100%
+  );
+}
+.metal-rule[data-metal='champagne'] {
+  background: linear-gradient(
+    90deg,
+    var(--champagne-shadow) 0%,
+    var(--champagne) calc(var(--sheen-x, 50%) - 22%),
+    var(--champagne-light) var(--sheen-x, 50%),
+    var(--champagne) calc(var(--sheen-x, 50%) + 22%),
+    var(--champagne-shadow) 100%
+  );
+}
+
+/* One slow pass of light across the hero photograph, like a lamp moving over a
+   tray. It runs once on load and then holds still. */
+@property --lp-x { syntax: '<percentage>'; inherits: false; initial-value: -30%; }
+.light-pass { position: relative; isolation: isolate; overflow: hidden; }
+.light-pass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(38% 55% at var(--lp-x) 42%, rgb(238 240 240 / 0.11), transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: light-pass 5.6s var(--ease-turn) 0.4s 1 both;
+}
+@keyframes light-pass {
+  from { --lp-x: -30%; }
+  to { --lp-x: 130%; }
+}
+
+/* Links: a hairline under the word that withdraws on hover. */
+.link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 1px;
+  transition: background-size var(--dur-calm) var(--ease-settle);
+}
+.link:hover { background-size: 0% 1px; background-position: 100% 100%; }
+
+/* Buttons. Primary is alabaster on onyx; there is no gold button. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 3rem;
+  padding: 0.8rem 1.5rem;
+  font-size: var(--step-0);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  border: 1px solid transparent;
+  border-radius: 1px;
+  transition:
+    background-color var(--dur-calm) var(--ease-settle),
+    color var(--dur-calm) var(--ease-settle),
+    border-color var(--dur-calm) var(--ease-settle);
+  cursor: pointer;
+  text-align: center;
+}
+.btn-primary { background: var(--alabaster); color: var(--onyx); }
+.btn-primary:hover { background: var(--argent-light); }
+.btn-quiet { border-color: var(--rule-on-dark); color: var(--ink-on-dark); }
+.btn-quiet:hover { border-color: var(--argent); }
+.ground-light .btn-primary { background: var(--onyx); color: var(--alabaster); }
+.ground-light .btn-quiet { border-color: var(--rule-on-light); color: var(--ink-on-light); }
+.btn[disabled], .btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+
+/* Form fields: a bottom hairline, the way a ledger is ruled. */
+.field {
+  width: 100%;
+  min-height: 3rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-on-dark);
+  padding: 0.6rem 0;
+  color: inherit;
+  font: inherit;
+  transition: border-color var(--dur-calm) var(--ease-settle);
+}
+.field:focus { outline: none; border-bottom-color: var(--argent); }
+.field:focus-visible { outline: 1.5px solid var(--focus); outline-offset: 2px; }
+.ground-light .field { border-bottom-color: var(--rule-on-light); }
+.label { display: block; font-size: var(--step--1); color: var(--ink-on-dark-muted); }
+.ground-light .label { color: var(--ink-on-light-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .light-pass::after { display: none; }
 }

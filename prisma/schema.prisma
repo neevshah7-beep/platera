@@ -193,6 +193,9 @@ model Product {
   finish          String?
   netWeightMg     Int?
   grossWeightMg   Int?
+  /// The client offers no weight tolerance, so a live-rate piece is only sold once
+  /// the owner has weighed it and confirmed the figure in admin.
+  weightVerified  Boolean        @default(false)
   makingPct       Int?
   stonePaise      Int            @default(0)
   hallmarkPaise   Int            @default(0)

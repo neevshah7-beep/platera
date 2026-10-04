@@ -23,6 +23,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "resend": "^6.32.0",
+    "server-only": "^0.0.1",
     "sharp": "^0.35.5",
     "zod": "^4.6.5"
   },
@@ -37,6 +38,7 @@
     "embedded-postgres": "^16.14.0-beta.17",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "playwright-core": "^1.63.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
