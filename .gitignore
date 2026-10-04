@@ -6,3 +6,4 @@ assets/raw/
 assets/sorted/
 *.log
 .pgdata/
+assets/prepared/
