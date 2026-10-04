@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { db } from '@/lib/db'
 import { getCurrentRates, isSold, priceProduct } from '@/lib/catalogue'
@@ -40,6 +41,16 @@ export async function addToBag(_: BagActionState, form: FormData): Promise<BagAc
   })
   revalidatePath('/', 'layout')
   return { ok: true, message: 'Added to your bag.' }
+}
+
+export async function buyNow(form: FormData) {
+  const result = await addToBag(null, form)
+  if (!result?.ok) {
+    const id = form.get('productId')
+    const product = typeof id === 'string' ? await db.product.findUnique({ where: { id }, select: { slug: true } }) : null
+    redirect(product ? `/piece/${product.slug}?unavailable=1` : '/collection')
+  }
+  redirect('/checkout')
 }
 
 export async function removeFromBag(form: FormData) {

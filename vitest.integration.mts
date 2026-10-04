@@ -3,7 +3,7 @@ import path from 'node:path'
 
 // Runs against a real Postgres (platera_test). Start it with `npm run db:dev`.
 export default defineConfig({
-  resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
+  resolve: { alias: { '@': path.resolve(__dirname, 'src'), 'server-only': path.resolve(__dirname, 'tests/stubs/server-only.ts') } },
   test: {
     include: ['tests/integration/**/*.test.ts'],
     environment: 'node',
