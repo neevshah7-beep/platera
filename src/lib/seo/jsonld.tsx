@@ -1,4 +1,4 @@
-import { STORE, siteUrl } from '@/lib/store'
+import { STORE, mediaUrl, siteUrl } from '@/lib/store'
 import type { Pricing, ProductWithMedia } from '@/lib/catalogue'
 
 export function JsonLd({ data }: { data: object }) {
@@ -54,7 +54,7 @@ export function productJsonLd(p: ProductWithMedia, pricing: Pricing, sold: boole
     sku: p.sku,
     mpn: p.sku,
     description: `${p.summary} ${p.description}`,
-    image: p.images.map((i) => siteUrl(`/media/${i.src}-1600.webp`)),
+    image: p.images.map((i) => mediaUrl(i.src)),
     brand: { '@type': 'Brand', name: STORE.brand },
     category: p.category.name,
     material: p.finish ? `925 sterling silver, ${p.finish.toLowerCase()}` : '925 sterling silver',

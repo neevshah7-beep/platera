@@ -2,8 +2,13 @@ import type { ProductImage } from '@prisma/client'
 
 const WIDTHS = [480, 960, 1600] as const
 
+/** Local files live under /media; uploads in production are full Vercel Blob URLs. */
+export function mediaBase(src: string) {
+  return src.startsWith('http') ? src : `/media/${src}`
+}
+
 function srcSet(src: string, ext: 'avif' | 'webp') {
-  return WIDTHS.map((w) => `/media/${src}-${w}.${ext} ${w}w`).join(', ')
+  return WIDTHS.map((w) => `${mediaBase(src)}-${w}.${ext} ${w}w`).join(', ')
 }
 
 /**
@@ -28,7 +33,7 @@ export function PieceImage({
       <source type="image/avif" srcSet={srcSet(image.src, 'avif')} sizes={sizes} />
       <source type="image/webp" srcSet={srcSet(image.src, 'webp')} sizes={sizes} />
       <img
-        src={`/media/${image.src}-960.webp`}
+        src={`${mediaBase(image.src)}-960.webp`}
         alt={image.alt}
         width={image.width}
         height={image.height}

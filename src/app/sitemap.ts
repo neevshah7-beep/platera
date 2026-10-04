@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 import { POLICIES } from '@/content/policies'
-import { siteUrl } from '@/lib/store'
+import { mediaUrl, siteUrl } from '@/lib/store'
 
 export const revalidate = 3600
 
@@ -37,6 +37,6 @@ export default async function sitemap({ id }: { id: Promise<string> | string }):
     lastModified: p.updatedAt,
     changeFrequency: 'weekly',
     priority: 0.7,
-    images: p.images.map((i) => siteUrl(`/media/${i.src}-1600.webp`)),
+    images: p.images.map((i) => mediaUrl(i.src)),
   }))
 }

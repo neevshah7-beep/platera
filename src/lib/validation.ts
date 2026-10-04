@@ -82,3 +82,62 @@ export function fieldErrors(error: z.ZodError): Record<string, string> {
   }
   return out
 }
+
+const optionalMoney = z
+  .string()
+  .trim()
+  .regex(/^(\d{1,7}(\.\d{1,2})?)?$/, 'Enter an amount in rupees, like 450 or 450.50')
+  .transform((s) => (s ? Math.round(Number(s) * 100) : 0))
+
+const optionalGrams = z
+  .string()
+  .trim()
+  .regex(/^(\d{1,4}(\.\d{1,3})?)?$/, 'Enter grams with up to three decimals, like 24.360')
+  .transform((s) => (s ? Math.round(Number(s) * 1000) : null))
+
+/** Everything on the product edit screen. Weights in grams, money in rupees, as the owner thinks of them. */
+export const productSchema = z
+  .object({
+    name: trimmed(120, 'Give the piece a name.'),
+    slug: z.string().trim().toLowerCase().regex(/^([a-z0-9]+(-[a-z0-9]+)*)?$/, 'Use lowercase words joined by hyphens.').max(100),
+    sku: z.string().trim().toUpperCase().regex(/^PLT-[A-Z]{3}-\d{3}$/, 'The reference looks like PLT-NKS-021.'),
+    categoryId: z.string().min(1, 'Choose a category.'),
+    summary: trimmed(240, 'Write one sentence about the piece.'),
+    description: z.string().trim().max(2000).default(''),
+    status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
+    pricingMode: z.enum(['LIVE', 'FIXED']),
+    metal: z.enum(['SILVER_925', 'GOLD_22K', 'GOLD_18K', 'GOLD_14K', 'PLATINUM_950']),
+    finish: z.string().trim().max(60).default(''),
+    netWeight: optionalGrams,
+    grossWeight: optionalGrams,
+    weightVerified: z.boolean(),
+    makingPct: z.coerce.number().pipe(z.union([z.literal(10), z.literal(15), z.literal(20)], { message: 'Making is 10, 15 or 20 percent.' })),
+    stoneValue: optionalMoney,
+    hallmarkCharge: optionalMoney,
+    fixedPrice: optionalMoney,
+    hallmarked: z.boolean(),
+    huid: z.string().trim().toUpperCase().regex(/^([A-Z0-9]{6})?$/, 'A HUID is six letters and numbers.').default(''),
+    stoneType: z.enum(['NONE', 'CUBIC_ZIRCONIA', 'NATURAL_DIAMOND', 'LAB_GROWN_DIAMOND', 'KUNDAN_GLASS', 'PEARL', 'GEMSTONE', 'MIXED']),
+    stoneDetails: z.string().trim().max(240).default(''),
+    stock: z.coerce.number().int().min(0, 'Stock can’t be below zero.').max(999),
+    availability: z.enum(['IN_STOCK', 'MADE_TO_ORDER']),
+    leadTimeDays: z.string().trim().max(40).default(''),
+    returnable: z.boolean(),
+    returnNote: z.string().trim().max(240).default(''),
+    lengthInches: z.string().trim().regex(/^(\d{1,2}(\.\d)?)?$/, 'Length in inches, like 16 or 16.5').default(''),
+    dimensions: z.string().trim().max(120).default(''),
+    featured: z.boolean(),
+    seoTitle: z.string().trim().max(60, 'Keep the search title under 60 characters.').default(''),
+    seoDescription: z.string().trim().max(155, 'Keep the search description under 155 characters.').default(''),
+  })
+  .superRefine((p, ctx) => {
+    if (p.pricingMode === 'LIVE' && p.weightVerified && !p.netWeight) {
+      ctx.addIssue({ code: 'custom', path: ['netWeight'], message: 'Enter the net weight before marking it as weighed.' })
+    }
+    if (p.pricingMode === 'FIXED' && p.status === 'PUBLISHED' && !p.fixedPrice) {
+      ctx.addIssue({ code: 'custom', path: ['fixedPrice'], message: 'A fixed-price piece needs its price before it can be published.' })
+    }
+    if ((p.stoneType === 'NATURAL_DIAMOND' || p.stoneType === 'LAB_GROWN_DIAMOND') && !p.stoneDetails) {
+      ctx.addIssue({ code: 'custom', path: ['stoneDetails'], message: 'Diamonds need their details: carat, colour, clarity and certificate.' })
+    }
+  })

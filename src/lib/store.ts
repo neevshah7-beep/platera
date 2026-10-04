@@ -42,3 +42,8 @@ export function siteUrl(path = ''): string {
   const base = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
   return `${base}${path}`
 }
+
+/** Absolute URL of a product image derivative, for feeds, sitemaps and structured data. */
+export function mediaUrl(src: string, width: 480 | 960 | 1600 = 1600, ext: 'webp' | 'avif' = 'webp'): string {
+  return src.startsWith('http') ? `${src}-${width}.${ext}` : siteUrl(`/media/${src}-${width}.${ext}`)
+}

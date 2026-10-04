@@ -12,7 +12,7 @@ import { PieceCard } from '@/components/tray/PieceCard'
 import { STONE_LABEL, getCurrentRates, getProduct, isSold, listProducts, metalLine, priceProduct } from '@/lib/catalogue'
 import { formatGrams, formatINRWhole } from '@/lib/pricing/format'
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld'
-import { STORE, siteUrl, whatsappLink } from '@/lib/store'
+import { STORE, mediaUrl, siteUrl, whatsappLink } from '@/lib/store'
 
 export const revalidate = 300
 
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: `/piece/${p.slug}`,
-      images: image ? [{ url: `/media/${image.src}-1600.webp`, width: 1600, alt: image.alt }] : undefined,
+      images: image ? [{ url: mediaUrl(image.src), width: 1600, alt: image.alt }] : undefined,
     },
   }
 }
