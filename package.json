@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
-    "images": "tsx scripts/process-images.ts"
+    "images": "tsx scripts/process-images.ts",
+    "db:dev": "node scripts/dev-db.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -33,6 +34,7 @@
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^5.0.3",
     "dotenv": "^18.0.5",
+    "embedded-postgres": "^16.14.0-beta.17",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
     "tailwindcss": "^4",
@@ -45,6 +47,7 @@
     "@prisma/engines@6.19.3": true,
     "esbuild@0.28.2": true,
     "prisma@6.19.3": true,
-    "unrs-resolver@1.12.2": true
+    "unrs-resolver@1.12.2": true,
+    "@embedded-postgres/windows-x64@16.14.0-beta.17": true
   }
 }
