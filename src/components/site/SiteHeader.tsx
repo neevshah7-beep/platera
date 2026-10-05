@@ -11,8 +11,8 @@ export const NAV = [
 
 export function SiteHeader({ bagCount }: { bagCount: number }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-velvet/95 backdrop-blur-[2px] supports-[backdrop-filter]:bg-velvet/85">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:bg-ivory focus:px-3 focus:py-2 focus:text-velvet">
+    <header className="sticky top-0 z-40 border-b border-rule bg-ground/95 backdrop-blur-[2px] supports-[backdrop-filter]:bg-ground/85">
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:bg-ivory focus:px-3 focus:py-2 focus:text-ground">
         Skip to content
       </a>
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-6 px-[var(--gutter)]">

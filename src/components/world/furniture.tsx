@@ -10,7 +10,7 @@ export function useVelvet(p: WorldPalette, raised = false) {
   const m = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
-        color: raised ? p.velvetRaised : p.velvet,
+        color: raised ? p.groundRaised : p.velvet,
         roughness: 1,
         metalness: 0,
         sheen: 0.7,

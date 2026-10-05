@@ -26,7 +26,7 @@ export function ImageManager({ productId, sku, images }: { productId: string; sk
         {images.map((img) => (
           <li key={img.id} className="space-y-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`${mediaBase(img.src)}-480.webp`} alt={img.alt} className="aspect-square w-full bg-velvet object-cover" />
+            <img src={`${mediaBase(img.src)}-480.webp`} alt={img.alt} className="aspect-square w-full bg-ground object-cover" />
             <p className="num text-step--1 text-ink-light-muted">{img.kind === 'PHOTO' ? `Photo ${img.index}` : img.kind === 'TURNTABLE' ? `Turntable ${img.index}` : img.kind.toLowerCase()}</p>
             <form action={setImageAlt} className="flex gap-2">
               <input type="hidden" name="imageId" value={img.id} />

@@ -2,43 +2,43 @@
 
 /* ─── Tokens. The only place a colour value is written. ──────────────── */
 :root {
-  /* Grounds: Emerald Vault. Deep green velvet, like the inside of a jewellery box. */
-  --velvet: #0b2420;
-  --velvet-raised: #12332d;
-  --ivory: #f3ede2;
+  /* Grounds: Ivory Gallery. Warm ivory walls, white marble, daylight. */
+  --ground: #f4efe7;
+  --ground-raised: #eae3d7;
+  --ivory: #fbf8f3;
 
   /* Type */
-  --ink-on-dark: #f3ede2;
-  --ink-on-dark-muted: #a9b8b0;
-  --ink-on-light: #0b2420;
-  --ink-on-light-muted: #4f5f58;
+  --ink-on-dark: #1c1b19;
+  --ink-on-dark-muted: #655e55;
+  --ink-on-light: #1c1b19;
+  --ink-on-light-muted: #5e584f;
 
   /* Metal. Silver is the house metal; gold appears only on gold and gold-plated pieces.
      Neither is ever used as a flat fill: only as a hairline or a moving three-stop surface. */
-  --argent: #c9cdd0;
-  --argent-shadow: #7c8287;
-  --argent-light: #f4f6f7;
-  --gold: #c2a06a;
-  --gold-shadow: #7a5f33;
-  --gold-light: #ebd6a8;
+  --argent: #7a7f84;
+  --argent-shadow: #4f5357;
+  --argent-light: #e6e8ea;
+  --gold: #a8844f;
+  --gold-shadow: #6f5530;
+  --gold-light: #e9d5ac;
 
-  /* Ruby: bridal and critical UI only. ruby-bright is the readable form on velvet. */
-  --ruby: #7a1f2e;
-  --ruby-bright: #f0a3ae;
+  /* Ruby: bridal and critical UI only. */
+  --ruby: #8e2436;
+  --ruby-bright: #8e2436;
 
   /* Hairlines */
-  --rule-on-dark: rgb(201 205 208 / 0.2);
-  --rule-on-light: rgb(11 36 32 / 0.16);
+  --rule-on-dark: rgb(28 27 25 / 0.14);
+  --rule-on-light: rgb(28 27 25 / 0.16);
 
-  --focus: #ebd6a8;
+  --focus: #1f4d46;
 
   /* The 3D house. Read by the WebGL world at runtime (components/world/palette.ts). */
-  --lamp: #fff4e3;            /* warm jeweller's lamp */
+  --lamp: #fff8ee;            /* warm jeweller's lamp */
   --spec-silver: #eef2f5;     /* highlight tint on silver */
   --spec-gold: #e2c48c;       /* highlight tint on gold plating */
-  --stone: #0f2b26;           /* green marble of the plinths and counter */
-  --velvet-sheen: #2c5c50;    /* the soft lighter green velvet shows at grazing angles */
-  --shadow-ink: #020a08;      /* contact shadows on velvet */
+  --stone: #e4ded4;           /* green marble of the plinths and counter */
+  --velvet-sheen: #ffffff;    /* the soft lighter green velvet shows at grazing angles */
+  --shadow-ink: #5a5248;      /* contact shadows on velvet */
 
   /* Light Moods: the lamp's colour for each occasion (product page). */
   --mood-daylight: #f4f7ff;   /* north window, late morning */
@@ -69,8 +69,8 @@
 }
 
 @theme inline {
-  --color-velvet: var(--velvet);
-  --color-velvet-raised: var(--velvet-raised);
+  --color-ground: var(--ground);
+  --color-ground-raised: var(--ground-raised);
   --color-ivory: var(--ivory);
   --color-ink: var(--ink-on-dark);
   --color-ink-muted: var(--ink-on-dark-muted);
@@ -102,7 +102,7 @@
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
 html {
-  background: var(--velvet);
+  background: var(--ground);
   color: var(--ink-on-dark);
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
@@ -112,7 +112,7 @@ body {
   font-size: var(--step-0);
   line-height: 1.6;
   font-weight: 400;
-  background: var(--velvet);
+  background: var(--ground);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -125,14 +125,14 @@ h1, h2, h3, .display {
 }
 p { text-wrap: pretty; }
 
-::selection { background: var(--argent); color: var(--velvet); }
+::selection { background: var(--gold-light); color: var(--ink-on-dark); }
 
 :focus-visible {
   outline: 1.5px solid var(--focus);
   outline-offset: 3px;
   border-radius: 1px;
 }
-.ground-light :focus-visible { outline-color: var(--velvet); }
+.ground-light :focus-visible { outline-color: var(--ground); }
 
 /* Every price, weight, purity and measurement. */
 .num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
@@ -140,7 +140,7 @@ p { text-wrap: pretty; }
 .measure { max-width: var(--measure); }
 
 /* A light section: ivory ground, velvet type. */
-.ground-light { background: var(--ivory); color: var(--ink-on-light); }
+.ground-light { background: var(--ground-raised); color: var(--ink-on-light); }
 
 /* ─── Metal ──────────────────────────────────────────────────────────────
    A hairline that behaves like polished metal: three tonal stops with a highlight
@@ -217,11 +217,11 @@ p { text-wrap: pretty; }
   cursor: pointer;
   text-align: center;
 }
-.btn-primary { background: var(--ivory); color: var(--velvet); }
-.btn-primary:hover { background: var(--argent-light); }
+.btn-primary { background: var(--ink-on-dark); color: var(--ground); }
+.btn-primary:hover { background: var(--focus); }
 .btn-quiet { border-color: var(--rule-on-dark); color: var(--ink-on-dark); }
 .btn-quiet:hover { border-color: var(--argent); }
-.ground-light .btn-primary { background: var(--velvet); color: var(--ivory); }
+.ground-light .btn-primary { background: var(--ink-on-dark); color: var(--ground); }
 .ground-light .btn-quiet { border-color: var(--rule-on-light); color: var(--ink-on-light); }
 .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
@@ -259,12 +259,12 @@ p { text-wrap: pretty; }
 html[data-world='on'] body { background: transparent; }
 
 /* A section drawn over the world that needs a calm, solid ground (long text, forms). */
-.ground-solid { background: var(--velvet); position: relative; }
+.ground-solid { background: var(--ground); position: relative; }
 
 /* Text set over the 3D scene: a soft pool of velvet behind it keeps it readable
    wherever the camera is, without a visible box. */
 .over-world {
-  text-shadow: 0 1px 18px color-mix(in srgb, var(--velvet) 90%, transparent), 0 0 2px color-mix(in srgb, var(--velvet) 60%, transparent);
+  text-shadow: 0 1px 18px color-mix(in srgb, var(--ground) 85%, transparent), 0 0 2px color-mix(in srgb, var(--ground) 70%, transparent);
 }
 
 /* The page transition: one pass of light across the screen. */
@@ -277,10 +277,34 @@ html[data-world='on'] body { background: transparent; }
   background: linear-gradient(
     100deg,
     transparent 30%,
-    color-mix(in srgb, var(--argent-light) 5%, transparent) 42%,
-    color-mix(in srgb, var(--argent-light) 22%, transparent) 50%,
-    color-mix(in srgb, var(--gold-light) 8%, transparent) 56%,
+    color-mix(in srgb, var(--ivory) 30%, transparent) 42%,
+    color-mix(in srgb, var(--ivory) 75%, transparent) 50%,
+    color-mix(in srgb, var(--gold-light) 25%, transparent) 56%,
     transparent 70%
   );
   animation: sheen-wipe 1.15s var(--ease-turn) both;
+}
+
+/* The hero render drifts up and settles slightly closer as the page scrolls away from
+   it: a camera easing back, not a parallax trick. Scroll-driven, so no JavaScript. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-drift {
+      animation: hero-drift linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+@keyframes hero-drift {
+  to { transform: translateY(-7%) scale(1.035); opacity: 0.85; }
+}
+
+/* The hero render dissolves into the page at its edges, so no rectangle is ever visible.
+   (A mask is an alpha ramp, not a colour: black here means "fully shown".) */
+.hero-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 72%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 72%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
+  mask-composite: intersect;
 }

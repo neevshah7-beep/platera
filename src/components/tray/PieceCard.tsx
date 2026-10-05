@@ -25,15 +25,18 @@ export function PieceCard({
   return (
     <article className="group">
       <Link href={`/piece/${product.slug}`} className="block" aria-label={product.name}>
-        <div className="overflow-hidden bg-velvet-raised">
+        {/* A stone-coloured panel, like a jeweller's display card; the cut-out piece rests on it. */}
+        <div className="relative aspect-[4/5] overflow-hidden bg-ground-raised">
           {image && (
             <PieceImage
               image={image}
               sizes={sizes}
               priority={priority}
-              className={`block transition-[filter] duration-[var(--dur-slow)] ease-[var(--ease-settle)] group-hover:brightness-[1.08] ${sold ? 'opacity-70' : ''}`}
+              fit="contain"
+              className={`absolute inset-[9%] block transition-transform duration-[var(--dur-slow)] ease-[var(--ease-settle)] group-hover:scale-[1.035] ${sold ? 'opacity-60' : ''}`}
             />
           )}
+          {sold && <span className="absolute left-4 top-4 text-step--1 text-ink-muted">Sold</span>}
         </div>
         <div className="mt-4 flex items-baseline justify-between gap-4">
           <h3 className="font-display text-step-1 tracking-[-0.015em]">{product.name}</h3>

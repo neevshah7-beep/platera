@@ -84,7 +84,7 @@ export function AppointmentForm({
         <label htmlFor="f-date" className="label mt-5">Day</label>
         <select id="f-date" name="date" className="field" value={date} onChange={(ev) => setDate(ev.target.value)} aria-invalid={Boolean(e.date)}>
           {dates.map((d) => (
-            <option key={d.value} value={d.value} className="bg-velvet">{d.label}</option>
+            <option key={d.value} value={d.value} className="bg-ground">{d.label}</option>
           ))}
         </select>
         {e.date && <p className="mt-1 text-step--1 text-ruby-bright">{e.date}</p>}
@@ -94,7 +94,7 @@ export function AppointmentForm({
           {slots.map((s) => {
             const busy = taken.includes(`${date} ${s}`)
             return (
-              <label key={s} className={`num flex min-h-12 cursor-pointer items-center justify-center border border-rule text-step--1 has-[:checked]:border-argent has-[:checked]:bg-velvet-raised ${busy ? 'cursor-not-allowed opacity-35 line-through' : ''}`}>
+              <label key={s} className={`num flex min-h-12 cursor-pointer items-center justify-center border border-rule text-step--1 has-[:checked]:border-argent has-[:checked]:bg-ground-raised ${busy ? 'cursor-not-allowed opacity-35 line-through' : ''}`}>
                 <input type="radio" name="slot" value={s} disabled={busy} defaultChecked={v?.slot === s} className="sr-only" />
                 {hour12(s)}
               </label>

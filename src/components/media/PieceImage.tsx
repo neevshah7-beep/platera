@@ -13,7 +13,8 @@ function srcSet(src: string, ext: 'avif' | 'webp') {
 
 /**
  * A product photograph from our own pipeline (scripts/process-images.ts):
- * AVIF then WebP, three widths, intrinsic size reserved, 20px blur underneath.
+ * AVIF then WebP with transparency (the piece is cut out), three widths,
+ * intrinsic size reserved so nothing shifts as it loads.
  * We don't route these through next/image because they're already optimised,
  * and doing it twice costs quality and build time.
  */
@@ -22,11 +23,14 @@ export function PieceImage({
   sizes,
   priority = false,
   className = '',
+  fit = 'natural',
 }: {
   image: Pick<ProductImage, 'src' | 'width' | 'height' | 'alt' | 'lqip'>
   sizes: string
   priority?: boolean
   className?: string
+  /** 'natural' keeps the photo's own proportions; 'contain' centres it inside a fixed panel. */
+  fit?: 'natural' | 'contain'
 }) {
   return (
     <picture className={className}>
@@ -40,8 +44,7 @@ export function PieceImage({
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : 'auto'}
         decoding={priority ? 'sync' : 'async'}
-        className="block h-auto w-full bg-velvet object-cover"
-        style={{ backgroundImage: `url(${image.lqip})`, backgroundSize: 'cover' }}
+        className={fit === 'contain' ? 'block h-full w-full object-contain' : 'block h-auto w-full'}
       />
     </picture>
   )

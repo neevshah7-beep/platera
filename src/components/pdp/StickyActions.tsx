@@ -33,7 +33,7 @@ export function StickyActions({
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-velvet/95 px-[var(--gutter)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 transition-transform duration-[var(--dur-calm)] ease-[var(--ease-settle)] lg:hidden ${show ? 'translate-y-0' : 'translate-y-full'}`}
+      className={`fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-ground/95 px-[var(--gutter)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 transition-transform duration-[var(--dur-calm)] ease-[var(--ease-settle)] lg:hidden ${show ? 'translate-y-0' : 'translate-y-full'}`}
       aria-hidden={!show}
       inert={!show}
     >

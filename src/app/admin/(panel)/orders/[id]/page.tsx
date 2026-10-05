@@ -45,7 +45,7 @@ export default async function OrderAdmin({ params }: { params: Promise<{ id: str
             ))}
             <li className="flex justify-between border-t border-rule-light py-3 text-ink-light-muted"><span>Of which GST</span><span>{formatINR(order.gstPaise)}</span></li>
             <li className="flex justify-between border-t border-rule-light py-3 text-ink-light-muted"><span>Delivery</span><span>{formatINR(order.shippingPaise)}</span></li>
-            <li className="flex justify-between border-t border-velvet py-3 font-display text-step-2"><span>Paid</span><span>{formatINR(order.totalPaise)}</span></li>
+            <li className="flex justify-between border-t border-ground py-3 font-display text-step-2"><span>Paid</span><span>{formatINR(order.totalPaise)}</span></li>
           </ul>
           {order.giftMessage && <p className="mt-4">Gift card: “{order.giftMessage}”</p>}
           {order.hidePrices && <p className="mt-2 font-medium">Leave prices out of the parcel.</p>}

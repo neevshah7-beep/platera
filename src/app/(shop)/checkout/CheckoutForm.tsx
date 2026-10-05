@@ -58,7 +58,7 @@ export function CheckoutForm({ summary, conditions }: { summary: Summary; condit
               <label htmlFor="f-state" className="label">State</label>
               <select id="f-state" name="state" className="field" key={v?.state} defaultValue={v?.state ?? 'Maharashtra'} aria-invalid={Boolean(e['address.state'])}>
                 {INDIAN_STATES.map((s) => (
-                  <option key={s} value={s} className="bg-velvet">{s}</option>
+                  <option key={s} value={s} className="bg-ground">{s}</option>
                 ))}
               </select>
               {e['address.state'] && <p className="mt-1 text-step--1 text-ruby-bright">{e['address.state']}</p>}

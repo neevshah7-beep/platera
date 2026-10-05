@@ -24,18 +24,18 @@ export function renderEmail(c: EmailContent): { html: string; text: string } {
   const rows = (c.rows ?? [])
     .map(
       ([k, v]) =>
-        `<tr><td style="padding:10px 0;border-top:1px solid #d8d1c4;color:#4f5f58">${esc(k)}</td><td style="padding:10px 0;border-top:1px solid #d8d1c4;text-align:right;font-variant-numeric:tabular-nums">${esc(v)}</td></tr>`,
+        `<tr><td style="padding:10px 0;border-top:1px solid #d8d1c4;color:#655e55">${esc(k)}</td><td style="padding:10px 0;border-top:1px solid #d8d1c4;text-align:right;font-variant-numeric:tabular-nums">${esc(v)}</td></tr>`,
     )
     .join('')
-  const html = `<!doctype html><html lang="en"><body style="margin:0;background:#f3ede2;color:#0b2420;font-family:Georgia,serif">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3ede2"><tr><td align="center" style="padding:40px 20px">
+  const html = `<!doctype html><html lang="en"><body style="margin:0;background:#f4efe7;color:#1c1b19;font-family:Georgia,serif">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe7"><tr><td align="center" style="padding:40px 20px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
 <tr><td style="font-size:26px;padding-bottom:28px">Platera</td></tr>
-<tr><td style="border-top:1px solid #0b2420;padding-top:28px;font-size:28px;line-height:1.15">${esc(c.heading)}</td></tr>
+<tr><td style="border-top:1px solid #1c1b19;padding-top:28px;font-size:28px;line-height:1.15">${esc(c.heading)}</td></tr>
 ${c.paragraphs.map((p) => `<tr><td style="padding-top:16px;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6">${esc(p)}</td></tr>`).join('')}
 ${rows ? `<tr><td style="padding-top:24px"><table role="presentation" width="100%" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">${rows}</table></td></tr>` : ''}
-${c.cta ? `<tr><td style="padding-top:28px"><a href="${esc(c.cta.href)}" style="display:inline-block;background:#0b2420;color:#f3ede2;padding:14px 22px;font-family:Helvetica,Arial,sans-serif;font-size:15px;text-decoration:none">${esc(c.cta.label)}</a></td></tr>` : ''}
-<tr><td style="padding-top:40px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#4f5f58;line-height:1.6">${esc(STORE.brand)}, ${esc(STORE.collaboration.toLowerCase())}.<br>${esc(STORE.address.line1)}, ${esc(STORE.address.line2)}, ${esc(STORE.address.city)} ${esc(STORE.address.postalCode)} · ${esc(STORE.phoneDisplay)}<br>Sold and invoiced by ${esc(STORE.legalName)}, GSTIN ${esc(STORE.gstin)}</td></tr>
+${c.cta ? `<tr><td style="padding-top:28px"><a href="${esc(c.cta.href)}" style="display:inline-block;background:#1c1b19;color:#f4efe7;padding:14px 22px;font-family:Helvetica,Arial,sans-serif;font-size:15px;text-decoration:none">${esc(c.cta.label)}</a></td></tr>` : ''}
+<tr><td style="padding-top:40px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#655e55;line-height:1.6">${esc(STORE.brand)}, ${esc(STORE.collaboration.toLowerCase())}.<br>${esc(STORE.address.line1)}, ${esc(STORE.address.line2)}, ${esc(STORE.address.city)} ${esc(STORE.address.postalCode)} · ${esc(STORE.phoneDisplay)}<br>Sold and invoiced by ${esc(STORE.legalName)}, GSTIN ${esc(STORE.gstin)}</td></tr>
 </table></td></tr></table></body></html>`
   const text = [
     c.heading,

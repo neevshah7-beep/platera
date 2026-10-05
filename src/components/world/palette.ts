@@ -8,7 +8,7 @@ import * as THREE from 'three'
  */
 export type WorldPalette = {
   velvet: THREE.Color
-  velvetRaised: THREE.Color
+  groundRaised: THREE.Color
   velvetSheen: THREE.Color
   stone: THREE.Color
   silver: THREE.Color
@@ -26,8 +26,8 @@ export type WorldPalette = {
 }
 
 const TOKENS: Record<keyof WorldPalette, string> = {
-  velvet: '--velvet',
-  velvetRaised: '--velvet-raised',
+  velvet: '--ground',
+  groundRaised: '--ground-raised',
   velvetSheen: '--velvet-sheen',
   stone: '--stone',
   silver: '--argent',

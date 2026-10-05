@@ -40,7 +40,7 @@ function Check({ name, label, defaults, state }: { name: string; label: string; 
   const checked = state?.values ? state.values[name] === 'on' : Boolean(defaults[name])
   return (
     <label className="flex items-start gap-3">
-      <input type="checkbox" name={name} defaultChecked={checked} className="mt-1.5 size-4 accent-[var(--velvet)]" />
+      <input type="checkbox" name={name} defaultChecked={checked} className="mt-1.5 size-4 accent-[var(--ground)]" />
       <span>{label}</span>
     </label>
   )

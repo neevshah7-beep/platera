@@ -53,7 +53,7 @@ export function PayLauncher(p: Props) {
       name: 'Platera Jewellers',
       description: `Order ${p.orderNumber}`,
       prefill: p.prefill,
-      theme: { color: '#0b2420' },
+      theme: { color: '#1c1b19' },
       handler: (r: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => void verify(r),
       modal: { ondismiss: () => setStatus('Payment window closed. Nothing has been charged. You can open it again.') },
     })

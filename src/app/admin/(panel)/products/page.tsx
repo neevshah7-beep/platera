@@ -84,7 +84,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
                     <label className="sr-only" htmlFor={`w-${p.id}`}>Net weight in grams</label>
                     <input id={`w-${p.id}`} name="netWeight" inputMode="decimal" defaultValue={p.netWeightMg ? (p.netWeightMg / 1000).toFixed(3) : ''} placeholder="grams" className="field min-h-9 w-24 py-1" />
                     <label className="flex items-center gap-1">
-                      <input type="checkbox" name="weightVerified" defaultChecked={p.weightVerified} className="accent-[var(--velvet)]" /> Weighed
+                      <input type="checkbox" name="weightVerified" defaultChecked={p.weightVerified} className="accent-[var(--ground)]" /> Weighed
                     </label>
                     <button className="link">Save</button>
                   </form>

@@ -184,7 +184,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
       {priced && pricing.state === 'PRICED' && (
         <section data-world-section="1" aria-labelledby="weighing-heading" className="over-world relative min-h-[160svh]">
           <div className="sticky top-16 mx-auto flex min-h-[calc(100svh-4rem)] max-w-[1440px] items-end px-[var(--gutter)] pb-10 lg:items-center lg:pb-0">
-            <div className="w-full max-w-md rounded-[2px] bg-velvet/80 p-6 backdrop-blur-[1px] lg:bg-transparent lg:p-0">
+            <div className="w-full max-w-md rounded-[2px] bg-ground/80 p-6 backdrop-blur-[1px] lg:bg-transparent lg:p-0">
               <h2 id="weighing-heading" className="text-step-4">Weighed, then priced</h2>
               <p className="mt-3 text-ink-muted">
                 {product.netWeightMg && product.weightVerified
@@ -204,7 +204,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
         <h2 className="text-step-3">Photographs</h2>
         <ul className="-mx-[var(--gutter)] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0">
           {product.images.map((image) => (
-            <li key={image.id} className="w-[86vw] shrink-0 snap-center bg-velvet-raised md:w-auto">
+            <li key={image.id} className="w-[86vw] shrink-0 snap-center bg-ground-raised md:w-auto">
               <PieceImage image={image} sizes="(min-width: 768px) 46vw, 86vw" />
             </li>
           ))}
