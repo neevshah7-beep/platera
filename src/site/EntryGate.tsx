@@ -33,6 +33,7 @@ export function EntryGate() {
 
   useEffect(() => {
     if (entered) {
+      document.documentElement.dataset.entered = '1'
       scroller.lenis?.start()
       const t = setTimeout(() => setGone(true), 1600)
       return () => clearTimeout(t)

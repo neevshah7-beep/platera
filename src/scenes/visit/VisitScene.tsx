@@ -65,7 +65,7 @@ export function VisitScene({
   const day = days[index]
 
   return (
-    <section ref={section} aria-labelledby="visit-title" className="relative flex flex-col overflow-hidden md:block md:h-[100svh] md:min-h-[680px]">
+    <section id="chapter-counter" ref={section} aria-labelledby="visit-title" className="relative flex flex-col overflow-hidden md:block md:h-[100svh] md:min-h-[680px]">
       <div className="visit-stage relative h-[64svh] md:absolute md:inset-0 md:h-auto">
       <canvas
         ref={canvas}

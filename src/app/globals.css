@@ -379,3 +379,25 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 @media (max-width: 767px) {
   .visit-stage { -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent); mask-image: linear-gradient(to bottom, #000 78%, transparent); }
 }
+
+/* ─── Chapter rail ─────────────────────────────────────────────────────────── */
+.chapter-rail { position: fixed; left: 0; right: 0; top: 4rem; z-index: 39; padding: 0 var(--gutter); opacity: 0; transform: translateY(-8px); transition: opacity 900ms var(--ease-entry) 600ms, transform 900ms var(--ease-entry) 600ms; pointer-events: none; }
+.chapter-rail[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
+.chapter-rail ol { display: flex; gap: clamp(0.8rem, 0.2rem + 1.6vw, 2.2rem); max-width: 1600px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+.chapter-rail ol::-webkit-scrollbar { display: none; }
+.chapter-rail button { display: flex; align-items: baseline; gap: 0.45rem; padding: 0.55rem 0; white-space: nowrap; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--espresso-muted); opacity: 0.55; transition: opacity var(--dur-ui) var(--ease-entry), color var(--dur-ui) var(--ease-entry); }
+.chapter-rail button:hover { opacity: 1; }
+.chapter-rail button[data-past='true'] { opacity: 0.8; }
+.chapter-rail button[data-on='true'] { opacity: 1; color: var(--espresso); }
+.chapter-n { font-size: 0.66rem; color: var(--gold-shadow); }
+.chapter-rail button[data-on='true'] .chapter-label { background: linear-gradient(100deg, var(--gold-shadow), var(--gold) 40%, var(--gold-bright) 50%, var(--gold) 60%, var(--gold-shadow)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.chapter-line { display: block; height: 1px; max-width: 1600px; margin: 0 auto; background: linear-gradient(90deg, var(--gold-shadow), var(--gold), var(--gold-bright)); transform-origin: 0 50%; }
+@media (max-width: 767px) { .chapter-label { display: none; } .chapter-rail button[data-on='true'] .chapter-label { display: inline; } }
+
+/* ─── The treasury ─────────────────────────────────────────────────────────── */
+.treasury-copy { left: 0; top: 13svh; max-width: 30rem; }
+@media (min-width: 768px) { .treasury-copy { left: 2vw; top: 16svh; } }
+.treasury-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.4rem); line-height: 0.98; }
+.treasury-rates { margin-top: 1.6rem; display: flex; gap: 2.2rem; }
+.treasury-rates dd { font-size: var(--step-3); margin-top: 0.2rem; }
+.treasury-hint { position: absolute; left: 50%; bottom: 5svh; transform: translateX(-50%); white-space: nowrap; }

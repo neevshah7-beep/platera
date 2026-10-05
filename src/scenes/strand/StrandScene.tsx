@@ -74,7 +74,7 @@ export function StrandScene({ promises }: { promises: StrandPromise[] }) {
   }, [])
 
   return (
-    <section ref={section} aria-labelledby="strand-title" className="strand relative" style={{ height: `${(PROMISES + 1) * 100}svh` }}>
+    <section id="chapter-promises" ref={section} aria-labelledby="strand-title" className="strand relative" style={{ height: `${(PROMISES + 1) * 100}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full touch-pan-y" />
         <div className="strand-eyebrow pointer-events-none absolute px-[var(--gutter)]">

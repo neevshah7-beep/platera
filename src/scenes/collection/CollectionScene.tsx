@@ -66,7 +66,7 @@ export function CollectionScene({ pieces, total }: { pieces: (CollectionPiece & 
 
   const piece = label ? pieces.find((p) => p.slug === label.slug) : null
   return (
-    <section ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(300, pieces.length * 60)}svh` }}>
+    <section id="chapter-collection" ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(300, pieces.length * 60)}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas
           ref={canvas}
