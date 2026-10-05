@@ -90,3 +90,10 @@ and/or built live in WebGL, and each answers the pointer or touch in its own way
 - **Stone setting**: claws close over a stone one by one.
 - **Gold rate**: today's rate set in molten digits that cool and set.
 - **Diamond light**: rainbow fire from a stone follows the pointer across the page.
+
+### Checkout ceremony (client idea, 2026-10-05, to build last)
+On "Buy now": a packing scene. Two Platera artisans (gloved hands at the bench) take the exact
+piece chosen (its real photo) into its case, box it, and wrap it in the house paper and ribbon.
+The parcel then sets off on its journey (delivery date shown: ship, or a route across India to
+the visitor's pin code — client to choose), and payment arrives as a signed-and-sealed moment
+rather than a plain form. Brainstorm further signature moments of this kind.
