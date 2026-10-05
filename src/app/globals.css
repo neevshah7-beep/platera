@@ -256,20 +256,11 @@ p { text-wrap: pretty; }
   display: grid;
   place-items: center;
   background: radial-gradient(120% 90% at 50% 40%, var(--cream) 0%, var(--champagne) 55%, var(--honey) 130%);
-  clip-path: inset(0 0 0 0);
-  transition: clip-path 1500ms var(--ease-camera);
 }
-.entry-gate::after { /* the bright edge that leads the lift */
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--gold-white), var(--gold-bright), transparent);
-  opacity: 0;
-  transition: opacity 400ms;
-}
-.entry-gate[data-entered='true'] { clip-path: inset(0 0 100% 0); pointer-events: none; }
-.entry-gate[data-entered='true']::after { opacity: 1; }
+/* Entering: the cloud rolls in over the veil, which dissolves beneath it. */
+.entry-gate[data-entered='true'] { opacity: 0; pointer-events: none; transition: opacity 500ms ease 300ms; }
+.entry-gate[data-entered='true'] .entry-inner { transform: scale(1.06); filter: blur(6px); transition: transform 800ms var(--ease-entry), filter 600ms; }
+.cloud-veil { position: fixed; inset: 0; z-index: 61; width: 100%; height: 100%; pointer-events: none; }
 .entry-inner { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; text-align: center; padding: 0 var(--gutter); }
 .entry-word { font-size: clamp(3.6rem, 1.5rem + 9vw, 9rem); line-height: 0.9; letter-spacing: -0.02em; background-size: 300% 100%; animation: entry-sheen 4.5s var(--ease-camera) infinite alternate; }
 @keyframes entry-sheen { from { background-position: 0% 0; } to { background-position: 100% 0; } }

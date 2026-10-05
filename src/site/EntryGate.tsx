@@ -1,13 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { CloudVeil } from './CloudVeil'
 import { scroller } from './SmoothScroll'
 import { entry, useEntry } from './entry'
 
 /**
  * THE ENTRY. A champagne veil with the wordmark. A gold hairline fills with the real load
- * progress of the first scene; when it is ready the invitation appears. Entering lifts the
- * veil away upward with a bright edge of light, and the fall begins. Scroll is held until
+ * progress of the first scene; when it is ready the invitation appears. Entering fills the
+ * screen with sunlit cloud (CloudVeil); it parts, and the ring falls out of the sky. Scroll is held until
  * then, so nobody scrolls past a scene that hasn't arrived.
  */
 export function EntryGate() {
@@ -48,14 +49,15 @@ export function EntryGate() {
         localStorage.setItem('platera:entered', '1')
       } catch {}
       scroller.lenis?.start()
-      const t = setTimeout(() => setGone(true), 1600)
-      return () => clearTimeout(t)
     }
     scroller.lenis?.stop()
   }, [entered])
 
+  const done = useCallback(() => setGone(true), [])
   if (gone || returning) return null
   return (
+    <>
+    {entered && <CloudVeil onDone={done} />}
     <div className="entry-gate" data-entered={entered} aria-hidden={entered}>
       <div className="entry-inner">
         <p className="eyebrow">Hallmarked 925 · Gorai 1</p>
@@ -74,5 +76,6 @@ export function EntryGate() {
         </button>
       </div>
     </div>
+    </>
   )
 }

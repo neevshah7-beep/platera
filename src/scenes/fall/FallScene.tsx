@@ -96,8 +96,9 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       let f = 0
       if (enteredRef.current) {
         // Returning visitors find the ring already resting on the silk.
-        if (introStart < 0) introStart = entry.get().returning ? now - (LANDED / FPS) * 1000 : now
-        const played = reduced ? LANDED : Math.min(LANDED, ((now - introStart) / 1000) * FPS)
+        // The ring begins its fall as the clouds start to part (CloudVeil).
+        if (introStart < 0) introStart = entry.get().returning ? now - (LANDED / FPS) * 1000 : now + 1150
+        const played = reduced ? LANDED : Math.max(0, Math.min(LANDED, ((now - introStart) / 1000) * FPS))
         const sec = section.current!
         const scrolled = Math.max(0, -sec.getBoundingClientRect().top) / Math.max(1, innerHeight)
         const scrub = Math.min(1, scrolled / 1.1)
