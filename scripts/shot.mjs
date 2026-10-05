@@ -65,7 +65,20 @@ for (const run of runs) {
   })
   await page.waitForTimeout(1500)
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
-  if (flags.includes('--frames')) {
+  if (flags.includes('--stations')) {
+    // Stop at each station of the homepage walk: centre its anchor, let the camera settle.
+    const ys = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-anchor]')).map((el) => {
+        const r = el.getBoundingClientRect()
+        return Math.max(0, r.top + window.scrollY + r.height / 2 - window.innerHeight / 2)
+      }),
+    )
+    for (let i = 0; i < ys.length; i++) {
+      await page.evaluate((y) => window.scrollTo(0, y), Math.round(ys[i]))
+      await page.waitForTimeout(3200)
+      await page.screenshot({ path: `${outDir}/${slug}-${run.name}-s${i}.png` })
+    }
+  } else if (flags.includes('--frames')) {
     // The 3D world is fixed behind the page, so a full-page capture can't show it.
     // Instead, capture the viewport at several scroll positions as the camera moves.
     const h = await page.evaluate(() => document.body.scrollHeight)

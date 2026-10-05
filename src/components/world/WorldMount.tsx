@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useWorld } from './store'
 
@@ -22,6 +23,8 @@ function webglAvailable(): boolean {
  */
 export function WorldMount() {
   const [on, setOn] = useState(false)
+  // The homepage has its own walk-through hall (src/experience); this world serves the other pages.
+  const home = usePathname() === '/'
   useEffect(() => {
     if (!webglAvailable()) return
     const start = () => setOn(true)
@@ -32,7 +35,7 @@ export function WorldMount() {
   useEffect(() => {
     document.documentElement.dataset.world = on ? 'on' : 'off'
   }, [on])
-  return on ? <World /> : null
+  return on && !home ? <World /> : null
 }
 
 /**
