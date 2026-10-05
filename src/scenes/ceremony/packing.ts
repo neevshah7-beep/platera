@@ -2,20 +2,29 @@ import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { buildCarton, CARTON, FLAP_OPEN, TISSUE_OPEN_ANGLE } from './courier'
 
 /**
- * CHECKOUT, ACT I · PREPARED FOR YOU. The pieces the visitor has just bought, their own
- * photographs, are lowered one after another onto espresso velvet in an open Platera case
- * on the counter; the satin-lined lid swings closed on a soft spring, and a gold band is
- * drawn around the case to seal it. Plays once (about 6 s), then reports done.
- * Units are centimetres.
+ * BEFORE CHECKOUT · PREPARED AND PACKED. Two acts on the counter, one camera:
+ *   I   The case. The pieces the visitor has just bought, their own photographs, are
+ *       lowered onto espresso velvet in an open Platera case; the satin-lined lid swings
+ *       closed on a soft spring, and a gold band is drawn around it.
+ *   II  The courier box. A Platera kraft carton slides in beside it, flaps open, lined
+ *       with ivory tissue. The case is lifted across and set inside; the tissue folds
+ *       over it and is sealed with a gold P; the flaps close, short then long; Platera
+ *       tape is drawn along the seam and down the ends; the shipping label is pressed on.
+ * (The gift box is a different thing, and stays on the homepage.)
+ * Plays once, reports each act (onPhase) and the end (onDone), then keeps rendering the
+ * packed carton under a slow drifting camera. Units are centimetres.
  */
 export type PackPiece = { base: string; width: number; height: number; maps: boolean }
-export type PackingApi = { resize: () => void; dispose: () => void }
+export type PackPhase = 'case' | 'courier'
+export type PackingApi = { resize: () => void; skip: () => void; dispose: () => void }
 
-export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], onDone: () => void): PackingApi {
+export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], onDone: () => void, onPhase?: (p: PackPhase) => void): PackingApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
   const gate = visibleGate(canvas)
+  renderer.localClippingEnabled = true
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.85
@@ -109,20 +118,43 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     return m
   })
 
-  const key = new THREE.SpotLight(0xfff1dc, 3200, 200, 0.6, 0.7, 1.6)
+  const key = new THREE.SpotLight(0xfff1dc, 3200, 260, 0.62, 0.7, 1.6)
   key.position.set(-30, 70, 40)
   key.castShadow = true
   key.shadow.mapSize.set(2048, 2048)
   scene.add(key, key.target)
   scene.add(new THREE.HemisphereLight(0xfff4e0, 0x6a4420, 0.25))
 
+  // The courier carton waits off to the right; it slides in once the case is sealed.
+  const carton = buildCarton()
+  const CX = 62
+  carton.group.position.set(CX + 150, 0, 0)
+  scene.add(carton.group)
+  document.fonts?.ready.then(() => carton.redraw())
+  const [tapePlane] = carton.tapeMat.clippingPlanes!
+  const [tabPlane] = carton.tabMat.clippingPlanes!
+  const { W, H, T } = CARTON
+
   // Timeline (seconds).
   const T_PIECE = 0.9, PER = 1.3
   const T_LID = T_PIECE + n * PER + 0.8
   const T_BAND = T_LID + 2.0
-  const T_END = T_BAND + 1.8
+  const T2 = T_BAND + 1.5 // act II: the courier box
+  const T_SLIDE = T2, T_LIFT = T2 + 1.2, T_TISSUE = T2 + 3.2, T_SEAL = T2 + 4.3, T_SHORT = T2 + 4.9, T_LONG = T2 + 5.5, T_TAPE = T2 + 6.4, T_TAB = T2 + 7.3, T_LABEL = T2 + 8.0
+  const T_END = T2 + 9.2
   let lidA = -1.95, lidV = 0
   let done = false
+  let phase: PackPhase = 'case'
+  const smooth = (x: number) => {
+    const k = Math.min(1, Math.max(0, x))
+    return k * k * (3 - 2 * k)
+  }
+  // A fold that settles with a touch of give, as board does.
+  const fold = (x: number) => {
+    const k = Math.min(1, Math.max(0, x))
+    return 1 - Math.pow(1 - k, 3) * Math.cos(k * 4.2)
+  }
+  const lerp = (a: number, b: number, k: number) => a + (b - a) * k
   const created = performance.now()
   let start = -1
   let raf = 0
@@ -158,10 +190,57 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     lidA += lidV * dt
     lid.rotation.x = lidA
     band.scale.x = Math.max(0.0001, ease((t - T_BAND) / 1.3))
-    // The camera drifts in a slow arc over the counter.
-    const a = 0.35 - t * 0.03
-    camera.position.set(Math.sin(a) * 70, 62 - t * 1.2, Math.cos(a) * 70)
-    camera.lookAt(0, 3, 0)
+
+    // ACT II · the courier box.
+    if (phase === 'case' && t > T2) {
+      phase = 'courier'
+      onPhase?.('courier')
+    }
+    carton.group.position.x = CX + 150 * (1 - ease((t - T_SLIDE) / 1.5))
+    // The case is lifted across in an arc and set down on the carton's floor.
+    const lift = smooth((t - T_LIFT) / 1.9)
+    caseGroup.position.set(CX * lift, T * lift + Math.sin(Math.PI * lift) * 26, 0)
+    caseGroup.rotation.z = -Math.sin(Math.PI * lift) * 0.1
+    // Tissue folds over, front then back; the gold P seals it.
+    const { tissue, flaps, sticker, label } = carton
+    tissue.front.rotation.x = lerp(TISSUE_OPEN_ANGLE, -Math.PI / 2 + 0.03, smooth((t - T_TISSUE) / 0.7))
+    tissue.back.rotation.x = lerp(-TISSUE_OPEN_ANGLE, Math.PI / 2 - 0.03, smooth((t - T_TISSUE - 0.45) / 0.7))
+    const s = ease((t - T_SEAL) / 0.45)
+    sticker.visible = t > T_SEAL
+    sticker.position.y = H - 0.2 + (1 - s) * 12
+    sticker.rotation.y = (1 - s) * 2
+    // The flaps close: short ones first, then the long ones meet over them.
+    flaps.right.rotation.z = lerp(-FLAP_OPEN, Math.PI / 2, fold((t - T_SHORT) / 0.6))
+    flaps.left.rotation.z = lerp(FLAP_OPEN, -Math.PI / 2, fold((t - T_SHORT - 0.12) / 0.6))
+    flaps.back.rotation.x = lerp(-FLAP_OPEN, Math.PI / 2, fold((t - T_LONG) / 0.65))
+    flaps.front.rotation.x = lerp(FLAP_OPEN, -Math.PI / 2, fold((t - T_LONG - 0.15) / 0.65))
+    // Tape drawn along the seam from the left, then down both ends.
+    const x0 = carton.group.position.x - W / 2 - 0.3
+    tapePlane.constant = t < T_TAPE ? x0 - 1 : x0 + (W + 0.6) * smooth((t - T_TAPE) / 0.85)
+    tabPlane.constant = -(H + T * 2 + 0.2 - 9 * smooth((t - T_TAB) / 0.5))
+    // The label is pressed on with a little bounce.
+    const l = Math.min(1, Math.max(0, (t - T_LABEL) / 0.42))
+    label.visible = t > T_LABEL
+    label.position.y = H + T * 1.5 + 0.1 + (1 - l) * (1 - l) * 9
+    label.scale.setScalar(1 + 0.12 * (1 - l) + Math.sin(l * Math.PI) * 0.03)
+
+    // The camera: a slow arc over the counter; for act II it widens to take in both,
+    // follows the case across, and settles over the carton.
+    const zk = smooth((t - T2) / 1.6)
+    const fk = smooth((t - T_LIFT + 0.3) / 2.6)
+    const settle = smooth((t - T_SHORT) / 3)
+    // On a wide screen the words sit on the left, so the carton is framed to the right.
+    const side = camera.aspect >= 1 ? 1 : 0
+    const tx = CX * fk - 15 * side * zk, ty = 3 + 4 * fk
+    // Once packed, the camera all but stops: a breath of drift, not an orbit.
+    const tc = t <= T_END ? t : T_END + (t - T_END) * 0.15
+    const a = 0.35 - Math.min(tc, T2) * 0.03 - Math.max(0, tc - T2) * 0.012
+    const r = 70 + 40 * zk - 8 * settle
+    const h = 62 - Math.min(tc, T2) * 0.8 + 26 * zk - 4 * settle
+    camera.position.set(tx + Math.sin(a) * r, h, Math.cos(a) * r)
+    camera.lookAt(tx, ty, 0)
+    key.position.set(-30 + tx, 70, 40)
+    key.target.position.set(tx, 0, 0)
     renderer.render(scene, camera)
     if (!done && t > T_END) {
       done = true
@@ -181,6 +260,11 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
 
   return {
     resize,
+    // Jump to the packed carton (every motion is a function of time, so this lands cleanly).
+    skip: () => {
+      if (start < 0) start = performance.now()
+      start = Math.min(start, performance.now() - (T_END + 0.1) * 1000)
+    },
     dispose: () => {
       cancelAnimationFrame(raf)
       gate.dispose()

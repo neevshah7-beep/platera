@@ -27,7 +27,7 @@ await page.keyboard.press('Escape')
 await page.waitForTimeout(600)
 // Back to the house
 await page.goto(base + '/', { waitUntil: 'load' })
-await page.evaluate(() => localStorage.setItem('platera:entered', '1'))
+await page.evaluate(() => sessionStorage.setItem('platera:entered', '1'))
 await page.reload({ waitUntil: 'load' })
 await page.waitForTimeout(2500)
 const y0 = await page.evaluate(() => document.getElementById('chapter-collection').getBoundingClientRect().top + scrollY + 900)

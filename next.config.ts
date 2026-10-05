@@ -31,8 +31,11 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
   // Shaders live as commented .glsl files (src/world/shaders) and import as strings.
-  webpack(config) {
+  webpack(config, { dev: isDev }) {
     config.module.rules.push({ test: /\.(glsl|vert|frag)$/, type: 'asset/source' })
+    // Blender writes a render frame every few seconds into assets/; screenshots land in
+    // look/. Neither is source, and watching them made the dev server reload open pages.
+    if (isDev) config.watchOptions = { ...config.watchOptions, ignored: ['**/node_modules/**', '**/.git/**', '**/assets/**', '**/look/**', '**/.next-prod/**', '**/public/scenes/**'] }
     return config
   },
   turbopack: { rules: { '*.glsl': { loaders: ['raw-loader'], as: '*.js' } } },

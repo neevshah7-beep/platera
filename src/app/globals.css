@@ -287,6 +287,13 @@ p { text-wrap: pretty; }
 .site-header { color: var(--espresso); background: color-mix(in oklab, var(--cream) 94%, transparent); }
 html[data-hero='1'] .site-header { background: transparent; }
 .link-underline { position: relative; }
+.link-underline[aria-current='page']::after { transform: scaleX(1); }
+/* The bag: a drawn symbol with a small gold count that pops when a piece lands. */
+.bag-link { position: relative; display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; margin-right: -0.5rem; border-radius: 50%; transition: background-color var(--dur-ui) var(--ease-entry); }
+.bag-link:hover { background: rgb(201 154 62 / 0.16); }
+.bag-icon { width: 1.45rem; height: 1.45rem; }
+.bag-count { position: absolute; top: 0.05rem; right: 0.05rem; min-width: 1.15rem; height: 1.15rem; padding: 0 0.3rem; display: grid; place-items: center; border-radius: 999px; background: linear-gradient(120deg, #b98a34, #f1d488 55%, #c99a3e); color: #1c1207; font-size: 0.68rem; font-weight: 700; letter-spacing: 0; line-height: 1; box-shadow: 0 0 0 2px var(--cream); animation: bag-pop 600ms var(--ease-entry); }
+@keyframes bag-pop { 0% { transform: scale(0.4); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
 .link-underline::after {
   content: '';
   position: absolute;

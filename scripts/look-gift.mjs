@@ -5,7 +5,7 @@ const only = process.env.ONLY
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
 for (const run of [{ name: 'laptop', viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1.5 }, { name: 'phone', viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }].filter((r) => !only || r.name === only)) {
   const ctx = await browser.newContext(run)
-  await ctx.addInitScript(() => localStorage.setItem('platera:entered', '1'))
+  await ctx.addInitScript(() => sessionStorage.setItem('platera:entered', '1'))
   const page = await ctx.newPage()
   const errors = []
   page.on('pageerror', (e) => errors.push(e.message))

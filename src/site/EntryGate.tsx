@@ -16,8 +16,8 @@ export function EntryGate() {
   const ready = useEntry((s) => s.ready)
   const entered = useEntry((s) => s.entered)
   const [gone, setGone] = useState(false)
-  // Visitors who have entered before (this session or an earlier one) walk straight in:
-  // no veil on a refresh or a return visit.
+  // Within a visit (a refresh, or coming back to the homepage) there is no veil; every new
+  // visit, once the site has been closed, enters through the gate and the clouds again.
   const [returning, setReturning] = useState(false)
   useEffect(() => {
     // Set before first paint by the script in the root layout, so the veil never flashes.
@@ -46,7 +46,8 @@ export function EntryGate() {
     if (entered) {
       document.documentElement.dataset.entered = '1'
       try {
-        localStorage.setItem('platera:entered', '1')
+        // Remembered for this visit only: a refresh walks straight in, a new visit enters again.
+        sessionStorage.setItem('platera:entered', '1')
       } catch {}
       scroller.lenis?.start()
     }

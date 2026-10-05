@@ -44,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en-IN" className={`${gambetta.variable} ${satoshi.variable}`} suppressHydrationWarning>
       <head>
         {/* Returning visitors skip the entry veil: marked before first paint. */}
-        <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('platera:entered')==='1')document.documentElement.dataset.returning='1'}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{if(sessionStorage.getItem('platera:entered')==='1')document.documentElement.dataset.returning='1'}catch(e){}" }} />
       </head>
       <body>{children}</body>
     </html>
