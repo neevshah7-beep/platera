@@ -109,3 +109,12 @@ rather than a plain form. Brainstorm further signature moments of this kind.
 - Festival nights: Diwali diyas light across the site; marigold for weddings; gold shimmer for Akshaya Tritiya.
 - Order journey: tracking told as scenes (hallmarked, wrapped, dispatched, arriving).
 - Book the counter: turn the brass appointment dial; Gorai 1 at dusk, its lamps coming on.
+
+### Client additions (2026-10-05)
+- **The Treasury** (new homepage scene): a gold coin, a diamond and a gold bar. The coin
+  spins on its edge and settles face up (PLATERA minted on it); the diamond throws
+  rainbow fire across the page as you move; the bar slides out stamped 999.9. Interaction:
+  drag to spin the coin; the stone follows the pointer's light.
+- **Chapter rail**: every section shown at the top as a quiet index of chapters (Entry ·
+  The Fall · Six Promises · The Hallmark · The Collection · The Treasury · The Gift ·
+  The Counter), the current one lit in gold, any one a click away.

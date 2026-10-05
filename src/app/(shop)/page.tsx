@@ -1,14 +1,20 @@
-import { getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
+import { bookableDates } from '@/lib/appointments'
+import { getCurrentRates, getSetting, listProducts, priceProduct } from '@/lib/catalogue'
 import { mediaBase } from '@/components/media/PieceImage'
 import { toPieceRef } from '@/lib/world-data'
 import { formatINR } from '@/lib/pricing/format'
-import { STORE } from '@/lib/store'
+import { STORE, whatsappLink } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
 
 export const revalidate = 300
 
 export default async function HomePage() {
-  const [rates, products] = await Promise.all([getCurrentRates(), listProducts()])
+  const [rates, products, closed] = await Promise.all([getCurrentRates(), listProducts(), getSetting('closedWeekdays') as Promise<number[] | null>])
+  const days = bookableDates(closed ?? [], 28).map((d) => {
+    const dt = new Date(`${d.value}T00:00:00Z`)
+    const f = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-IN', { ...o, timeZone: 'UTC' }).format(dt)
+    return { value: d.value, day: f({ day: 'numeric' }), weekday: f({ weekday: 'long' }), month: f({ month: 'long', year: 'numeric' }), long: f({ weekday: 'long', day: 'numeric', month: 'long' }) }
+  })
   const featured = [...products.filter((p) => p.featured), ...products.filter((p) => !p.featured)]
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
@@ -20,6 +26,14 @@ export default async function HomePage() {
   return (
     <HomeExperience
       pieces={featured}
+      visit={{
+        days,
+        address: [STORE.address.line1, `${STORE.address.line2}, ${STORE.address.city} ${STORE.address.postalCode}`],
+        hours: STORE.hoursText,
+        phone: STORE.phoneDisplay,
+        whatsapp: whatsappLink('Hello Platera, I would like to book a visit.'),
+        maps: STORE.mapsUrl,
+      }}
       total={products.length}
       line="Hallmarked silver, chosen piece by piece."
       collaboration="With Bhairav Jewellers · Gorai 1"
