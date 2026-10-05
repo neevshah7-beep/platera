@@ -97,3 +97,15 @@ piece chosen (its real photo) into its case, box it, and wrap it in the house pa
 The parcel then sets off on its journey (delivery date shown: ship, or a route across India to
 the visitor's pin code — client to choose), and payment arrives as a signed-and-sealed moment
 rather than a plain form. Brainstorm further signature moments of this kind.
+
+### More signature moments (born from the ritual of buying at a counter)
+- Engrave it yourself: type initials/date; cut live into the band or pendant back under raking light.
+- Weigh it yourself: drag a piece onto a brass balance; weight settles, price writes the ledger line by line.
+- Verify the hallmark: enter a HUID; the hallmark is checked and certified in the metal.
+- Wrap studio (gifting): choose paper, ribbon, tag; watch your parcel wrapped; a note letter-pressed on the card.
+- Your velvet tray: saved pieces laid on your own tray in a drawer that slides open.
+- Payals that chime, jhumkas that swing: Web Audio bells and pendulum physics under the pointer.
+- The live rate in molten metal: today's rate pours and cools into its digits each morning.
+- Festival nights: Diwali diyas light across the site; marigold for weddings; gold shimmer for Akshaya Tritiya.
+- Order journey: tracking told as scenes (hallmarked, wrapped, dispatched, arriving).
+- Book the counter: turn the brass appointment dial; Gorai 1 at dusk, its lamps coming on.
