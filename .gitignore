@@ -8,3 +8,5 @@ assets/sorted/
 .pgdata/
 assets/prepared/
 assets/adobe/
+tools/
+assets/blender/*.png
