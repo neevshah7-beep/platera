@@ -121,6 +121,18 @@ p { text-wrap: pretty; }
 .num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .measure { max-width: var(--measure); }
 .eyebrow { font-size: var(--step--1); letter-spacing: 0.22em; text-transform: uppercase; color: var(--espresso-muted); }
+.eyebrow::before { content: ''; display: inline-block; width: 1.8rem; height: 1px; margin-right: 0.75rem; vertical-align: 0.3em; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright)); }
+/* The accent: the second half of a title, set in Gambetta italic and cast in deep gold. */
+.accent {
+  font-style: italic;
+  padding-right: 0.08em;
+  background: linear-gradient(100deg, #5a3c10 0%, #8a5f1c 30%, #b4862f 48%, #8a5f1c 66%, #5a3c10 100%);
+  background-size: 200% 100%;
+  background-position: var(--sheen-pos, 40%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 /* A lighter reading surface (forms, admin). */
 .ground-light { background: var(--cream); color: var(--espresso); }
@@ -215,6 +227,13 @@ p { text-wrap: pretty; }
 .hero-letter-mask { display: inline-block; overflow: hidden; padding: 0 0.01em; line-height: 0.86; }
 .hero-letter {
   display: inline-block;
+  /* Deep, burnished gold with a soft shadow beneath, so the name reads on the silk. */
+  background: linear-gradient(100deg, #4a300b 0%, #7d5517 26%, #b98a34 46%, #e8c47a 52%, #b98a34 58%, #7d5517 78%, #4a300b 100%) !important;
+  background-size: 260% 100% !important;
+  background-position: var(--sheen-pos, 50%) 0 !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  filter: drop-shadow(0 2px 18px rgb(255 246 220 / 0.55)) drop-shadow(0 1px 1px rgb(43 29 14 / 0.25));
   font-size: clamp(3.6rem, 0.8rem + 11.5vw, 13rem);
   letter-spacing: -0.02em;
   line-height: 0.86;
@@ -271,7 +290,8 @@ p { text-wrap: pretty; }
 .entry-enter:hover { background: var(--espresso); color: var(--cream); }
 
 /* ─── Header ───────────────────────────────────────────────────────────────── */
-.site-header { color: var(--espresso); }
+.site-header { color: var(--espresso); background: color-mix(in oklab, var(--cream) 94%, transparent); }
+html[data-hero='1'] .site-header { background: transparent; }
 .link-underline { position: relative; }
 .link-underline::after {
   content: '';
@@ -317,6 +337,7 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 .stamp-copy[data-struck='true'] .stamp-body { opacity: 1; transform: none; }
 .stamp-hold {
   position: absolute;
+  white-space: nowrap;
   left: 50%;
   bottom: 6svh;
   transform: translateX(-50%);
@@ -352,7 +373,7 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 .collection-head { left: 0; top: 12svh; max-width: 40rem; }
 @media (min-width: 768px) { .collection-head { left: 2vw; top: 14svh; } }
 .collection-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
-.collection-label { transform: translate(2.5rem, -120%); padding-left: 1rem; border-left: 1px solid var(--gold); animation: label-in 600ms var(--ease-entry); }
+.collection-label { transform: translate(2.5rem, -120%); padding: 0.9rem 1.2rem 0.95rem; background: var(--cream); border: 1px solid rgb(201 154 62 / 0.55); box-shadow: 0 18px 40px -18px rgb(43 29 14 / 0.45); color: var(--espresso); min-width: 12rem; animation: label-in 600ms var(--ease-entry); }
 @keyframes label-in { from { opacity: 0; transform: translate(1.5rem, -120%); } }
 .collection-all { position: absolute; right: var(--gutter); bottom: 6svh; }
 
@@ -381,18 +402,19 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 }
 
 /* ─── Chapter rail ─────────────────────────────────────────────────────────── */
-.chapter-rail { position: fixed; left: 0; right: 0; top: 4rem; z-index: 39; padding: 0 var(--gutter); opacity: 0; transform: translateY(-8px); transition: opacity 900ms var(--ease-entry) 600ms, transform 900ms var(--ease-entry) 600ms; pointer-events: none; }
+/* Set on a solid cream band so the names read over any scene behind them. */
+.chapter-rail { position: fixed; left: 0; right: 0; top: 4rem; z-index: 39; padding: 0 var(--gutter); background: color-mix(in oklab, var(--cream) 94%, transparent); border-bottom: 1px solid var(--rule); opacity: 0; transform: translateY(-8px); transition: opacity 900ms var(--ease-entry) 600ms, transform 900ms var(--ease-entry) 600ms; pointer-events: none; }
 .chapter-rail[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
-.chapter-rail ol { display: flex; gap: clamp(0.8rem, 0.2rem + 1.6vw, 2.2rem); max-width: 1600px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+html[data-hero='1'] .chapter-rail { opacity: 0; transform: translateY(-8px); pointer-events: none; transition-delay: 0ms; }
+.chapter-rail ol { display: flex; gap: clamp(1rem, 0.2rem + 2vw, 2.6rem); max-width: 1600px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .chapter-rail ol::-webkit-scrollbar { display: none; }
-.chapter-rail button { display: flex; align-items: baseline; gap: 0.45rem; padding: 0.55rem 0; white-space: nowrap; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--espresso-muted); opacity: 0.55; transition: opacity var(--dur-ui) var(--ease-entry), color var(--dur-ui) var(--ease-entry); }
-.chapter-rail button:hover { opacity: 1; }
-.chapter-rail button[data-past='true'] { opacity: 0.8; }
-.chapter-rail button[data-on='true'] { opacity: 1; color: var(--espresso); }
-.chapter-n { font-size: 0.66rem; color: var(--gold-shadow); }
-.chapter-rail button[data-on='true'] .chapter-label { background: linear-gradient(100deg, var(--gold-shadow), var(--gold) 40%, var(--gold-bright) 50%, var(--gold) 60%, var(--gold-shadow)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.chapter-line { display: block; height: 1px; max-width: 1600px; margin: 0 auto; background: linear-gradient(90deg, var(--gold-shadow), var(--gold), var(--gold-bright)); transform-origin: 0 50%; }
-@media (max-width: 767px) { .chapter-label { display: none; } .chapter-rail button[data-on='true'] .chapter-label { display: inline; } }
+.chapter-rail button { position: relative; display: flex; align-items: baseline; gap: 0.5rem; padding: 0.7rem 0 0.65rem; white-space: nowrap; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--espresso-muted); transition: color var(--dur-ui) var(--ease-entry); }
+.chapter-rail button:hover { color: var(--espresso); }
+.chapter-rail button[data-on='true'] { color: var(--espresso); }
+.chapter-rail button[data-on='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold), var(--gold-bright)); }
+.chapter-n { font-size: 0.7rem; color: var(--gold-shadow); font-weight: 600; }
+.chapter-line { display: block; height: 1px; position: absolute; left: 0; right: 0; bottom: -1px; opacity: 0.6; max-width: 1600px; margin: 0 auto; background: linear-gradient(90deg, var(--gold-shadow), var(--gold), var(--gold-bright)); transform-origin: 0 50%; }
+@media (max-width: 767px) { .chapter-rail { top: 3.6rem; } .chapter-label { display: none; } .chapter-rail button[data-on='true'] .chapter-label { display: inline; } }
 
 /* ─── The treasury ─────────────────────────────────────────────────────────── */
 .treasury-copy { left: 0; top: 13svh; max-width: 30rem; }
@@ -401,3 +423,15 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 .treasury-rates { margin-top: 1.6rem; display: flex; gap: 2.2rem; }
 .treasury-rates dd { font-size: var(--step-3); margin-top: 0.2rem; }
 .treasury-hint { position: absolute; left: 50%; bottom: 5svh; transform: translateX(-50%); white-space: nowrap; }
+
+.treasury-rates .eyebrow::before { display: none; }
+html[data-returning='1'] .entry-gate { display: none; }
+
+/* ─── The lamp (piece page) ────────────────────────────────────────────────── */
+.lamp-stage { height: 62svh; min-height: 420px; }
+@media (min-width: 1024px) { .lamp-stage { height: 74svh; } }
+
+@media (max-width: 767px) {
+  /* Phones: the caption docks above the button instead of following the piece. */
+  .collection-label { left: var(--gutter) !important; right: var(--gutter); top: auto !important; bottom: calc(6svh + 4.2rem); transform: none; min-width: 0; animation: none; }
+}

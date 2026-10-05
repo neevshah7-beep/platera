@@ -31,6 +31,9 @@ export function createGL(canvas: HTMLCanvasElement, frag: string): GL | null {
   gl.linkProgram(program)
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) ?? 'link')
   gl.useProgram(program)
+  // Champagne, never black, before the first frame has arrived.
+  gl.clearColor(0.91, 0.83, 0.65, 1)
+  gl.clear(gl.COLOR_BUFFER_BIT)
   const buf = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, buf)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
@@ -87,6 +90,15 @@ export class FrameStore {
 
   get count() {
     return this.blobs.length
+  }
+
+  /** Load the first available of several sequences (e.g. the portrait render, then the landscape one). */
+  static async loadFirst(bases: string[], count: number, onProgress: (p: number) => void): Promise<FrameStore | null> {
+    for (const b of bases) {
+      const ok = await fetch(`${b}/0001.webp`, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)
+      if (ok) return FrameStore.load(b, count, onProgress)
+    }
+    return null
   }
 
   static async load(base: string, count: number, onProgress: (p: number) => void): Promise<FrameStore> {

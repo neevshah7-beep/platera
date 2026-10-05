@@ -377,6 +377,12 @@ def build():
         cam = lib.camera("Camera", (-0.18, -0.36, 0.3), (0, 0, H * 0.35), lens=70, fstop=5.6, focus=focus)
     else:
         cam = lib.camera("Camera", (-0.2, -0.3, 0.2), (0, 0, H * 0.45), lens=75, fstop=5.0, focus=focus)
+    # Landscape: the gift sits in the right third, leaving the left for the words.
+    if not portrait:
+        cam.data.shift_x = -0.2
+        cam.data.lens = 62
+    else:
+        cam.data.shift_y = 0.12
     start = cam.location.copy()
     for f in range(1, FRAMES + 1):
         a = math.radians(-12) * (f / FRAMES)

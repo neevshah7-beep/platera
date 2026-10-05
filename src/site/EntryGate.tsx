@@ -15,6 +15,16 @@ export function EntryGate() {
   const ready = useEntry((s) => s.ready)
   const entered = useEntry((s) => s.entered)
   const [gone, setGone] = useState(false)
+  // Visitors who have entered before (this session or an earlier one) walk straight in:
+  // no veil on a refresh or a return visit.
+  const [returning, setReturning] = useState(false)
+  useEffect(() => {
+    // Set before first paint by the script in the root layout, so the veil never flashes.
+    if (document.documentElement.dataset.returning === '1') {
+      setReturning(true)
+      entry.set({ entered: true, returning: true })
+    }
+  }, [])
   const [shown, setShown] = useState(0)
 
   // The number counts toward the real progress on an eased curve, never jumping.
@@ -34,6 +44,9 @@ export function EntryGate() {
   useEffect(() => {
     if (entered) {
       document.documentElement.dataset.entered = '1'
+      try {
+        localStorage.setItem('platera:entered', '1')
+      } catch {}
       scroller.lenis?.start()
       const t = setTimeout(() => setGone(true), 1600)
       return () => clearTimeout(t)
@@ -41,7 +54,7 @@ export function EntryGate() {
     scroller.lenis?.stop()
   }, [entered])
 
-  if (gone) return null
+  if (gone || returning) return null
   return (
     <div className="entry-gate" data-entered={entered} aria-hidden={entered}>
       <div className="entry-inner">

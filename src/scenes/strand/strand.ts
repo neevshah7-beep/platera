@@ -105,9 +105,9 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const rondelle = new THREE.TorusGeometry(R * 0.5, R * 0.16, 16, 40)
 
   const promiseMats = MARKS.map((mark) => {
-    const { normal, rough } = engraving(mark)
+    const { normal, rough, color } = engraving(mark)
     const m = gold.clone()
-    m.setValues({ normalMap: normal, normalScale: new THREE.Vector2(1.1, 1.1), roughnessMap: rough, roughness: 1 })
+    m.setValues({ map: color, normalMap: normal, normalScale: new THREE.Vector2(1.1, 1.1), roughnessMap: rough, roughness: 1 })
     return m
   })
   const beads: THREE.Mesh[] = []
@@ -289,6 +289,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
       gold.dispose()
       goldCut.dispose()
       promiseMats.forEach((m) => {
+        m.map?.dispose()
         m.normalMap?.dispose()
         m.roughnessMap?.dispose()
         m.dispose()

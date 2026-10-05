@@ -62,7 +62,7 @@ export function TreasuryScene({ rates }: { rates: { label: string; value: string
         <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full touch-pan-y" onPointerDown={(e) => send(e, 'down')} onPointerUp={(e) => send(e, 'up')} />
         <div className="treasury-copy pointer-events-none absolute px-[var(--gutter)]">
           <p className="eyebrow">The treasury</p>
-          <h2 id="treasury-title" className="treasury-title">Pure metal, priced in the open.</h2>
+          <h2 id="treasury-title" className="treasury-title">Pure metal, <em className="accent">priced in the open.</em></h2>
           <dl className="treasury-rates">
             {rates.map((r) => (
               <div key={r.label}>

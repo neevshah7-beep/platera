@@ -28,7 +28,8 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
     }
   }, [])
   return (
-    <>
+    // The homepage runs full-bleed under the header.
+    <div className="-mt-16">
       <EntryGate />
       <ChapterRail
         chapters={[
@@ -50,6 +51,6 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
       <TreasuryScene rates={rates} />
       <GiftScene />
       <VisitScene {...visit} />
-    </>
+    </div>
   )
 }

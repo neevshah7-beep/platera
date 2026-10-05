@@ -3,8 +3,8 @@
 import { useSyncExternalStore } from 'react'
 
 /** Shared between the entry gate and the scenes: load progress and whether the visitor has entered. */
-type Entry = { progress: number; ready: boolean; entered: boolean; sound: boolean }
-let state: Entry = { progress: 0, ready: false, entered: false, sound: false }
+type Entry = { progress: number; ready: boolean; entered: boolean; returning: boolean; sound: boolean }
+let state: Entry = { progress: 0, ready: false, entered: false, returning: false, sound: false }
 const listeners = new Set<() => void>()
 
 export const entry = {

@@ -23,6 +23,7 @@ export function StampScene() {
   const section = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const [phase, setPhase] = useState<Phase>('idle')
+  const [missing, setMissing] = useState(false)
   const control = useRef({ hold: false, auto: false })
 
   useEffect(() => {
@@ -72,7 +73,10 @@ export function StampScene() {
         visible = e.isIntersecting
         if (visible && !started) {
           started = true
-          FrameStore.load(`/scenes/${dir}/${innerWidth * devicePixelRatio > 1300 ? 1600 : 1000}`, FRAMES, () => {}).then((f) => (frames = f))
+          FrameStore.loadFirst((portrait ? ['stamp_portrait', 'stamp'] : ['stamp']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}).then((f) => {
+            frames = f
+            if (!f) setMissing(true)
+          })
         }
       },
       { rootMargin: '120% 0px' },
@@ -176,7 +180,7 @@ export function StampScene() {
         />
         <div className="stamp-copy pointer-events-none absolute px-[var(--gutter)]" data-struck={phase === 'struck'}>
           <p className="eyebrow">The hallmark</p>
-          <h2 id="stamp-title" className="stamp-title">Struck into the metal.</h2>
+          <h2 id="stamp-title" className="stamp-title">Struck into <em className="accent">the metal.</em></h2>
           <p className="stamp-body measure">
             Every Platera piece carries the BIS hallmark: the purity, 925, and a unique HUID you can check yourself on the BIS CARE app.
           </p>

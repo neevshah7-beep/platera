@@ -22,7 +22,7 @@ export function HeroCopy({ landed, line, collaboration }: { landed: boolean; lin
   const mid = (WORD.length - 1) / 2
 
   return (
-    <div data-landed={landed} className="hero-copy pointer-events-none absolute inset-0 flex flex-col justify-between px-[var(--gutter)] pb-[7svh] pt-[10svh]">
+    <div data-landed={landed} className="hero-copy pointer-events-none absolute inset-0 flex flex-col justify-between px-[var(--gutter)] pb-[7svh] pt-[14svh] md:pt-[13svh]">
       <div ref={word} aria-hidden className="flex justify-center" style={{ ['--sheen-pos' as string]: `${sheen}%` }}>
         {WORD.split('').map((ch, i) => (
           <span key={i} className="hero-letter-mask">
@@ -36,7 +36,7 @@ export function HeroCopy({ landed, line, collaboration }: { landed: boolean; lin
         <div className="max-w-xl">
           <p className="hero-rise eyebrow" style={{ transitionDelay: '700ms' }}>{collaboration}</p>
           <h1 className="hero-rise mt-4 text-[clamp(1.9rem,1.2rem+2.4vw,3.4rem)] leading-[1.02]" style={{ transitionDelay: '820ms' }}>
-            {line}
+            {line.split(', ').length === 2 ? (<>{line.split(', ')[0]}, <em className="accent">{line.split(', ')[1]}</em></>) : line}
           </h1>
         </div>
         <div className="hero-rise pointer-events-auto flex flex-wrap gap-3" style={{ transitionDelay: '980ms' }}>

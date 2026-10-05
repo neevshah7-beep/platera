@@ -337,9 +337,16 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
       return hovered?.slug ?? null
     },
     hoveredScreen: () => {
-      if (!hovered) return null
-      hovered.mesh.getWorldPosition(tmp).project(camera)
-      return { slug: hovered.slug, x: (tmp.x * 0.5 + 0.5) * canvas.clientWidth, y: (-tmp.y * 0.5 + 0.5) * canvas.clientHeight }
+      // The hovered piece, or else the case the camera is standing at.
+      let it = hovered
+      if (!it) {
+        let best: Item | null = null
+        for (const x of items) if (!best || Math.abs(x.home.x - look.x) < Math.abs(best.home.x - look.x)) best = x
+        if (best && best.open > 0.85) it = best
+      }
+      if (!it) return null
+      it.mesh.getWorldPosition(tmp).project(camera)
+      return { slug: it.slug, x: (tmp.x * 0.5 + 0.5) * canvas.clientWidth, y: (-tmp.y * 0.5 + 0.5) * canvas.clientHeight }
     },
     resize,
     dispose: () => {

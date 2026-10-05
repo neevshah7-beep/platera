@@ -20,7 +20,7 @@ for (const [i, f] of files.entries()) {
   meta ??= await img.metadata()
   for (const w of widths) {
     const name = String(i + 1).padStart(4, '0') + '.webp'
-    const info = await img.clone().resize({ width: w }).webp({ quality: w > 1200 ? 84 : 80, effort: 5, smartSubsample: true }).toFile(join(out, String(w), name))
+    const info = await img.clone().resize({ width: w, withoutEnlargement: true }).webp({ quality: w > 1200 ? 84 : 80, effort: 5, smartSubsample: true }).toFile(join(out, String(w), name))
     bytes[w] += info.size
   }
 }

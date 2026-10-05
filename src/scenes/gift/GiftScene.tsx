@@ -17,6 +17,7 @@ export function GiftScene() {
   const section = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const [tied, setTied] = useState(false)
+  const [missing, setMissing] = useState(false)
   const drag = useRef({ active: false, x0: 0, pull: 0 })
 
   useEffect(() => {
@@ -55,7 +56,10 @@ export function GiftScene() {
         visible = e.isIntersecting
         if (visible && !started) {
           started = true
-          FrameStore.load(`/scenes/${portrait ? 'gift_portrait' : 'gift'}/${innerWidth * devicePixelRatio > 1300 ? 1600 : 1000}`, FRAMES, () => {}).then((f) => (frames = f))
+          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}).then((f) => {
+            frames = f
+            if (!f) setMissing(true)
+          })
         }
       },
       { rootMargin: '120% 0px' },
@@ -128,9 +132,15 @@ export function GiftScene() {
           onPointerUp={onUp}
           onPointerCancel={onUp}
         />
+        {missing && (
+          <picture className="absolute inset-0">
+            <source media="(max-aspect-ratio: 4/5)" srcSet="/scenes/gift-poster-portrait.webp" />
+            <img src="/scenes/gift-poster.webp" alt="A Platera gift box wrapped in espresso paper foiled in gold, tied with gold satin and a bow, with a For you tag" className="h-full w-full object-cover" />
+          </picture>
+        )}
         <div className="gift-copy pointer-events-none absolute px-[var(--gutter)]">
           <p className="eyebrow">The gift</p>
-          <h2 id="gift-title" className="gift-title">Wrapped by hand, for someone.</h2>
+          <h2 id="gift-title" className="gift-title">Wrapped by hand, <em className="accent">for someone.</em></h2>
           <p className="gift-body measure">
             Every piece leaves in the Platera box, wrapped by hand in our paper, tied with satin, your note on the card. Sent insured, anywhere in India.
           </p>

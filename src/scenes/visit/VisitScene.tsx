@@ -79,7 +79,7 @@ export function VisitScene({
       </div>
       <div className="visit-copy pointer-events-none px-[var(--gutter)] pb-16 md:absolute md:pb-0">
         <p className="eyebrow">The counter</p>
-        <h2 id="visit-title" className="visit-title">See it in your hand before you decide.</h2>
+        <h2 id="visit-title" className="visit-title">See it in your hand <em className="accent">before you decide.</em></h2>
         <p className="visit-choice" aria-live="polite">
           <span className="text-muted">Flip to your day:</span> <span className="font-display">{day?.long}</span>
         </p>

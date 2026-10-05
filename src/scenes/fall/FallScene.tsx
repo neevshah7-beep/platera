@@ -43,7 +43,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     c.addEventListener('webglcontextlost', onLost)
     c.addEventListener('webglcontextrestored', onRestored)
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
-    const width = innerWidth * devicePixelRatio > 1300 ? 1600 : 1000
+    const width = Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000
     let frames: FrameStore | null = null
     let shownBmp: ImageBitmap | null = null
     let introStart = -1
@@ -64,7 +64,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting))
     io.observe(c)
 
-    FrameStore.load(`/scenes/fall/${width}`, FRAMES, (p) => entry.set({ progress: p })).then((f) => {
+    FrameStore.loadFirst(innerWidth / innerHeight < 0.8 ? [`/scenes/fall_portrait/${width}`, `/scenes/fall/${width}`] : [`/scenes/fall/${width}`], FRAMES, (p) => entry.set({ progress: p })).then((f) => {
       frames = f
       entry.set({ ready: true })
     })
@@ -89,7 +89,8 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       // Which frame: the fall plays in real time once entered; then scroll scrubs the settle.
       let f = 0
       if (enteredRef.current) {
-        if (introStart < 0) introStart = now
+        // Returning visitors find the ring already resting on the silk.
+        if (introStart < 0) introStart = entry.get().returning ? now - (LANDED / FPS) * 1000 : now
         const played = reduced ? LANDED : Math.min(LANDED, ((now - introStart) / 1000) * FPS)
         const sec = section.current!
         const scrolled = Math.max(0, -sec.getBoundingClientRect().top) / Math.max(1, innerHeight)

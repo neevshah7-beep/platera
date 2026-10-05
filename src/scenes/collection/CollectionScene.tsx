@@ -10,7 +10,7 @@ import { createCollection, type CollectionApi, type CollectionPiece } from './co
  * the silk. A hovered piece rises toward you and its name and today's price set beside it;
  * click to open it. Every piece is also a plain link below, for keyboards and readers.
  */
-export function CollectionScene({ pieces, total }: { pieces: (CollectionPiece & { href: string })[]; total: number }) {
+export function CollectionScene({ pieces, total, title, eyebrow = 'The collection', allHref = '/collection', chapterId = 'chapter-collection' }: { pieces: (CollectionPiece & { href: string })[]; total: number; title?: React.ReactNode; eyebrow?: string; allHref?: string; chapterId?: string }) {
   const section = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const api = useRef<CollectionApi | null>(null)
@@ -29,7 +29,7 @@ export function CollectionScene({ pieces, total }: { pieces: (CollectionPiece & 
           scene = api.current = null
         }
       },
-      { rootMargin: '100% 0px' },
+      { rootMargin: '220% 0px' },
     )
     io.observe(section.current!)
     let raf = 0
@@ -66,7 +66,7 @@ export function CollectionScene({ pieces, total }: { pieces: (CollectionPiece & 
 
   const piece = label ? pieces.find((p) => p.slug === label.slug) : null
   return (
-    <section id="chapter-collection" ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(300, pieces.length * 60)}svh` }}>
+    <section id={chapterId} ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(300, pieces.length * 60)}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas
           ref={canvas}
@@ -76,16 +76,17 @@ export function CollectionScene({ pieces, total }: { pieces: (CollectionPiece & 
           onClick={() => piece && router.push(piece.href)}
         />
         <div ref={head} className="collection-head pointer-events-none absolute px-[var(--gutter)]">
-          <p className="eyebrow">The collection</p>
-          <h2 id="collection-title" className="collection-title">Laid out on silk, priced today.</h2>
+          <p className="eyebrow">{eyebrow}</p>
+          <h2 id="collection-title" className="collection-title">{title ?? (<>Each piece, <em className="accent">in its own case.</em></>)}</h2>
         </div>
         {piece && label && (
-          <div className="collection-label pointer-events-none absolute" style={{ left: label.x, top: label.y }}>
+          <div key={piece.slug} className="collection-label pointer-events-none absolute" style={{ left: Math.min(label.x, (typeof window !== "undefined" ? innerWidth : 1440) - 300), top: Math.max(label.y, 200) }}>
             <p className="font-display text-step-2 leading-tight">{piece.name}</p>
-            <p className="num mt-1 text-step--1 text-muted">{piece.price}</p>
+            <p className="num mt-1.5 text-step-0 font-medium text-gold-shadow">{piece.price}</p>
+            <p className="mt-2 text-[0.7rem] uppercase tracking-[0.16em] text-muted">Click to see it closer</p>
           </div>
         )}
-        <Link href="/collection" className="collection-all btn btn-primary">See all {total} pieces</Link>
+        <Link href={allHref} className="collection-all btn btn-primary">See all {total} pieces</Link>
       </div>
       <ul className="sr-only">
         {pieces.map((p) => (
