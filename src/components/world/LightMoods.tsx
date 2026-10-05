@@ -1,7 +1,7 @@
 'use client'
 
 import { track } from '@/lib/analytics/client'
-import { useWorld, world, type Mood } from './store'
+import { useXp as useWorld, xp as world, type Mood } from '@/world/state'
 
 const MOODS: { id: Mood; label: string; hint: string }[] = [
   { id: 'studio', label: 'The lamp', hint: 'How we light it at the store' },

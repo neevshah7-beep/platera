@@ -2,19 +2,17 @@ import { LightSource } from '@/components/metal/LightSource'
 import { ConsentAndTags } from '@/components/site/ConsentAndTags'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
-import { SheenTransition } from '@/components/world/SheenTransition'
-import { WorldMount } from '@/components/world/WorldMount'
 import { getCurrentRates } from '@/lib/catalogue'
 import { getBagCount } from '@/lib/cart/bag'
+import { WorldProvider } from '@/world/WorldProvider'
 
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
   const [rates, bagCount] = await Promise.all([getCurrentRates(), getBagCount()])
   return (
     <>
-      {/* The 3D house sits behind everything; the HTML shop is drawn on top of it. */}
-      <WorldMount />
+      {/* One persistent world behind every page; the HTML shop is drawn on top of it. */}
+      <WorldProvider />
       <LightSource />
-      <SheenTransition />
       <div className="relative z-10">
         <SiteHeader bagCount={bagCount} />
         <main id="main">{children}</main>

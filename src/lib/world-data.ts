@@ -1,5 +1,5 @@
 import 'server-only'
-import type { PieceRef } from '@/components/world/store'
+import type { TrayPiece as PieceRef } from '@/world/state'
 import { isSold, type Pricing, type ProductWithMedia } from '@/lib/catalogue'
 import { formatINRWhole } from '@/lib/pricing/format'
 

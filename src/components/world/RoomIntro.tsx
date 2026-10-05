@@ -1,5 +1,5 @@
 import { WorldStation } from '@/components/world/WorldStation'
-import type { PieceRef } from '@/components/world/store'
+import type { TrayPiece as PieceRef } from '@/world/state'
 
 /**
  * The top of a collection page: you stand at the head of the long tray. Scrolling

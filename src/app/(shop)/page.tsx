@@ -1,6 +1,8 @@
 import Link from 'next/link'
-import type { FestivalKey } from '@/experience/Festival'
-import { HomeExperience, MoodSwitch } from '@/experience/HomeExperience'
+import type { FestivalKey } from '@/world/rooms/Festival'
+import { Room } from '@/world/Room'
+import { MoodSwitch } from '@/world/ui/MoodSwitch'
+import { WorldPoster } from '@/world/ui/WorldPoster'
 import { Ledger } from '@/components/ledger/Ledger'
 import { RateNote } from '@/components/site/RateNote'
 import { getCategories, getCurrentRates, getSetting, isSold, listProducts, priceProduct } from '@/lib/catalogue'
@@ -66,16 +68,22 @@ export default async function HomePage() {
   const necklaces = categories.find((c) => c.slug === 'necklaces')
   const neckRef = refs.find((x) => x.p.categoryId === necklaces?.id)?.ref ?? null
   const rooms = categories.filter((c) => c._count.products > 0)
+  const bridalCat = categories.find((c) => c.slug === 'mangalsutras')
+  const bridal = refs.filter((x) => x.p.categoryId === bridalCat?.id || x.p.categoryId === necklaces?.id).slice(0, 6)
 
   return (
     <>
-      <HomeExperience
-        poster={<Poster />}
-        data={{
+      <WorldPoster>
+        <Poster />
+      </WorldPoster>
+      <Room
+        state={{
+          key: 'home',
           tray: tray.map((x) => x.ref),
-          vault: vault.map((x) => x.ref),
+          drawer: vault.map((x) => x.ref),
           weighed: bookRef ? { piece: bookRef, weight: bookPiece?.netWeightMg ? formatGrams(bookPiece.netWeightMg) : null } : null,
           neck: neckRef,
+          bridal: bridal.map((x) => x.ref),
           festival: festival ?? 'none',
         }}
       />
