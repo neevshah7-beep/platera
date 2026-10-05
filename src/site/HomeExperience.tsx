@@ -30,7 +30,7 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
   }, [])
   return (
     // The homepage runs full-bleed under the header.
-    <div className="-mt-16">
+    <div className="home-chapters -mt-16">
       <EntryGate />
       <ChapterRail
         chapters={[

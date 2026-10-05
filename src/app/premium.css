@@ -1,0 +1,69 @@
+/* ─── The finish ──────────────────────────────────────────────────────────────
+   Refinements laid over everything: the house's buttons and controls are squared and
+   lettered like a jeweller's card rather than an app's pill; selection and focus are in
+   gold; and the homepage chapters dissolve into one another instead of cutting. */
+
+/* Buttons: slim, squared, letter-spaced; a line of gold light crosses on hover. */
+.btn { position: relative; overflow: hidden; min-height: 3.2rem; padding: 0.9rem 2rem; border-radius: 2px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+.btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 30%, rgb(241 212 136 / 0.35) 50%, transparent 70%); transform: translateX(-120%); transition: transform 900ms var(--ease-entry); pointer-events: none; }
+.btn:hover::after { transform: translateX(120%); }
+.btn-primary { box-shadow: inset 0 0 0 1px rgb(201 154 62 / 0.0); transition: background-color var(--dur-ui) var(--ease-entry), box-shadow var(--dur-ui) var(--ease-entry); }
+.btn-primary:hover { background: #3a2813; box-shadow: inset 0 0 0 1px rgb(201 154 62 / 0.85); }
+.btn-quiet { border-color: rgb(43 29 14 / 0.42); }
+.btn-quiet:hover { border-color: var(--gold-shadow); background: rgb(251 247 238 / 0.45); }
+
+/* The other controls follow the same line. */
+.visit-sitting { border-radius: 2px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.05rem; }
+.visit-sitting[aria-checked='true'] { box-shadow: inset 0 0 0 1px var(--gold); }
+.viewing-close, .originals-close, .collection-view, .back-house, .entry-enter, .stamp-hold, .eq-working { border-radius: 2px; }
+.pay-ways li { border-radius: 2px; }
+.collection-view { letter-spacing: 0.16em; }
+.back-house { letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.8rem; }
+.back-house-arrow { border-radius: 1px; }
+.entry-enter { font-family: var(--font-satoshi), sans-serif; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; padding: 1.05rem 2.6rem; }
+
+/* Gold for selection and focus. */
+::selection { background: rgb(201 154 62 / 0.35); color: var(--espresso); }
+:focus-visible { outline: 1.5px solid var(--gold-shadow); outline-offset: 3px; }
+
+/* A fine scrollbar in the house colours. */
+html { scrollbar-width: thin; scrollbar-color: #b98a34 #efe1c3; }
+
+/* ── Scene to scene ──────────────────────────────────────────────────────────
+   Each chapter rises over the last few moments of the one before (they overlap by a
+   quarter screen); its top edge is feathered, so it dissolves in rather than cutting,
+   and the chapter it covers sinks back a little and dims, like a card beneath a card.
+   Driven by the scroll itself where the browser supports it; elsewhere, plain cuts. */
+@supports (animation-timeline: view()) {
+  .home-chapters > section + section:has(> .sticky) { margin-top: -24svh; }
+  .home-chapters > section:has(+ section > .sticky) > .sticky { animation: chapter-out linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; transform-origin: 50% 0; }
+  .home-chapters > section + section > .sticky {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24svh);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 24svh);
+    -webkit-mask-size: 100% calc(100% + 24svh);
+    mask-size: 100% calc(100% + 24svh);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: chapter-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  .home-chapters > section + section:has(+ section > .sticky) > .sticky {
+    animation: chapter-in linear both, chapter-out linear both;
+    animation-timeline: view(), view();
+    animation-range: entry 0% entry 100%, exit 0% exit 100%;
+  }
+}
+@supports (animation-timeline: view()) {
+  /* The counter is not pinned: the section itself dissolves in over the house. */
+  .home-chapters > #chapter-counter { margin-top: -24svh; background: var(--champagne);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24svh); mask-image: linear-gradient(to bottom, transparent 0, #000 24svh);
+    -webkit-mask-size: 100% calc(100% + 24svh); mask-size: 100% calc(100% + 24svh); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    animation: chapter-in linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  .home-chapters > section:has(+ #chapter-counter) > .sticky { animation: chapter-in linear both, chapter-out linear both; animation-timeline: view(), view(); animation-range: entry 0% entry 100%, exit 0% exit 100%; transform-origin: 50% 0; }
+}
+@keyframes chapter-in { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 -24svh; mask-position: 0 -24svh; } }
+@keyframes chapter-out { to { transform: scale(0.94); filter: brightness(0.88) saturate(0.9); } }
+@media (prefers-reduced-motion: reduce) {
+  .home-chapters > section > .sticky { animation: none !important; -webkit-mask-image: none !important; mask-image: none !important; }
+}

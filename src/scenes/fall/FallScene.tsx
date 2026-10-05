@@ -154,7 +154,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
   }, [onLanded])
 
   return (
-    <section id="chapter-fall" ref={section} aria-label="The fall" className="relative h-[230svh]">
+    <section id="chapter-fall" ref={section} aria-label="The fall" className="relative h-[180svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full" />
         {children}

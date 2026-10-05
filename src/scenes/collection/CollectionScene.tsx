@@ -57,7 +57,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
 
   const piece = label ? pieces.find((p) => p.slug === label.slug) : null
   return (
-    <section id={chapterId} ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(300, pieces.length * 60)}svh` }}>
+    <section id={chapterId} ref={section} aria-labelledby="collection-title" className="relative" style={{ height: `${Math.max(240, pieces.length * 42)}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div ref={host} className="absolute inset-0" style={{ cursor: piece ? 'pointer' : 'default' }} onClick={() => piece && router.push(piece.href)} />
         <div ref={head} className="collection-head pointer-events-none absolute px-[var(--gutter)]">

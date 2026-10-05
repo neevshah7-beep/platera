@@ -47,7 +47,7 @@ export function HouseScene({ id = 'chapter-house' }: { id?: string }) {
   }, [api])
 
   return (
-    <section id={id} ref={section} aria-label="About Platera" className="house relative" style={{ height: `${(DRAWINGS + 1) * 100}svh` }}>
+    <section id={id} ref={section} aria-label="About Platera" className="house relative" style={{ height: `${DRAWINGS * 70 + 100}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div className="house-wall" aria-hidden />
         <div ref={host} className="absolute inset-0" />

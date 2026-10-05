@@ -173,7 +173,7 @@ export function StampScene() {
   const up = () => (control.current.hold = false)
 
   return (
-    <section id="chapter-hallmark" ref={section} aria-labelledby="stamp-title" className="relative h-[220svh]">
+    <section id="chapter-hallmark" ref={section} aria-labelledby="stamp-title" className="relative h-[180svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas
           ref={canvas}

@@ -127,7 +127,7 @@ export function GiftScene() {
   const onUp = () => (drag.current.active = false)
 
   return (
-    <section id="chapter-gift" ref={section} aria-labelledby="gift-title" className="relative h-[320svh]">
+    <section id="chapter-gift" ref={section} aria-labelledby="gift-title" className="relative h-[240svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <canvas
           ref={canvas}

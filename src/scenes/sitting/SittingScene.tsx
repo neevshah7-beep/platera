@@ -164,7 +164,7 @@ export function SittingScene() {
   }
 
   return (
-    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[640svh]" data-look="0">
+    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[460svh]" data-look="0">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div className="sit-floor" aria-hidden />
         <div className="sit-stage">
