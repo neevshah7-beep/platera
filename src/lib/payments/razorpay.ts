@@ -10,9 +10,14 @@ export function paymentsConfigured(): boolean {
   return Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET)
 }
 
-/** Local end-to-end testing without Razorpay keys. Never available in production. */
+/**
+ * Local end-to-end testing without Razorpay keys: in development, or in a production build
+ * run on this machine as a preview (PAYMENTS_LOCAL_PREVIEW is set only on that local start
+ * command, never in an env file or a deployment). Never once real keys are present.
+ */
 export function simulatedPayments(): boolean {
-  return process.env.NODE_ENV !== 'production' && process.env.PAYMENTS_DEV_SIMULATE === '1' && !paymentsConfigured()
+  const local = process.env.NODE_ENV !== 'production' || process.env.PAYMENTS_LOCAL_PREVIEW === '1'
+  return local && process.env.PAYMENTS_DEV_SIMULATE === '1' && !paymentsConfigured()
 }
 
 let client: Razorpay | null = null

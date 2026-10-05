@@ -2,7 +2,7 @@
 // 1440×900 and 1536×864: HTTP status, console errors, page errors, failed requests,
 // horizontal overflow, images without alt, and links that 404.
 import { chromium } from 'playwright-core'
-const base = 'http://localhost:3000'
+const base = process.env.BASE ?? 'http://localhost:3000'
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
 const ctx = await browser.newContext({ viewport: { width: 1366, height: 768 } })
 const page = await ctx.newPage()
