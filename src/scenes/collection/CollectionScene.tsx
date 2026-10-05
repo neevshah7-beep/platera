@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { prewarm } from '../prewarm'
 import { useEffect, useRef, useState } from 'react'
+import { OriginalsButton } from '@/site/OriginalsViewer'
 import { createCollection, type CollectionApi, type CollectionPiece } from './collection'
 
 /**
@@ -79,7 +80,8 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
           <div key={piece.slug} className="collection-label pointer-events-none absolute" style={{ left: Math.min(label.x, (typeof window !== "undefined" ? innerWidth : 1440) - 300), top: Math.max(label.y, 200) }}>
             <p className="font-display text-step-2 leading-tight">{piece.name}</p>
             <p className="num mt-1.5 text-step-0 font-medium text-gold-shadow">{piece.price}</p>
-            <p className="mt-2 text-[0.7rem] uppercase tracking-[0.16em] text-muted">Click to see it closer</p>
+            <p className="mt-2 text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-muted">Click the piece to see it closer</p>
+            {piece.originals && piece.originals.length > 0 && <OriginalsButton name={piece.name} photos={piece.originals} label="Original photos" className="collection-originals" />}
           </div>
         )}
         <Link href={allHref} className="collection-all btn btn-primary">See all {total} pieces</Link>

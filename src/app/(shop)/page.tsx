@@ -2,6 +2,7 @@ import { bookableDates } from '@/lib/appointments'
 import { getCurrentRates, getSetting, listProducts, priceProduct } from '@/lib/catalogue'
 import { mediaBase } from '@/components/media/PieceImage'
 import { toPieceRef } from '@/lib/world-data'
+import { originalsFor } from '@/lib/originals'
 import { formatINR } from '@/lib/pricing/format'
 import { STORE, whatsappLink } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
@@ -18,7 +19,7 @@ export default async function HomePage() {
   const featured = [...products.filter((p) => p.featured), ...products.filter((p) => !p.featured)]
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}` }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku) }] : []
     })
     .slice(0, 8)
   const silver = rates.SILVER_925

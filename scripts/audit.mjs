@@ -7,7 +7,8 @@ const base = 'http://localhost:3000'
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
 const pages = process.argv.slice(2)
 const report = []
-for (const run of [{ name: 'd', viewport: { width: 1440, height: 900 } }, { name: 'm', viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }]) {
+const RUNS = process.env.LAPTOP === '1' ? [{ name: 'l1280', viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1.5 }, { name: 'l1536', viewport: { width: 1536, height: 864 }, deviceScaleFactor: 1.25 }] : [{ name: 'd', viewport: { width: 1440, height: 900 } }, { name: 'm', viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }]
+for (const run of RUNS) {
   const ctx = await browser.newContext(run)
   const page = await ctx.newPage()
   const errors = []

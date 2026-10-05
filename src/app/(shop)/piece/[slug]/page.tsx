@@ -11,6 +11,9 @@ import { RateNote } from '@/components/site/RateNote'
 import { PieceCard } from '@/components/tray/PieceCard'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
+import { originalsFor } from '@/lib/originals'
+import { OriginalsButton } from '@/site/OriginalsViewer'
+import { OriginalsGallery } from '@/site/OriginalsGallery'
 import maps from '@/data/maps-manifest.json'
 import { toPieceRef } from '@/lib/world-data'
 import { STONE_LABEL, getCurrentRates, getProduct, isSold, listProducts, metalLine, priceProduct } from '@/lib/catalogue'
@@ -120,7 +123,10 @@ export default async function PiecePage({ params, searchParams }: Props) {
               poster={<PieceImage image={product.images[0]} sizes="(min-width: 1024px) 56vw, 100vw" priority className="block h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-contain" />}
             />
           ) : null}
-          <p className="mt-2 text-step--1"><a href="#photographs" className="link">See the photographs</a></p>
+          <p className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
+            <OriginalsButton name={product.name} photos={originalsFor(product.sku)} className="link font-medium" />
+            <a href="#originals" className="link">All photographs</a>
+          </p>
         </section>
 
         <section aria-labelledby="piece-name" className="lg:col-span-5 lg:col-start-8">
@@ -200,6 +206,14 @@ export default async function PiecePage({ params, searchParams }: Props) {
       <StickyActions productId={product.id} name={product.name} price={priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : null} enquiry={enquiry} />
 
       <div className="mt-24 pt-20">
+      {originalsFor(product.sku).length > 0 && (
+        <section id="originals" aria-labelledby="originals-heading" className="mx-auto mb-24 max-w-[1440px] px-[var(--gutter)]">
+          <p className="eyebrow">Unedited</p>
+          <h2 id="originals-heading" className="mt-3 text-step-4">As photographed <em className="accent">at the store.</em></h2>
+          <p className="measure mt-3 text-ink-muted">The original photographs, exactly as taken at the counter in Gorai 1: no retouching, no background removed. Open any one to look closer.</p>
+          <div className="mt-8"><OriginalsGallery name={product.name} photos={originalsFor(product.sku)} /></div>
+        </section>
+      )}
       <section id="photographs" aria-label="Photographs" className="mx-auto max-w-[1440px] px-[var(--gutter)]">
         <h2 className="text-step-3">Photographs</h2>
         <ul className="-mx-[var(--gutter)] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0">

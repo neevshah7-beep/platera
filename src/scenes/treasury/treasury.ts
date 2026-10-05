@@ -394,7 +394,7 @@ export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
     composer.setSize(w, h)
     camera.aspect = w / h
     const portrait = w / h < 0.8
-    camera.fov = portrait ? 46 : 30
+    camera.fov = portrait ? 46 : 34
     camera.position.set(portrait ? 0 : -16, portrait ? 120 : 74, portrait ? 92 : 92)
     camera.lookAt(portrait ? 0 : -16, 0, portrait ? -4 : -2)
     camera.updateProjectionMatrix()

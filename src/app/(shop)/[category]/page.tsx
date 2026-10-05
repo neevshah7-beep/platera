@@ -5,6 +5,7 @@ import { mediaBase } from '@/components/media/PieceImage'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
+import { originalsFor } from '@/lib/originals'
 import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
@@ -14,7 +15,7 @@ function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: A
   return products
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}` }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku) }] : []
     })
     .slice(0, 8)
 }
