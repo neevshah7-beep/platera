@@ -118,3 +118,11 @@
   .eq-working { border-radius: 1.4rem; padding: 1rem 1.2rem; }
   .eq-op { padding: 0 0.6rem; }
 }
+
+/* The piece's own heading, set like a jeweller's card. */
+.pdp-crumbs { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(43 29 14 / 0.6); }
+.pdp-crumbs a:hover { color: var(--espresso); }
+.pdp-name { margin-top: 0.9rem; font-size: clamp(2.6rem, 1.4rem + 2.8vw, 4.4rem); line-height: 1; letter-spacing: -0.01em; }
+.pdp-price { position: relative; margin-top: 2.2rem; padding-top: 1.8rem; }
+.pdp-price::before { content: ''; position: absolute; left: 0; top: 0; width: 5.5rem; height: 1px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright)); }
+.pdp-note { margin-top: 1.6rem; padding: 0.9rem 1.1rem; border: 1px solid rgb(201 154 62 / 0.45); background: rgb(251 247 238 / 0.45); font-size: var(--step-0); line-height: 1.5; }

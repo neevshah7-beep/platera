@@ -86,3 +86,20 @@ html[data-scroll='down'] .chapter-rail[data-shown='true'] { opacity: 0; transfor
 .chapter-rail button[data-on='true']::after { height: 1px; }
 .chapter-n { font-size: 0.66rem; letter-spacing: 0.1em; }
 @media (max-width: 767px) { .chapter-rail ol { justify-content: flex-start; } }
+
+/* ── Grain, arrival, and the gold ring ────────────────────────────────────── */
+/* A whisper of film grain over everything: flat colour gains the tooth of printed paper. */
+body::after { content: ''; position: fixed; inset: 0; z-index: 95; pointer-events: none; background: url('/media/grain.png') repeat; background-size: 180px 180px; opacity: 0.4; }
+/* Each page comes up from the champagne (opacity only: a transform here would unpin the
+   page's fixed layers). */
+.page-arrive { animation: page-arrive 900ms var(--ease-entry) both; }
+@keyframes page-arrive { from { opacity: 0; } }
+.gold-cursor { position: fixed; left: 0; top: 0; z-index: 96; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; border: 1px solid rgb(185 138 52 / 0.85); pointer-events: none; opacity: 0; transition: opacity 400ms, width 450ms var(--ease-entry), height 450ms var(--ease-entry), margin 450ms var(--ease-entry), background-color 450ms, border-color 450ms; }
+.gold-cursor::after { content: ''; position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px; border-radius: 50%; background: #b98a34; transition: opacity 300ms; }
+.gold-cursor[data-on='true'] { opacity: 1; }
+.gold-cursor[data-hot='true'] { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgb(241 212 136 / 0.14); border-color: rgb(201 154 62 / 0.9); }
+.gold-cursor[data-hot='true']::after { opacity: 0; }
+.gold-cursor[data-down='true'] { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+@media (pointer: coarse) { .gold-cursor { display: none; } }
+@media (prefers-reduced-motion: reduce) { .page-arrive { animation: none; } }
+.site-header button[aria-label='Menu'] { font-size: 0.74rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; }

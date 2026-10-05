@@ -3,6 +3,7 @@ import { SiteFooter } from '@/components/site/SiteFooter'
 import { getCurrentRates } from '@/lib/catalogue'
 import { getBagCount } from '@/lib/cart/bag'
 import { BackToHouse } from '@/site/BackToHouse'
+import { GoldCursor } from '@/site/GoldCursor'
 import { Header } from '@/site/Header'
 import { SmoothScroll } from '@/site/SmoothScroll'
 
@@ -15,6 +16,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
       <main id="main" className="pt-16">{children}</main>
       <SiteFooter rate={rates.SILVER_925} />
       <BackToHouse />
+      <GoldCursor />
       <ConsentAndTags gaId={process.env.NEXT_PUBLIC_GA4_ID} pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />
     </>
   )

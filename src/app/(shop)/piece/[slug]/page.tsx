@@ -101,7 +101,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
       />
 
       <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-6">
-        <nav aria-label="Breadcrumb" className="text-step--1 text-ink-muted">
+        <nav aria-label="Breadcrumb" className="pdp-crumbs">
           <ol className="flex gap-2">
             <li><Link href="/" className="hover:text-ink">Home</Link> /</li>
             <li><Link href={`/${product.category.slug}`} className="hover:text-ink">{product.category.name}</Link> /</li>
@@ -131,11 +131,11 @@ export default async function PiecePage({ params, searchParams }: Props) {
 
         <section aria-labelledby="piece-name" className="lg:col-span-5 lg:col-start-8">
           <div className="lg:sticky lg:top-24">
-            <p className="text-step--1 text-ink-muted">{metalLine(product)}</p>
-            <h1 id="piece-name" className="mt-2 text-step-5">{product.name}</h1>
+            <p className="eyebrow">{metalLine(product)}</p>
+            <h1 id="piece-name" className="pdp-name">{product.name}</h1>
             <p className="measure mt-5 text-step-1 text-ink-muted">{product.summary}</p>
 
-            <div className="mt-8">
+            <div className="pdp-price">
               {sold ? (
                 <p className="font-display text-step-3">Sold</p>
               ) : priced ? (
@@ -156,7 +156,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
             </div>
 
             {product.stoneType === 'CUBIC_ZIRCONIA' && (
-              <p className="mt-6 border-l border-argent pl-4 text-step-0">Set with cubic zirconia (CZ), a lab-made stone. Not diamond.</p>
+              <p className="pdp-note">Set with cubic zirconia (CZ), a lab-made stone. Not diamond.</p>
             )}
             {oneOfOne && !sold && <p className="mt-4 text-step--1 text-ink-muted">One of one. There is only this piece.</p>}
 
