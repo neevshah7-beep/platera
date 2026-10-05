@@ -67,3 +67,22 @@ html { scrollbar-width: thin; scrollbar-color: #b98a34 #efe1c3; }
 @media (prefers-reduced-motion: reduce) {
   .home-chapters > section > .sticky { animation: none !important; -webkit-mask-image: none !important; mask-image: none !important; }
 }
+
+/* ── The header, as letterhead ───────────────────────────────────────────────
+   Frosted champagne glass with a gold hairline; the name centred in spaced capitals; the
+   rooms in small fine lettering. The chapter index shares the glass and tucks away while
+   reading down, returning when the visitor scrolls back. */
+.site-header { background: rgb(247 238 218 / 0.74); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); box-shadow: inset 0 -1px 0 rgb(201 154 62 / 0.38); transition: background-color 700ms var(--ease-entry), box-shadow 700ms var(--ease-entry); }
+html[data-hero='1'] .site-header { background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.site-nav { font-size: 0.74rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; }
+.site-nav .link-underline::after { height: 1px; background: var(--gold-shadow); }
+.site-brand { justify-self: center; padding-left: 0.34em; font-size: clamp(1.3rem, 1rem + 0.6vw, 1.7rem); letter-spacing: 0.34em; line-height: 1; color: var(--espresso); }
+.chapter-rail { top: 4rem; background: rgb(247 238 218 / 0.74); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); border-bottom: 0; box-shadow: inset 0 -1px 0 rgb(201 154 62 / 0.3); }
+.chapter-rail[data-shown='true'] { transition: opacity 600ms var(--ease-entry), transform 700ms var(--ease-entry); }
+html[data-scroll='down'] .chapter-rail[data-shown='true'] { opacity: 0; transform: translateY(-100%); pointer-events: none; }
+.chapter-rail ol { justify-content: center; gap: clamp(1rem, 0.2rem + 1.8vw, 2.8rem); }
+.chapter-rail button { padding: 0.62rem 0 0.6rem; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; color: rgb(43 29 14 / 0.62); }
+.chapter-rail button[data-on='true'] { color: var(--espresso); }
+.chapter-rail button[data-on='true']::after { height: 1px; }
+.chapter-n { font-size: 0.66rem; letter-spacing: 0.1em; }
+@media (max-width: 767px) { .chapter-rail ol { justify-content: flex-start; } }

@@ -60,6 +60,47 @@ function silkNormals(size = 1024): THREE.CanvasTexture {
   return t
 }
 
+/** Fine pebbled leather grain as a normal map: two scales of soft cellular bumps. */
+function leatherNormals(size = 512): THREE.CanvasTexture {
+  const c = document.createElement('canvas')
+  c.width = c.height = size
+  const g = c.getContext('2d')!
+  const img = g.createImageData(size, size)
+  let s = 7
+  const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647)
+  const N = 64
+  const grid = Array.from({ length: N * N }, () => rnd())
+  const v = (x: number, y: number) => {
+    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi
+    const a = grid[((yi % N) + N) % N * N + ((xi % N) + N) % N], b = grid[((yi % N) + N) % N * N + (((xi + 1) % N) + N) % N]
+    const c2 = grid[(((yi + 1) % N) + N) % N * N + ((xi % N) + N) % N], d = grid[(((yi + 1) % N) + N) % N * N + (((xi + 1) % N) + N) % N]
+    const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy)
+    return a + (b - a) * ux + (c2 - a) * uy + (a - b - c2 + d) * ux * uy
+  }
+  const h = (x: number, y: number) => {
+    const k = (N / size)
+    const p = Math.abs(v(x * k * 6, y * k * 6) - 0.5)
+    return (0.5 - p) * 1.0 + v(x * k * 17, y * k * 17) * 0.35
+  }
+  for (let y = 0; y < size; y++)
+    for (let x = 0; x < size; x++) {
+      const dx = (h(x + 1, y) - h(x - 1, y)) * 4
+      const dy = (h(x, y + 1) - h(x, y - 1)) * 4
+      const l = Math.hypot(dx, dy, 1)
+      const i = (y * size + x) * 4
+      img.data[i] = (-dx / l * 0.5 + 0.5) * 255
+      img.data[i + 1] = (dy / l * 0.5 + 0.5) * 255
+      img.data[i + 2] = (1 / l * 0.5 + 0.5) * 255
+      img.data[i + 3] = 255
+    }
+  g.putImageData(img, 0, 0)
+  const t = new THREE.CanvasTexture(c)
+  t.wrapS = t.wrapT = THREE.RepeatWrapping
+  t.repeat.set(3, 3)
+  t.anisotropy = 8
+  return t
+}
+
 export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPiece[]): CollectionApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
   const gate = visibleGate(canvas)
@@ -72,8 +113,8 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
   const scene = new THREE.Scene()
-  scene.background = new THREE.Color(0.91, 0.83, 0.65)
-  scene.fog = new THREE.Fog(new THREE.Color(0.91, 0.83, 0.65), 90, 220)
+  scene.background = new THREE.Color(0.8, 0.64, 0.4)
+  scene.fog = new THREE.Fog(new THREE.Color(0.8, 0.64, 0.4), 80, 200)
   const camera = new THREE.PerspectiveCamera(32, 1, 1, 600)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
@@ -82,7 +123,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     envTex = pmrem.fromEquirectangular(tex).texture
     tex.dispose()
     scene.environment = envTex
-    scene.environmentIntensity = 0.55
+    scene.environmentIntensity = 0.7
   })
 
   const run = (pieces.length - 1) * SPACING
@@ -94,24 +135,26 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   for (let i = 0; i < sp.count; i++) {
     const x = sp.getX(i), y = sp.getY(i)
     const z =
-      2.6 * Math.sin(x * 0.045 + y * 0.03 + Math.sin(y * 0.02) * 1.8) +
-      1.4 * Math.sin(x * 0.11 - y * 0.07 + 1.1) * (0.6 + 0.4 * Math.sin(y * 0.05)) +
+      3.6 * Math.sin(x * 0.045 + y * 0.03 + Math.sin(y * 0.02) * 1.8) +
+      2.0 * Math.sin(x * 0.11 - y * 0.07 + 1.1) * (0.6 + 0.4 * Math.sin(y * 0.05)) +
       0.5 * Math.sin(x * 0.26 + y * 0.19)
     // Calm under the pieces' line so they rest level; folds rise toward the back.
     const calm = Math.exp(-(y * y) / (2 * 14 * 14))
-    sp.setZ(i, z * (1 - 0.75 * calm) + Math.max(0, y - 20) * 0.08)
+    sp.setZ(i, z * (1 - 0.5 * calm) + Math.max(0, y - 20) * 0.08)
   }
   silkGeo.computeVertexNormals()
   const silk = new THREE.Mesh(
     silkGeo,
     new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(0.86, 0.66, 0.36),
-      roughness: 0.42,
+      color: new THREE.Color(0.6, 0.4, 0.19),
+      roughness: 0.3,
       sheen: 1,
-      sheenRoughness: 0.35,
-      sheenColor: new THREE.Color(1, 0.9, 0.7),
+      sheenRoughness: 0.22,
+      sheenColor: new THREE.Color(1, 0.84, 0.52),
+      clearcoat: 0.25,
+      clearcoatRoughness: 0.3,
       normalMap: silkNormal,
-      normalScale: new THREE.Vector2(0.35, 0.35),
+      normalScale: new THREE.Vector2(0.55, 0.55),
     }),
   )
   silk.rotation.x = -Math.PI / 2
@@ -127,17 +170,20 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   lamp.shadow.camera.near = 10
   lamp.shadow.camera.far = 140
   scene.add(lamp, lamp.target)
-  const fill = new THREE.HemisphereLight(0xfff4e0, 0x8a5a26, 0.25)
+  const fill = new THREE.HemisphereLight(0xfff4e0, 0x8a5a26, 0.18)
   scene.add(fill)
+  const rim = new THREE.DirectionalLight(0xffd9a0, 1.4)
+  rim.position.set(30, 18, -60)
+  scene.add(rim, rim.target)
 
   const loader = new THREE.TextureLoader()
 
   // ── The case materials, shared ──
   // Champagne leatherette outside, a fine gold trim, espresso velvet inside (silver and
   // stones glow against dark velvet), and a cream satin lid lining foiled with the name.
-  const shell = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.9, 0.78, 0.58), roughness: 0.55, sheen: 0.6, sheenRoughness: 0.5, sheenColor: new THREE.Color(1, 0.93, 0.8), clearcoat: 0.2, clearcoatRoughness: 0.4 })
+  const shell = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.95, 0.88, 0.74), roughness: 0.42, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.28, 0.28), sheen: 0.5, sheenRoughness: 0.4, sheenColor: new THREE.Color(1, 0.95, 0.85), clearcoat: 1, clearcoatRoughness: 0.07, envMapIntensity: 1.3 })
   const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.12, 0.065, 0.035), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.55, 0.36, 0.22) })
-  const trim = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.18 })
+  const trim = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.78, 0.36), metalness: 1, roughness: 0.12, envMapIntensity: 1.6 })
   const liningCanvas = document.createElement('canvas')
   liningCanvas.width = 1024
   liningCanvas.height = 640
@@ -295,6 +341,8 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     // A low raking lamp from the left: long soft shadows and light across every fold.
     lamp.position.set(x - 46 + Math.sin(now * 0.0004) * 3, 34, 18)
     lamp.target.position.set(x + 4, 0, 0)
+    rim.position.set(x + 30, 18, -60)
+    rim.target.position.set(x, 0, 0)
 
     ray.setFromCamera(ndc, camera)
     const hits = ray.intersectObjects(items.map((it) => it.mesh), false)
@@ -359,6 +407,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
       cancelAnimationFrame(raf)
       gate.dispose()
       geos.forEach((g) => g.dispose())
+      shell.normalMap?.dispose()
       ;[shell, velvet, trim, lining].forEach((m) => m.dispose())
       liningTex.dispose()
       for (const it of items) {

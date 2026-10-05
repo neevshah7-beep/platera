@@ -223,6 +223,15 @@ def build():
     lib.area_light("Top", (0.05, -0.08, 0.35), (0, 0, top), 0.4, float(arg("--top", 2.5)), color=(1.0, 0.95, 0.88))
     lib.area_light("Rim", (0.12, 0.3, 0.14), (0, 0, top), 0.2, 2.2, color=(1.0, 0.78, 0.48))
     lib.softbox_card("Strip", (0.18, -0.1, 0.12), (0, 0, top), 0.02, 0.2, 2.5, color=(1, 0.97, 0.92))
+    # The bar's polished top mirrors the space beyond and above it, which was dark: a broad
+    # warm reflector card there (as a jewellery photographer sets one) so the face reads as
+    # champagne light graded across the silver, never as black.
+    # Seen from the camera the small face mirrors one narrow band of the room, about 29°
+    # above it. A bright card's lower edge is set exactly on that band and a warm board just
+    # below, so the face splits from bright champagne to deep warm, as polished silver does
+    # in a studio photograph.
+    lib.softbox_card("Reflector", (0.0, 0.45, 0.322), (0, 0, top), 0.9, 0.126, float(arg("--refl", 2.2)), color=(1.0, 0.95, 0.86))
+    lib.softbox_card("ReflectorWarm", (0.0, 0.45, 0.233), (0, 0, top), 0.9, 0.052, float(arg("--refl", 2.2)) * 0.22, color=(0.95, 0.7, 0.42))
     # The spark of the strike: a tiny hot light at the die face for two frames.
     spark = lib.area_light("Spark", (0, -0.004, top + 0.6 * mm), (0, 0, top), 0.003, 0, color=(1.0, 0.8, 0.45))
     for f, e in ((STRIKE - 1, 0), (STRIKE, 6), (STRIKE + 2, 1.5), (STRIKE + 4, 0)):
