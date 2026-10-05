@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Tray } from '@/components/tray/Tray'
+import { PieceGrid } from '@/components/tray/PieceGrid'
 import { RateNote } from '@/components/site/RateNote'
 import { getCurrentRates, listProducts, priceProduct, sortPriced, type CatalogueFilters, type SortKey } from '@/lib/catalogue'
 
@@ -97,7 +97,7 @@ export async function CollectionView({ basePath, category, search }: { basePath:
 
       <div className="mt-16">
         {items.length ? (
-          <Tray items={items} priorityFirst label="Pieces" />
+          <PieceGrid items={items} priorityFirst label="Pieces" />
         ) : (
           <div className="py-24">
             <p className="font-display text-step-3">Nothing on the tray matches that.</p>
