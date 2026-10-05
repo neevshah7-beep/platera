@@ -13,3 +13,4 @@ assets/blender/*.png
 assets/models/
 assets/render/
 public/scenes/
+.next-prod/

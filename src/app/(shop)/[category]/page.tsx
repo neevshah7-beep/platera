@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { CollectionView } from '@/components/tray/CollectionView'
 import { mediaBase } from '@/components/media/PieceImage'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
-import { getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
+import { isSold, getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor } from '@/lib/originals'
 import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
@@ -15,7 +15,7 @@ function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: A
   return products
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku) }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
     .slice(0, 8)
 }

@@ -83,7 +83,13 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
 
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop)
-      if (!visible || !frames) return
+      if (!visible || !frames) {
+        if (!visible && frames && shownBmp) {
+          frames.trim()
+          shownBmp = null
+        }
+        return
+      }
       const t = now / 1000
 
       // Which frame: the fall plays in real time once entered; then scroll scrubs the settle.

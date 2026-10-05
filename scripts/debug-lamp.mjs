@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core'
+const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
+const page = await (await browser.newContext({ viewport: { width: 1536, height: 864 } })).newPage()
+page.on('console', (m) => !/X4122|X3595/.test(m.text()) && console.log('[c]', m.type(), m.text().slice(0, 200)))
+page.on('pageerror', (e) => console.log('[pageerror]', e.message))
+await page.goto((process.env.BASE ?? 'http://localhost:3001') + '/piece/five-petal-necklace-set', { waitUntil: 'load' })
+await page.waitForTimeout(5000)
+console.log(await page.evaluate(() => { const c = document.querySelector('.lamp-stage canvas'); return c ? { w: c.width, h: c.height, cls: c.className, lost: c.getContext('webgl2')?.isContextLost() } : 'no canvas' }))
+await page.screenshot({ path: 'look/lamp.png' })
+await browser.close()

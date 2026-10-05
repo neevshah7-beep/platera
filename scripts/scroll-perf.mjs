@@ -2,7 +2,7 @@
 import { chromium } from 'playwright-core'
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
 const page = await (await browser.newContext({ viewport: { width: 1536, height: 864 }, deviceScaleFactor: 1.25 })).newPage()
-await page.goto('http://localhost:3000/', { waitUntil: 'load', timeout: 180000 })
+await page.goto((process.env.BASE ?? 'http://localhost:3000') + '/', { waitUntil: 'load', timeout: 180000 })
 await page.evaluate(() => localStorage.setItem('platera:entered', '1'))
 await page.reload({ waitUntil: 'load' })
 await page.waitForTimeout(4000)

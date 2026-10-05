@@ -1,8 +1,8 @@
 'use client'
 
-import { prewarm } from '../prewarm'
+import { useManagedScene } from '../useManagedScene'
 import { useEffect, useRef } from 'react'
-import { createTreasury, type TreasuryApi } from './treasury'
+import { createTreasury } from './treasury'
 
 /**
  * SCENE · THE TREASURY (treasury.ts). Pinned while the coin, the stone and the bar arrive.
@@ -10,50 +10,38 @@ import { createTreasury, type TreasuryApi } from './treasury'
  */
 export function TreasuryScene({ rates }: { rates: { label: string; value: string }[] }) {
   const section = useRef<HTMLElement>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
-  const api = useRef<TreasuryApi | null>(null)
+  const host = useRef<HTMLDivElement>(null)
+  const api = useManagedScene(section, host, (c) => createTreasury(c), [])
 
   useEffect(() => {
-    const c = canvas.current!
-    let s: TreasuryApi | null = null
-    const job = prewarm(() => {
-      if (!s) s = api.current = createTreasury(c)
-    })
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
-    io.observe(section.current!)
     let raf = 0
     const tick = () => {
       raf = requestAnimationFrame(tick)
       const r = section.current!.getBoundingClientRect()
+      if (r.bottom < -innerHeight || r.top > innerHeight * 2) return
       api.current?.setProgress(Math.min(1, Math.max(0, -r.top / (r.height - innerHeight))))
     }
     raf = requestAnimationFrame(tick)
-    const ro = new ResizeObserver(() => api.current?.resize())
-    ro.observe(c)
     const move = (e: PointerEvent) => {
-      const r = c.getBoundingClientRect()
+      const r = host.current!.getBoundingClientRect()
       api.current?.pointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, 'move')
     }
     addEventListener('pointermove', move, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
-      io.disconnect()
-      job.cancel()
-      ro.disconnect()
       removeEventListener('pointermove', move)
-      s?.dispose()
     }
-  }, [])
+  }, [api])
 
   const send = (e: React.PointerEvent, phase: 'down' | 'up') => {
-    const r = canvas.current!.getBoundingClientRect()
+    const r = host.current!.getBoundingClientRect()
     api.current?.pointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, phase)
   }
 
   return (
     <section id="chapter-treasury" ref={section} aria-labelledby="treasury-title" className="relative h-[260svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full touch-pan-y" onPointerDown={(e) => send(e, 'down')} onPointerUp={(e) => send(e, 'up')} />
+        <div ref={host} className="absolute inset-0 touch-pan-y" onPointerDown={(e) => send(e, 'down')} onPointerUp={(e) => send(e, 'up')} />
         <div className="treasury-copy pointer-events-none absolute px-[var(--gutter)]">
           <p className="eyebrow">The treasury</p>
           <h2 id="treasury-title" className="treasury-title">Pure metal, <em className="accent">priced in the open.</em></h2>

@@ -27,6 +27,8 @@ const csp = [
 ].join('; ')
 
 const nextConfig: NextConfig = {
+  // A separate output folder lets a production preview build run beside the dev server.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
   // Shaders live as commented .glsl files (src/world/shaders) and import as strings.
   webpack(config) {

@@ -1,8 +1,8 @@
 'use client'
 
-import { prewarm } from '../prewarm'
+import { useManagedScene } from '../useManagedScene'
 import { useEffect, useRef, useState } from 'react'
-import { createStrand, PROMISES, type StrandApi } from './strand'
+import { createStrand, PROMISES } from './strand'
 
 export type StrandPromise = { mark: string; title: string; body: string }
 
@@ -14,62 +14,49 @@ export type StrandPromise = { mark: string; title: string; body: string }
  */
 export function StrandScene({ promises }: { promises: StrandPromise[] }) {
   const section = useRef<HTMLElement>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
-  const api = useRef<StrandApi | null>(null)
+  const host = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(-1)
+  const api = useManagedScene(section, host, (c) => createStrand(c), [])
 
   useEffect(() => {
-    const c = canvas.current!
-    let strand: StrandApi | null = null
-    // Build the scene only when it is about to be seen; tear it down when far away.
-    const job = prewarm(() => {
-      if (!strand) strand = api.current = createStrand(c)
-    })
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
-    io.observe(section.current!)
-
     let raf = 0
     const tick = () => {
       raf = requestAnimationFrame(tick)
-      const s = section.current!
-      const r = s.getBoundingClientRect()
-      const total = r.height - innerHeight
-      const p = Math.min(1, Math.max(0, -r.top / total)) * PROMISES
+      const r = section.current!.getBoundingClientRect()
+      if (r.bottom < -innerHeight || r.top > innerHeight * 2) return
+      const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight))) * PROMISES
       api.current?.setProgress(p)
       const k = p > 0.15 && p < PROMISES - 0.05 ? Math.min(PROMISES - 1, Math.floor(p)) : -1
-      setActive((a) => (a === k ? a : k))
+      setActive((v) => (v === k ? v : k))
     }
     raf = requestAnimationFrame(tick)
-
-    const move = (e: PointerEvent, down: boolean | null) => {
-      const r = c.getBoundingClientRect()
-      if (e.clientY < r.top || e.clientY > r.bottom) return
-      api.current?.pointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, down)
+    const at = (e: PointerEvent) => {
+      const r = host.current!.getBoundingClientRect()
+      return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height] as const
     }
-    const onMove = (e: PointerEvent) => move(e, null)
-    const onDown = (e: PointerEvent) => move(e, true)
-    const onUp = (e: PointerEvent) => move(e, false)
+    const onMove = (e: PointerEvent) => {
+      const r = host.current!.getBoundingClientRect()
+      if (e.clientY < r.top || e.clientY > r.bottom) return
+      api.current?.pointer(...at(e), null)
+    }
+    const onDown = (e: PointerEvent) => api.current?.pointer(...at(e), true)
+    const onUp = (e: PointerEvent) => api.current?.pointer(...at(e), false)
+    const h = host.current!
     addEventListener('pointermove', onMove, { passive: true })
-    c.addEventListener('pointerdown', onDown)
+    h.addEventListener('pointerdown', onDown)
     addEventListener('pointerup', onUp, { passive: true })
-    const ro = new ResizeObserver(() => api.current?.resize())
-    ro.observe(c)
     return () => {
       cancelAnimationFrame(raf)
-      io.disconnect()
-      job.cancel()
-      ro.disconnect()
       removeEventListener('pointermove', onMove)
-      c.removeEventListener('pointerdown', onDown)
+      h.removeEventListener('pointerdown', onDown)
       removeEventListener('pointerup', onUp)
-      strand?.dispose()
     }
-  }, [])
+  }, [api])
 
   return (
     <section id="chapter-promises" ref={section} aria-labelledby="strand-title" className="strand relative" style={{ height: `${(PROMISES + 1) * 100}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full touch-pan-y" />
+        <div ref={host} className="absolute inset-0 touch-pan-y" />
         <div className="strand-eyebrow pointer-events-none absolute px-[var(--gutter)]">
           <h2 id="strand-title" className="eyebrow">Six promises, strung together</h2>
         </div>

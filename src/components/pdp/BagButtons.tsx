@@ -4,6 +4,7 @@ import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 import Link from 'next/link'
 import { addToBag, buyNow, type BagActionState } from '@/lib/cart/actions'
+import { flyToBag } from '@/site/flyToBag'
 
 function Submit({ children, className }: { children: React.ReactNode; className: string }) {
   const { pending } = useFormStatus()
@@ -15,7 +16,13 @@ function Submit({ children, className }: { children: React.ReactNode; className:
 }
 
 export function BagButtons({ productId, compact = false }: { productId: string; compact?: boolean }) {
-  const [state, action] = useActionState<BagActionState, FormData>(addToBag, null)
+  const [state, action] = useActionState<BagActionState, FormData>(async (prev, fd) => {
+    const r = await addToBag(prev, fd)
+    // The piece's photograph flies into the bag.
+    const from = document.querySelector<HTMLElement>('.lamp-stage img, main img')
+    if (r?.ok && from) flyToBag(from)
+    return r
+  }, null)
   return (
     <div>
       <div className={`grid gap-3 ${compact ? 'grid-cols-2' : 'sm:grid-cols-2'}`}>

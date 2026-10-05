@@ -86,7 +86,7 @@ export class FrameStore {
   private pending = new Set<number>()
   width = 0
   height = 0
-  constructor(private keep = 14) {}
+  constructor(private keep = 6) {}
 
   get count() {
     return this.blobs.length
@@ -150,6 +150,12 @@ export class FrameStore {
         }
       }
     })
+  }
+
+  /** Free every decoded frame (the compressed files stay); used while scrolled away. */
+  trim() {
+    for (const b of this.cache.values()) b.close()
+    this.cache.clear()
   }
 
   dispose() {

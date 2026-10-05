@@ -71,7 +71,13 @@ export function GiftScene() {
       raf = requestAnimationFrame(loop)
       const dt = Math.min(0.1, (now - last) / 1000)
       last = now
-      if (!visible || !frames) return
+      if (!visible || !frames) {
+        if (!visible && frames && shownBmp) {
+          frames.trim()
+          shownBmp = null
+        }
+        return
+      }
       const r = section.current!.getBoundingClientRect()
       const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)))
       // Scroll wraps the gift over the first 85% of the section; the rest is for pulling.

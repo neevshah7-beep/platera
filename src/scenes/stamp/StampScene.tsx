@@ -89,7 +89,13 @@ export function StampScene() {
       // Real elapsed time (not frame count), so the charge feels the same on any device.
       const dt = Math.min(0.25, (now - last) / 1000)
       last = now
-      if (!visible || !frames) return
+      if (!visible || !frames) {
+        if (!visible && frames && shownBmp) {
+          frames.trim()
+          shownBmp = null
+        }
+        return
+      }
       const t = now / 1000
       const ctl = control.current
 

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { MobileMenu } from '@/components/site/MobileMenu'
+import { BagCount } from './BagCount'
 
 const NAV = [
   { href: '/collection', label: 'Collection' },
@@ -23,8 +24,8 @@ export function Header({ bagCount }: { bagCount: number }) {
         <div className="flex items-center gap-6 text-step--1 tracking-[0.08em] uppercase">
           <Link href="/visit" className="link-underline hidden sm:inline">Visit</Link>
           <span className="md:hidden"><MobileMenu /></span>
-          <Link href="/bag" className="link-underline">
-            Bag<span className="num ml-1.5">({bagCount})</span>
+          <Link href="/bag" className="link-underline inline-block" data-bag-target>
+            Bag<BagCount initial={bagCount} />
           </Link>
         </div>
       </div>

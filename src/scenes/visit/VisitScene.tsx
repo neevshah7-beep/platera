@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { prewarm } from '../prewarm'
+import { useManagedScene } from '../useManagedScene'
 import { useEffect, useRef, useState } from 'react'
-import { createCalendar, type CalendarApi, type CalendarDay } from './calendar'
+import { createCalendar, type CalendarDay } from './calendar'
 
 /**
  * SCENE 6 · THE COUNTER (calendar.ts). Flip the Platera desk calendar to the day you'd
@@ -26,31 +26,13 @@ export function VisitScene({
   maps: string
 }) {
   const section = useRef<HTMLElement>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
-  const api = useRef<CalendarApi | null>(null)
+  const host = useRef<HTMLDivElement>(null)
   const [index, setIndex] = useState(0)
   const [sitting, setSitting] = useState<'morning' | 'evening'>('evening')
-
-  useEffect(() => {
-    const c = canvas.current!
-    let cal: CalendarApi | null = null
-    const job = prewarm(() => {
-      if (!cal) cal = api.current = createCalendar(c, days, setIndex)
-    })
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
-    io.observe(section.current!)
-    const ro = new ResizeObserver(() => api.current?.resize())
-    ro.observe(c)
-    return () => {
-      io.disconnect()
-      job.cancel()
-      ro.disconnect()
-      cal?.dispose()
-    }
-  }, [days])
+  const api = useManagedScene(section, host, (c) => createCalendar(c, days, setIndex), [days])
 
   const send = (e: React.PointerEvent, phase: 'down' | 'move' | 'up') => {
-    const r = canvas.current!.getBoundingClientRect()
+    const r = host.current!.getBoundingClientRect()
     api.current?.pointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, phase)
     if (phase === 'down') (e.target as Element).setPointerCapture?.(e.pointerId)
   }
@@ -59,10 +41,9 @@ export function VisitScene({
   return (
     <section id="chapter-counter" ref={section} aria-labelledby="visit-title" className="relative flex flex-col overflow-hidden md:block md:h-[100svh] md:min-h-[680px]">
       <div className="visit-stage relative h-[64svh] md:absolute md:inset-0 md:h-auto">
-      <canvas
-        ref={canvas}
-        aria-hidden
-        className="absolute inset-0 h-full w-full cursor-grab touch-pan-x active:cursor-grabbing"
+      <div
+        ref={host}
+        className="absolute inset-0 cursor-grab touch-pan-x active:cursor-grabbing"
         onPointerDown={(e) => send(e, 'down')}
         onPointerMove={(e) => send(e, 'move')}
         onPointerUp={(e) => send(e, 'up')}

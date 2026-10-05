@@ -12,7 +12,7 @@ import { PieceCard } from '@/components/tray/PieceCard'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
 import { originalsFor } from '@/lib/originals'
-import { OriginalsButton } from '@/site/OriginalsViewer'
+import { ViewButton } from '@/site/ViewButton'
 import { OriginalsGallery } from '@/site/OriginalsGallery'
 import maps from '@/data/maps-manifest.json'
 import { toPieceRef } from '@/lib/world-data'
@@ -124,7 +124,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
             />
           ) : null}
           <p className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
-            <OriginalsButton name={product.name} photos={originalsFor(product.sku)} className="link font-medium" />
+            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />}
             <a href="#originals" className="link">All photographs</a>
           </p>
         </section>
@@ -211,7 +211,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
           <p className="eyebrow">Unedited</p>
           <h2 id="originals-heading" className="mt-3 text-step-4">As photographed <em className="accent">at the store.</em></h2>
           <p className="measure mt-3 text-ink-muted">The original photographs, exactly as taken at the counter in Gorai 1: no retouching, no background removed. Open any one to look closer.</p>
-          <div className="mt-8"><OriginalsGallery name={product.name} photos={originalsFor(product.sku)} /></div>
+          <div className="mt-10">{pieceRef && <OriginalsGallery piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />}</div>
         </section>
       )}
       <section id="photographs" aria-label="Photographs" className="mx-auto max-w-[1440px] px-[var(--gutter)]">

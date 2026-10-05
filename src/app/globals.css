@@ -500,7 +500,7 @@ html[data-returning='1'] .entry-gate { display: none; }
 .strand-promise, .stamp-copy, .collection-head, .treasury-copy, .gift-copy, .ceremony-caption, .strand-eyebrow, .hero-copy > div:last-child > div:first-child {
   isolation: isolate;
 }
-.strand-promise::before, .stamp-copy::before, .collection-head::before, .treasury-copy::before, .gift-copy::before, .ceremony-caption::before, .hero-copy > div:last-child > div:first-child::before {
+.strand-promise[data-on='true']::before, .stamp-copy::before, .collection-head::before, .treasury-copy::before, .gift-copy::before, .ceremony-caption::before, .hero-copy > div:last-child > div:first-child::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -542,3 +542,8 @@ html[data-returning='1'] .entry-gate { display: none; }
 @media (max-width: 767px) { .originals-stage { padding: 0; } .originals-arrow { display: none; } }
 .collection-originals { pointer-events: auto; margin-top: 0.7rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-shadow); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
 .collection-originals:hover { color: var(--espresso); }
+
+/* Only the promise being read has its glow (six share one spot; the others' glows would cover it). */
+.strand-promise { pointer-events: none; }
+.strand-promise[data-on='false'] { visibility: hidden; transition: visibility 0s linear 700ms; }
+.strand-promise[data-on='true'] { visibility: visible; }

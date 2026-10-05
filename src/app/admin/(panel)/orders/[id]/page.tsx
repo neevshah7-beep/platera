@@ -6,7 +6,7 @@ import { NEXT_STATUS, returnRefundPreview } from '@/lib/orders/admin'
 import { formatINR } from '@/lib/pricing/format'
 import { shiprocketConfigured } from '@/lib/shipping/shiprocket'
 import { whatsappLink } from '@/lib/store'
-import { STATUS_LABEL } from '../page'
+import { STATUS_LABEL } from '@/lib/orders/labels'
 import { saveOrderNote } from '../actions'
 import { OrderButtons, RefundButton, ShipmentForm } from './OrderControls'
 
