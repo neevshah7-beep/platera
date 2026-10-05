@@ -1,5 +1,6 @@
 'use client'
 
+import { prewarm } from '../prewarm'
 import { useEffect, useRef, useState } from 'react'
 import { createStrand, PROMISES, type StrandApi } from './strand'
 
@@ -21,19 +22,10 @@ export function StrandScene({ promises }: { promises: StrandPromise[] }) {
     const c = canvas.current!
     let strand: StrandApi | null = null
     // Build the scene only when it is about to be seen; tear it down when far away.
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting && !strand) {
-          strand = createStrand(c)
-          api.current = strand
-        } else if (!e.isIntersecting && strand) {
-          strand.dispose()
-          strand = null
-          api.current = null
-        }
-      },
-      { rootMargin: '100% 0px' },
-    )
+    const job = prewarm(() => {
+      if (!strand) strand = api.current = createStrand(c)
+    })
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
     io.observe(section.current!)
 
     let raf = 0
@@ -65,6 +57,7 @@ export function StrandScene({ promises }: { promises: StrandPromise[] }) {
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
+      job.cancel()
       ro.disconnect()
       removeEventListener('pointermove', onMove)
       c.removeEventListener('pointerdown', onDown)

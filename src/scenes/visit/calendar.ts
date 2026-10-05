@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 
@@ -81,7 +82,8 @@ function pageTexture(d: CalendarDay | null): THREE.CanvasTexture {
 
 export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], onChange: (index: number) => void): CalendarApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.9
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -212,6 +214,10 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   let last = performance.now()
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     if (!dragging) {
@@ -299,6 +305,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       pages.forEach((p) => {
         p.mat.map?.dispose()
         p.mat.dispose()

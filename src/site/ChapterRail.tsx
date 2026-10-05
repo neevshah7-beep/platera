@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { scroller } from './SmoothScroll'
 
 export type Chapter = { id: string; label: string }
@@ -12,7 +12,7 @@ export type Chapter = { id: string; label: string }
  */
 export function ChapterRail({ chapters }: { chapters: Chapter[] }) {
   const [active, setActive] = useState(0)
-  const [progress, setProgress] = useState(0)
+  const line = useRef<HTMLSpanElement>(null)
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function ChapterRail({ chapters }: { chapters: Chapter[] }) {
       })
       setActive((v) => (v === a ? v : a))
       const max = document.documentElement.scrollHeight - innerHeight
-      setProgress(max > 0 ? scrollY / max : 0)
+      if (line.current) line.current.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`
       setShown(document.documentElement.dataset.entered === '1')
     }
     raf = requestAnimationFrame(tick)
@@ -53,7 +53,7 @@ export function ChapterRail({ chapters }: { chapters: Chapter[] }) {
           </li>
         ))}
       </ol>
-      <span className="chapter-line" aria-hidden style={{ transform: `scaleX(${progress})` }} />
+      <span ref={line} className="chapter-line" aria-hidden />
     </nav>
   )
 }

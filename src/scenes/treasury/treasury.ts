@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -179,7 +180,8 @@ function brilliant(r: number): THREE.BufferGeometry {
 
 export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.82
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -313,6 +315,7 @@ export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
   scene.add(lamp)
 
   const composer = new EffectComposer(renderer)
+  composer.setPixelRatio(1)
   composer.addPass(new RenderPass(scene, camera))
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(512, 512), 0.12, 0.25, 1.4))
   composer.addPass(new OutputPass())
@@ -335,6 +338,10 @@ export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
 
   const frameFn = (now: number) => {
     raf = requestAnimationFrame(frameFn)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     smooth += (progress - smooth) * (1 - Math.exp(-dt * 3.5))
@@ -417,6 +424,7 @@ export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       scene.traverse((o) => {
         const m = o as THREE.Mesh
         m.geometry?.dispose()

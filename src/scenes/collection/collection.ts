@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -61,7 +62,8 @@ function silkNormals(size = 1024): THREE.CanvasTexture {
 
 export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPiece[]): CollectionApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.78
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -119,7 +121,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
 
   const lamp = new THREE.SpotLight(0xfff1dc, 1900, 180, 0.6, 0.75, 1.6)
   lamp.castShadow = true
-  lamp.shadow.mapSize.set(4096, 4096)
+  lamp.shadow.mapSize.set(2048, 2048)
   lamp.shadow.bias = -0.00025
   lamp.shadow.normalBias = 0.02
   lamp.shadow.camera.near = 10
@@ -277,6 +279,10 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
 
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     smooth += (progress - smooth) * (1 - Math.exp(-dt * 3))
@@ -351,6 +357,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       geos.forEach((g) => g.dispose())
       ;[shell, velvet, trim, lining].forEach((m) => m.dispose())
       liningTex.dispose()

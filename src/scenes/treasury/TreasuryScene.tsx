@@ -1,5 +1,6 @@
 'use client'
 
+import { prewarm } from '../prewarm'
 import { useEffect, useRef } from 'react'
 import { createTreasury, type TreasuryApi } from './treasury'
 
@@ -15,18 +16,10 @@ export function TreasuryScene({ rates }: { rates: { label: string; value: string
   useEffect(() => {
     const c = canvas.current!
     let s: TreasuryApi | null = null
-    const io = new IntersectionObserver(
-      async ([e]) => {
-        if (e.isIntersecting && !s) {
-          await document.fonts.ready
-          if (!s) s = api.current = createTreasury(c)
-        } else if (!e.isIntersecting && s) {
-          s.dispose()
-          s = api.current = null
-        }
-      },
-      { rootMargin: '100% 0px' },
-    )
+    const job = prewarm(() => {
+      if (!s) s = api.current = createTreasury(c)
+    })
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
     io.observe(section.current!)
     let raf = 0
     const tick = () => {
@@ -45,6 +38,7 @@ export function TreasuryScene({ rates }: { rates: { label: string; value: string
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
+      job.cancel()
       ro.disconnect()
       removeEventListener('pointermove', move)
       s?.dispose()

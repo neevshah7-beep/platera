@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 
@@ -14,7 +15,8 @@ export type PackingApi = { resize: () => void; dispose: () => void }
 
 export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], onDone: () => void): PackingApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.85
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -129,6 +131,10 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
 
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     if (start < 0) {
@@ -177,6 +183,7 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       scene.traverse((o) => {
         const m = o as THREE.Mesh
         m.geometry?.dispose()

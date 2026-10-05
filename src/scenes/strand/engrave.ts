@@ -7,7 +7,15 @@ import * as THREE from 'three'
  * by the scene, not as a decal printed on it. The roughness map makes the cut satin and the
  * surface polished, which is how a hand-engraved mark actually catches light.
  */
-export function engraving(mark: string, size = 1024): { normal: THREE.CanvasTexture; rough: THREE.CanvasTexture; color: THREE.CanvasTexture } {
+const cache = new Map<string, ReturnType<typeof build>>()
+/** Cached: the six promise marks are drawn once per visit, however often the scene is built. */
+export function engraving(mark: string, size = 512) {
+  const k = `${mark}:${size}`
+  if (!cache.has(k)) cache.set(k, build(mark, size))
+  return cache.get(k)!
+}
+
+function build(mark: string, size: number): { normal: THREE.CanvasTexture; rough: THREE.CanvasTexture; color: THREE.CanvasTexture } {
   const c = document.createElement('canvas')
   c.width = c.height = size
   const g = c.getContext('2d')!

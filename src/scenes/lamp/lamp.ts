@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 
@@ -35,7 +36,8 @@ export type LampApi = {
 
 export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; width: number; height: number; maps: boolean }): LampApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', alpha: true })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.92
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -137,6 +139,10 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
 
   const frameFn = (now: number) => {
     raf = requestAnimationFrame(frameFn)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     const t = now / 1000
@@ -182,6 +188,7 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       scene.traverse((o) => {
         const mm = o as THREE.Mesh
         mm.geometry?.dispose()

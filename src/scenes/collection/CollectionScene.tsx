@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { prewarm } from '../prewarm'
 import { useEffect, useRef, useState } from 'react'
 import { createCollection, type CollectionApi, type CollectionPiece } from './collection'
 
@@ -21,16 +22,10 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
   useEffect(() => {
     const c = canvas.current!
     let scene: CollectionApi | null = null
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting && !scene) scene = api.current = createCollection(c, pieces)
-        else if (!e.isIntersecting && scene) {
-          scene.dispose()
-          scene = api.current = null
-        }
-      },
-      { rootMargin: '220% 0px' },
-    )
+    const job = prewarm(() => {
+      if (!scene) scene = api.current = createCollection(c, pieces)
+    })
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
     io.observe(section.current!)
     let raf = 0
     const tick = () => {
@@ -58,6 +53,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
+      job.cancel()
       ro.disconnect()
       removeEventListener('pointermove', onMove)
       scene?.dispose()

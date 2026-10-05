@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { prewarm } from '../prewarm'
 import { useEffect, useRef, useState } from 'react'
 import { createCalendar, type CalendarApi, type CalendarDay } from './calendar'
 
@@ -33,25 +34,16 @@ export function VisitScene({
   useEffect(() => {
     const c = canvas.current!
     let cal: CalendarApi | null = null
-    const start = async () => {
-      await document.fonts.ready // the pages are typeset in the house fonts
+    const job = prewarm(() => {
       if (!cal) cal = api.current = createCalendar(c, days, setIndex)
-    }
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) void start()
-        else if (cal) {
-          cal.dispose()
-          cal = api.current = null
-        }
-      },
-      { rootMargin: '100% 0px' },
-    )
+    })
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && job.now(), { rootMargin: '80% 0px' })
     io.observe(section.current!)
     const ro = new ResizeObserver(() => api.current?.resize())
     ro.observe(c)
     return () => {
       io.disconnect()
+      job.cancel()
       ro.disconnect()
       cal?.dispose()
     }

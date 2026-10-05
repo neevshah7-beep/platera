@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { visibleGate } from '../visible'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -58,13 +59,14 @@ function backdropMaterial() {
 
 export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+  const gate = visibleGate(canvas)
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   // Khronos PBR Neutral: keeps the gold's hue and the page's champagne true (AgX greys both).
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.95
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.VSMShadowMap
+  renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 200)
@@ -91,9 +93,8 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const key = new THREE.DirectionalLight(0xfff0d6, 1.1)
   key.position.set(-10, 18, 22)
   key.castShadow = true
-  key.shadow.mapSize.set(2048, 2048)
-  key.shadow.radius = 16
-  key.shadow.blurSamples = 24
+  key.shadow.mapSize.set(1024, 1024)
+  key.shadow.radius = 6
   Object.assign(key.shadow.camera, { left: -30, right: 30, top: 18, bottom: -18 })
   scene.add(key)
 
@@ -176,6 +177,8 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
 
   // ── Post: depth of field on the promise bead, a breath of bloom on the glints ──
   const composer = new EffectComposer(renderer)
+  // Post effects at 1× (they are soft by nature); the scene itself renders at full density.
+  composer.setPixelRatio(1)
   composer.addPass(new RenderPass(scene, camera))
   const bokeh = new BokehPass(scene, camera, { focus: 20, aperture: 0.0016, maxblur: 0.006 })
   composer.addPass(bokeh)
@@ -194,6 +197,10 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
 
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame)
+    if (!gate.on) {
+      last = now
+      return
+    }
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     acc += dt
@@ -285,6 +292,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
     resize,
     dispose: () => {
       cancelAnimationFrame(raf)
+      gate.dispose()
       for (const g of [round, cut, rondelle]) g.dispose()
       gold.dispose()
       goldCut.dispose()
