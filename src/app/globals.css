@@ -308,3 +308,50 @@ p { text-wrap: pretty; }
 html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 .strand-eyebrow { left: 0; top: 12svh; }
 @media (min-width: 768px) { .strand-eyebrow { left: 2vw; top: 27svh; } }
+
+/* ─── Scene 3 · the stamp ──────────────────────────────────────────────────── */
+.stamp-copy { left: 0; top: 14svh; max-width: 34rem; }
+@media (min-width: 768px) { .stamp-copy { left: 2vw; top: 17svh; } }
+.stamp-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
+.stamp-body { margin-top: 1rem; color: var(--espresso-muted); font-size: var(--step-1); opacity: 0; transform: translateY(14px); transition: opacity 1000ms var(--ease-entry) 300ms, transform 1100ms var(--ease-entry) 300ms; }
+.stamp-copy[data-struck='true'] .stamp-body { opacity: 1; transform: none; }
+.stamp-hold {
+  position: absolute;
+  left: 50%;
+  bottom: 6svh;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem 1.4rem 0.75rem 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--cream) 82%, transparent);
+  border: 1px solid var(--rule-strong);
+  color: var(--espresso);
+  font-size: var(--step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+}
+.stamp-ring {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: conic-gradient(var(--gold) var(--charge, 0%), var(--rule) 0);
+}
+.stamp-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--cream); }
+@property --charge { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+.stamp-hold[data-phase='holding'] .stamp-ring { animation: charge 1.5s linear forwards; }
+.stamp-hold[data-phase='striking'] .stamp-ring, .stamp-hold[data-phase='struck'] .stamp-ring { --charge: 100%; }
+@keyframes charge { to { --charge: 100%; } }
+
+/* ─── Scene 4 · the collection ─────────────────────────────────────────────── */
+.collection-head { left: 0; top: 12svh; max-width: 40rem; }
+@media (min-width: 768px) { .collection-head { left: 2vw; top: 14svh; } }
+.collection-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
+.collection-label { transform: translate(2.5rem, -120%); padding-left: 1rem; border-left: 1px solid var(--gold); animation: label-in 600ms var(--ease-entry); }
+@keyframes label-in { from { opacity: 0; transform: translate(1.5rem, -120%); } }
+.collection-all { position: absolute; right: var(--gutter); bottom: 6svh; }

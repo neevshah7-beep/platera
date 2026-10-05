@@ -168,8 +168,9 @@ def warm_world(strength=0.6, top=(1.0, 0.86, 0.62), bottom=(0.55, 0.38, 0.18)):
     ramp.color_ramp.elements[1].position = 0.75
     ramp.color_ramp.elements[1].color = (*top, 1)
     mr = nt.nodes.new("ShaderNodeMapRange")
-    mr.inputs["From Min"].default_value = -1
-    mr.inputs["From Max"].default_value = 1
+    # World "Normal" coordinates point inward, so up is −Z here: map it so the top is bright.
+    mr.inputs["From Min"].default_value = 1
+    mr.inputs["From Max"].default_value = -1
     bg = nt.nodes.new("ShaderNodeBackground")
     bg.inputs["Strength"].default_value = strength
     out = nt.nodes.new("ShaderNodeOutputWorld")
@@ -177,6 +178,31 @@ def warm_world(strength=0.6, top=(1.0, 0.86, 0.62), bottom=(0.55, 0.38, 0.18)):
     nt.links.new(sep.outputs["Z"], mr.inputs["Value"])
     nt.links.new(mr.outputs["Result"], ramp.inputs["Fac"])
     nt.links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
+    return w
+
+
+def studio_world(strength=1.0, rotation=0.0):
+    """The house light: the same studio HDR the live WebGL scenes use (public/env/studio.exr),
+    so rendered and real-time scenes share one light."""
+    import os
+    w = bpy.data.worlds.new("Studio")
+    bpy.context.scene.world = w
+    w.use_nodes = True
+    nt = w.node_tree
+    nt.nodes.clear()
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    mp = nt.nodes.new("ShaderNodeMapping")
+    mp.inputs["Rotation"].default_value = (0, 0, rotation)
+    env = nt.nodes.new("ShaderNodeTexEnvironment")
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+    env.image = bpy.data.images.load(os.path.join(root, "public", "env", "studio.exr"))
+    bg = nt.nodes.new("ShaderNodeBackground")
+    bg.inputs["Strength"].default_value = strength
+    out = nt.nodes.new("ShaderNodeOutputWorld")
+    nt.links.new(tc.outputs["Generated"], mp.inputs["Vector"])
+    nt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
+    nt.links.new(env.outputs["Color"], bg.inputs["Color"])
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
     return w
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { createGL, loadFrames, makeTexture, uploadImage } from '../gl'
+import { createGL, FrameStore, makeTexture, uploadImage } from '../gl'
 import { entry, useEntry } from '@/site/entry'
 import frag from './fall.frag.glsl'
 
@@ -33,11 +33,19 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     }
     if (!g) return
     const { gl, uniform, draw } = g
-    const tex = makeTexture(gl)
+    let tex = makeTexture(gl)
+    // If the GPU drops the context (memory pressure), rebuild on restore instead of going black.
+    const onLost = (e: Event) => e.preventDefault()
+    const onRestored = () => {
+      tex = makeTexture(gl)
+      shownBmp = null
+    }
+    c.addEventListener('webglcontextlost', onLost)
+    c.addEventListener('webglcontextrestored', onRestored)
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const width = innerWidth * devicePixelRatio > 1300 ? 1600 : 1000
-    let frames: ImageBitmap[] = []
-    let shown = -1
+    let frames: FrameStore | null = null
+    let shownBmp: ImageBitmap | null = null
     let introStart = -1
     let landedFired = false
     let visible = true
@@ -56,7 +64,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting))
     io.observe(c)
 
-    loadFrames(`/scenes/fall/${width}`, FRAMES, (p) => entry.set({ progress: p })).then((f) => {
+    FrameStore.load(`/scenes/fall/${width}`, FRAMES, (p) => entry.set({ progress: p })).then((f) => {
       frames = f
       entry.set({ ready: true })
     })
@@ -75,7 +83,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
 
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop)
-      if (!visible || !frames.length) return
+      if (!visible || !frames) return
       const t = now / 1000
 
       // Which frame: the fall plays in real time once entered; then scroll scrubs the settle.
@@ -93,9 +101,10 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
         }
       }
       const idx = Math.max(0, Math.min(FRAMES - 1, Math.round(f)))
-      if (idx !== shown) {
-        uploadImage(gl, tex, frames[idx])
-        shown = idx
+      const bmp = frames.get(idx)
+      if (bmp && bmp !== shownBmp) {
+        uploadImage(gl, tex, bmp)
+        shownBmp = bmp
       }
 
       // The lamp: follows the pointer on a soft spring; when the pointer rests (or on touch)
@@ -114,7 +123,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
 
       gl.uniform1i(uniform('uFrame'), 0)
       gl.uniform2f(uniform('uRes'), c.width, c.height)
-      gl.uniform2f(uniform('uImg'), frames[0].width, frames[0].height)
+      gl.uniform2f(uniform('uImg'), frames.width, frames.height)
       gl.uniform2f(uniform('uPointer'), ptr.x, ptr.y)
       gl.uniform1f(uniform('uLamp'), enteredRef.current ? ptr.lamp : 0)
       gl.uniform1f(uniform('uPress'), ptr.press)
@@ -131,7 +140,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       removeEventListener('pointermove', onMove)
       removeEventListener('pointerdown', onDown)
       removeEventListener('pointerup', onUp)
-      frames.forEach((b) => b.close())
+      frames?.dispose()
       g?.dispose()
     }
   }, [onLanded])

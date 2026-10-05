@@ -1,4 +1,6 @@
-import { getCurrentRates } from '@/lib/catalogue'
+import { getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
+import { mediaBase } from '@/components/media/PieceImage'
+import { toPieceRef } from '@/lib/world-data'
 import { formatINR } from '@/lib/pricing/format'
 import { STORE } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
@@ -6,11 +8,19 @@ import { HomeExperience } from '@/site/HomeExperience'
 export const revalidate = 300
 
 export default async function HomePage() {
-  const rates = await getCurrentRates()
+  const [rates, products] = await Promise.all([getCurrentRates(), listProducts()])
+  const featured = [...products.filter((p) => p.featured), ...products.filter((p) => !p.featured)]
+    .flatMap((p) => {
+      const r = toPieceRef(p, priceProduct(p, rates))
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}` }] : []
+    })
+    .slice(0, 8)
   const silver = rates.SILVER_925
   const rate = silver ? `${formatINR(silver.paisePerGram)} a gram` : 'set each morning'
   return (
     <HomeExperience
+      pieces={featured}
+      total={products.length}
       line="Hallmarked silver, chosen piece by piece."
       collaboration="With Bhairav Jewellers · Gorai 1"
       promises={[

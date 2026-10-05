@@ -71,25 +71,78 @@ export function makeTexture(gl: WebGL2RenderingContext) {
   return t
 }
 
-/** Load a numbered frame sequence, reporting progress; frames decode off the main thread. */
-export async function loadFrames(base: string, count: number, onProgress: (p: number) => void): Promise<ImageBitmap[]> {
-  let done = 0
-  const one = async (i: number) => {
-    const res = await fetch(`${base}/${String(i + 1).padStart(4, '0')}.webp`)
-    const bmp = await createImageBitmap(await res.blob())
-    onProgress(++done / count)
-    return bmp
+/**
+ * A rendered frame sequence held compressed (WebP blobs, ~10–20 KB each) and decoded on
+ * demand into a small rolling cache around the frame being shown. Keeping every frame
+ * decoded would cost ~5.7 MB per 1600 px frame (≈ 860 MB for 150 frames), enough to make
+ * a laptop or phone GPU drop the WebGL context.
+ */
+export class FrameStore {
+  private blobs: Blob[] = []
+  private cache = new Map<number, ImageBitmap>()
+  private pending = new Set<number>()
+  width = 0
+  height = 0
+  constructor(private keep = 14) {}
+
+  get count() {
+    return this.blobs.length
   }
-  // Six at a time: fast on broadband, gentle on phones.
-  const out: ImageBitmap[] = new Array(count)
-  let next = 0
-  await Promise.all(
-    Array.from({ length: 6 }, async () => {
-      while (next < count) {
-        const i = next++
-        out[i] = await one(i)
+
+  static async load(base: string, count: number, onProgress: (p: number) => void): Promise<FrameStore> {
+    const store = new FrameStore()
+    let done = 0
+    const blobs: Blob[] = new Array(count)
+    let next = 0
+    await Promise.all(
+      Array.from({ length: 6 }, async () => {
+        while (next < count) {
+          const i = next++
+          const res = await fetch(`${base}/${String(i + 1).padStart(4, '0')}.webp`)
+          blobs[i] = await res.blob()
+          onProgress(++done / count)
+        }
+      }),
+    )
+    store.blobs = blobs
+    const first = await createImageBitmap(blobs[0])
+    store.width = first.width
+    store.height = first.height
+    store.cache.set(0, first)
+    return store
+  }
+
+  /** The decoded frame if ready (else the nearest decoded one), and decode around it. */
+  get(i: number): ImageBitmap | null {
+    i = Math.max(0, Math.min(this.blobs.length - 1, i))
+    for (let d = -2; d <= 4; d++) this.decode(i + d)
+    if (this.cache.has(i)) return this.cache.get(i)!
+    let best: ImageBitmap | null = null
+    let bd = Infinity
+    for (const [k, v] of this.cache) if (Math.abs(k - i) < bd) (bd = Math.abs(k - i)), (best = v)
+    return best
+  }
+
+  private decode(i: number) {
+    if (i < 0 || i >= this.blobs.length || this.cache.has(i) || this.pending.has(i)) return
+    this.pending.add(i)
+    createImageBitmap(this.blobs[i]).then((bmp) => {
+      this.pending.delete(i)
+      this.cache.set(i, bmp)
+      if (this.cache.size > this.keep) {
+        // Drop the decoded frames farthest from the one just made.
+        const far = [...this.cache.keys()].sort((a, b) => Math.abs(b - i) - Math.abs(a - i))
+        for (const k of far.slice(0, this.cache.size - this.keep)) {
+          this.cache.get(k)!.close()
+          this.cache.delete(k)
+        }
       }
-    }),
-  )
-  return out
+    })
+  }
+
+  dispose() {
+    for (const b of this.cache.values()) b.close()
+    this.cache.clear()
+    this.blobs = []
+  }
 }

@@ -52,7 +52,10 @@ export function EntryGate() {
         <p className="num text-step--1 text-muted" aria-live="polite">
           {ready ? 'The house is ready' : `${Math.round(shown)}%`}
         </p>
-        <button type="button" className="entry-enter" data-ready={ready} disabled={!ready} onClick={() => entry.set({ entered: true })}>
+        <button type="button" className="entry-enter" data-ready={ready} disabled={!ready} onClick={(e) => {
+            e.currentTarget.blur()
+            entry.set({ entered: true })
+          }}>
           Enter Platera
         </button>
       </div>
