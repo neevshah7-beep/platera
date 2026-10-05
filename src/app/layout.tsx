@@ -6,6 +6,7 @@ import './viewing.css'
 import './sitting.css'
 import './welcome.css'
 import './house.css'
+import './piece.css'
 
 const gambetta = localFont({
   src: [

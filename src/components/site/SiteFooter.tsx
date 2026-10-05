@@ -39,8 +39,8 @@ export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
             {a.city} {a.postalCode}
           </p>
           <p className="num mt-3">{STORE.hoursText}</p>
-          <p className="mt-3 space-x-4">
-            <a className="link num" href={`tel:${STORE.phoneE164}`}>{STORE.phoneDisplay}</a>
+          <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+            <a className="link num whitespace-nowrap" href={`tel:${STORE.phoneE164}`}>{STORE.phoneDisplay}</a>
             <a className="link" href={whatsappLink('Hello Platera, I have a question.')}>WhatsApp</a>
           </p>
           <a className="link mt-3 inline-block text-step--1 text-ink-muted" href={STORE.mapsUrl} rel="noopener" target="_blank">

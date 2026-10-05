@@ -1,27 +1,27 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Ledger } from '@/components/ledger/Ledger'
 import { PieceImage } from '@/components/media/PieceImage'
-import { MetalRule } from '@/components/metal/LightSource'
 import { BagButtons } from '@/components/pdp/BagButtons'
-import { HallmarkPlate } from '@/components/pdp/HallmarkPlate'
+import { Certificate } from '@/components/pdp/Certificate'
+import { Originals } from '@/components/pdp/Originals'
+import { PriceEquation } from '@/components/pdp/PriceEquation'
 import { StickyActions } from '@/components/pdp/StickyActions'
 import { RateNote } from '@/components/site/RateNote'
-import { PieceCard } from '@/components/tray/PieceCard'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
 import { originalsFor } from '@/lib/originals'
 import { ViewButton } from '@/site/ViewButton'
-import { OriginalsGallery } from '@/site/OriginalsGallery'
 import maps from '@/data/maps-manifest.json'
 import { toPieceRef } from '@/lib/world-data'
 import { STONE_LABEL, getCurrentRates, getProduct, isSold, listProducts, metalLine, priceProduct } from '@/lib/catalogue'
-import { formatGrams, formatINRWhole } from '@/lib/pricing/format'
+import { formatGrams, formatINR, formatINRWhole } from '@/lib/pricing/format'
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld'
 import { STORE, mediaUrl, siteUrl, whatsappLink } from '@/lib/store'
 
 export const revalidate = 300
+
+const rateWhen = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' })
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ unavailable?: string }> }
 
@@ -66,7 +66,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
 
   const related = (await listProducts({ category: product.category.slug }))
     .filter((p) => p.id !== product.id)
-    .slice(0, 3)
+    .slice(0, 4)
     .map((p) => ({ product: p, pricing: priceProduct(p, rates) }))
 
   const enquiry = whatsappLink(
@@ -186,111 +186,105 @@ export default async function PiecePage({ params, searchParams }: Props) {
       </div>
 
 
-      {/* The Weighing: the camera turns to the balance; the piece is weighed; the book opens. */}
-      {priced && pricing.state === 'PRICED' && (
-        <section aria-labelledby="weighing-heading" className="relative">
-          <div className="mx-auto flex max-w-[1440px] px-[var(--gutter)] pt-24">
-            <div className="w-full max-w-md">
-              <h2 id="weighing-heading" className="text-step-4">Weighed, then priced</h2>
-              <p className="mt-3 text-ink-muted">
-                {product.netWeightMg && product.weightVerified
-                  ? `This piece weighs ${formatGrams(product.netWeightMg)} of silver. That weight, at today’s rate, is where its price begins.`
-                  : 'Every piece is weighed before it is priced.'}
-              </p>
-              <div className="mt-6"><Ledger breakdown={pricing.breakdown} metal={metal} compact title="The working" /></div>
-            </div>
-          </div>
-        </section>
-      )}
-
       <StickyActions productId={product.id} name={product.name} price={priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : null} enquiry={enquiry} />
 
-      <div className="mt-24 pt-20">
-      {originalsFor(product.sku).length > 0 && (
-        <section id="originals" aria-labelledby="originals-heading" className="mx-auto mb-24 max-w-[1440px] px-[var(--gutter)]">
-          <p className="eyebrow">Unedited</p>
-          <h2 id="originals-heading" className="mt-3 text-step-4">As photographed <em className="accent">at the store.</em></h2>
-          <p className="measure mt-3 text-ink-muted">The original photographs, exactly as taken at the counter in Gorai 1: no retouching, no background removed. Open any one to look closer.</p>
-          <div className="mt-10">{pieceRef && <OriginalsGallery piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />}</div>
+      {/* I · The originals: the store photographs, large, on an espresso wall. */}
+      {pieceRef && (
+        <section id="originals" aria-labelledby="originals-heading" className="orig">
+          <div className="orig-inner">
+            <div className="orig-head">
+              <p className="eyebrow">Unedited</p>
+              <h2 id="originals-heading" className="orig-title">As photographed <em className="accent">at the counter.</em></h2>
+              <p className="orig-note">Exactly as taken in Gorai 1: no retouching, no background removed. Open any photograph to look through the loupe.</p>
+            </div>
+            <Originals piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />
+          </div>
         </section>
       )}
-      <section id="photographs" aria-label="Photographs" className="mx-auto max-w-[1440px] px-[var(--gutter)]">
-        <h2 className="text-step-3">Photographs</h2>
-        <ul className="-mx-[var(--gutter)] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0">
-          {product.images.map((image) => (
-            <li key={image.id} className="w-[86vw] shrink-0 snap-center bg-ground-raised md:w-auto">
-              <PieceImage image={image} sizes="(min-width: 768px) 46vw, 86vw" />
-            </li>
-          ))}
-        </ul>
-        <p className="mt-4 max-w-2xl text-step--1 text-ink-muted">Photographed at the store. A new set of studio photographs is being made; the piece is exactly as shown.</p>
-      </section>
 
-      {/* The Ledger: the book, open. */}
-      <section id="ledger" aria-label="Price, weight and certification" className="mx-auto mt-28 grid max-w-[1440px] gap-16 px-[var(--gutter)] lg:grid-cols-12">
-        <div className="lg:col-span-6">
-          {priced ? (
-            <Ledger breakdown={pricing.breakdown} metal={metal} />
-          ) : (
-            <div>
-              <h2 className="text-step-3">How this price will be made</h2>
-              <p className="measure mt-4 text-ink-muted">
-                Once weighed, this piece is priced as: net weight × today’s 925 silver rate, plus a making charge of{' '}
-                {product.makingPct ?? 15}% of the metal value, plus 3% GST. Every line will be shown here.
-              </p>
-            </div>
-          )}
-          <div className="mt-14">
-            <h2 className="text-step-3">The hallmark</h2>
-            <div className="mt-6"><HallmarkPlate purity="925" huid={product.huid} metal={metal} /></div>
-            <p className="measure mt-5 text-ink-muted">
-              The Bureau of Indian Standards hallmark is stamped on the piece itself and certifies its purity: 925 means 92.5% pure silver.
-              Where a piece carries a six-character HUID, you can check it yourself in the government’s BIS CARE app.
-              <Link href="/hallmark" className="link ml-1 text-ink">How to read a hallmark</Link>
-            </p>
-          </div>
-        </div>
-
-        <div className="lg:col-span-5 lg:col-start-8">
-          <h2 className="text-step-3">Specifications</h2>
-          <dl className="mt-6">
-            {specs.map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[9rem_1fr] gap-4 border-t border-rule py-3 text-step--1 sm:grid-cols-[11rem_1fr]">
-                <dt className="text-ink-muted">{k}</dt>
-                <dd className="num">{v}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="measure mt-8">{product.description}</p>
-          <p className="mt-6 text-step--1">
-            <Link href="/size-guide" className="link">Size guide: chain, necklace and payal lengths</Link>
+      {/* II · Weighed, then priced: the price as one equation. */}
+      <section id="ledger" aria-labelledby="price-heading" className="price-sec">
+        <div className="price-head">
+          <p className="eyebrow">The working</p>
+          <h2 id="price-heading" className="price-title">Weighed, <em className="accent">then priced.</em></h2>
+          <p className="price-lede">
+            {product.netWeightMg && product.weightVerified
+              ? `This piece weighs ${formatGrams(product.netWeightMg)} of silver. That weight, at today’s rate, is where its price begins; every other line is shown beside it.`
+              : 'Every piece is weighed before it is priced, and every line of the price is shown.'}
           </p>
-          <div className="mt-10 border-t border-rule pt-6">
-            <h3 className="text-step-2">Something like this, made for you</h3>
-            <p className="measure mt-2 text-ink-muted">
-              Send us a design or a reference and we’ll confirm the price before anything is made. Made-to-order pieces take {STORE.madeToOrderDays}.
-            </p>
-            <a className="link mt-3 inline-block" href={whatsappLink(`Hello Platera, I'd like something made to order, similar to the ${product.name} (${product.sku}).`)}>
-              Start a custom order on WhatsApp
-            </a>
-          </div>
+        </div>
+        {priced && pricing.state === 'PRICED' ? (
+          <PriceEquation
+            lines={pricing.breakdown.lines.map((l) => ({ key: l.key, label: l.label, detail: l.detail, paise: l.paise }))}
+            totalPaise={pricing.breakdown.totalPaise}
+            rateNote={pricing.breakdown.rate ? `925 silver ${formatINR(pricing.breakdown.rate.paisePerGram)} per g · rate as on ${rateWhen.format(pricing.breakdown.rate.effectiveAt)}` : undefined}
+          />
+        ) : (
+          <p className="price-pending font-display">
+            Net weight × today’s 925 silver rate, plus a making charge of {product.makingPct ?? 15}% of the metal value, plus 3% GST.
+          </p>
+        )}
+        <p className="price-links">
+          <Link href="/silver-rate-today" className="link">Today’s silver rate</Link>
+          <Link href="/policies/returns" className="link">Returns and buyback</Link>
+        </p>
+      </section>
+
+      {/* III · In the hand, and the certificate. */}
+      <section aria-labelledby="hand-heading" className="cert-sec">
+        <div className="cert-copy">
+          <p className="eyebrow">In the hand</p>
+          <h2 id="hand-heading" className="cert-title">About <em className="accent">this piece.</em></h2>
+          <p className="cert-story">{product.description}</p>
+          <p className="cert-hallmark">
+            The hallmark is struck on the piece itself: 925 means 92.5% pure silver.
+            {product.huid ? ' Its HUID can be checked in the government’s BIS CARE app.' : ''}
+          </p>
+          <p className="cert-links">
+            <Link href="/hallmark" className="link">How to read a hallmark</Link>
+            <Link href="/size-guide" className="link">Size guide</Link>
+          </p>
+        </div>
+        <Certificate name={product.name} sku={product.sku} purity="925" huid={product.huid} specs={specs.map(([k, v]) => [k, String(v)] as [string, string])} />
+      </section>
+
+      {/* IV · Made for you. */}
+      <section aria-labelledby="bespoke-heading" className="bespoke">
+        <div className="bespoke-inner">
+          <p className="eyebrow">Made for you</p>
+          <h2 id="bespoke-heading" className="bespoke-title">Something like this, <em className="accent">made to your hand.</em></h2>
+          <p className="bespoke-body">Send us a design or a reference; we confirm the weight and the price before anything is made. Made-to-order pieces take {STORE.madeToOrderDays}.</p>
+          <a className="btn btn-primary" href={whatsappLink(`Hello Platera, I'd like something made to order, similar to the ${product.name} (${product.sku}).`)}>Start a custom order</a>
         </div>
       </section>
 
+      {/* V · From the same tray. */}
       {related.length > 0 && (
-        <section aria-labelledby="related-heading" className="mx-auto max-w-[1440px] px-[var(--gutter)] pb-32 pt-32">
-          <MetalRule metal={metal} />
-          <h2 id="related-heading" className="mt-12 text-step-4">Also on the tray</h2>
-          <ul className="mt-12 grid gap-12 sm:grid-cols-3">
-            {related.map((r) => (
-              <li key={r.product.id}>
-                <PieceCard product={r.product} pricing={r.pricing} sizes="(min-width: 640px) 30vw, 90vw" />
-              </li>
-            ))}
+        <section aria-labelledby="related-heading" className="tray-sec">
+          <div className="tray-head">
+            <h2 id="related-heading" className="tray-title">From the <em className="accent">same tray.</em></h2>
+            <Link href={`/${product.category.slug}`} className="link">All {product.category.name.toLowerCase()}</Link>
+          </div>
+          <ul className="tray-grid">
+            {related.map((r) => {
+              const img = r.product.images[0]
+              const rsold = isSold(r.product)
+              return (
+                <li key={r.product.id}>
+                  <Link href={`/piece/${r.product.slug}`} className="tray-card">
+                    <span className="tray-mat">{img && <PieceImage image={img} sizes="(min-width: 640px) 24vw, 90vw" fit="contain" className="tray-img" />}</span>
+                    <span className="tray-name font-display">{r.product.name}</span>
+                    <span className="tray-meta">
+                      <span>{metalLine(r.product)}</span>
+                      <span className="num">{rsold ? 'Sold' : r.pricing.state === 'PRICED' ? formatINRWhole(r.pricing.breakdown.totalPaise) : 'Priced once weighed'}</span>
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </section>
       )}
-      </div>
     </>
   )
 }

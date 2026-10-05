@@ -440,7 +440,7 @@ html[data-returning='1'] .entry-gate { display: none; }
 /* ─── Footer: the closing note, on espresso ────────────────────────────────── */
 .site-footer { background: var(--espresso); color: var(--cream); }
 .site-footer .text-ink-muted, .site-footer .text-muted { color: #c9b48e; }
-.site-footer .footer-word { font-size: clamp(3rem, 1rem + 8vw, 8.5rem); line-height: 0.9; letter-spacing: -0.02em; background: linear-gradient(100deg, #8a5f1c 0%, #c99a3e 30%, #f1d488 48%, #c99a3e 66%, #8a5f1c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.site-footer .footer-word { font-size: clamp(3rem, 1rem + 5vw, 6.6rem); line-height: 0.95; letter-spacing: 0.02em; padding: 0 0.08em 0.06em 0; white-space: nowrap; background: linear-gradient(100deg, #8a5f1c 0%, #c99a3e 30%, #f1d488 48%, #c99a3e 66%, #8a5f1c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .site-footer .footer-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #d8bd7e; }
 .site-footer .footer-label::before { content: ''; display: inline-block; width: 1.4rem; height: 1px; margin-right: 0.6rem; vertical-align: 0.3em; background: #c99a3e; }
 .site-footer a:hover { color: var(--gold-bright); }

@@ -60,13 +60,17 @@ export function BackToHouse() {
     }
   }, [path])
 
-  // Tuck away while scrolling down; return on the way up.
-  const [tucked, setTucked] = useState(false)
+  // Out of the way at the top of a page (where Home is in the header and the page's own
+  // buttons are); it appears once you are reading further down, tucking away while you
+  // scroll down and returning on the way up.
+  const [tucked, setTucked] = useState(true)
   useEffect(() => {
     let last = scrollY
+    setTucked(scrollY < innerHeight * 0.7)
     const on = () => {
       const d = scrollY - last
-      if (Math.abs(d) > 6) setTucked(d > 0 && scrollY > 200)
+      if (scrollY < innerHeight * 0.7) setTucked(true)
+      else if (Math.abs(d) > 6) setTucked(d > 0)
       last = scrollY
     }
     addEventListener('scroll', on, { passive: true })
