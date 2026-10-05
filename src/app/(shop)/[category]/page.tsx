@@ -13,6 +13,7 @@ export const revalidate = 300
 /** The first pieces of a room, as the case room presents them. */
 function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: Awaited<ReturnType<typeof getCurrentRates>>) {
   return products
+    .filter((p) => !/peacock/i.test(p.slug)) // kept out of the case showcase
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
       return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []

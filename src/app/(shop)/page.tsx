@@ -16,7 +16,9 @@ export default async function HomePage() {
     const f = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-IN', { ...o, timeZone: 'UTC' }).format(dt)
     return { value: d.value, day: f({ day: 'numeric' }), weekday: f({ weekday: 'long' }), month: f({ month: 'long', year: 'numeric' }), long: f({ weekday: 'long', day: 'numeric', month: 'long' }) }
   })
-  const featured = [...products.filter((p) => p.featured), ...products.filter((p) => !p.featured)]
+  // The peacock pieces stay in the catalogue but are kept out of the jewellery-box showcase.
+  const showcase = products.filter((p) => !/peacock/i.test(p.slug))
+  const featured = [...showcase.filter((p) => p.featured), ...showcase.filter((p) => !p.featured)]
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
       return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []

@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import { siteUrl } from '@/lib/store'
 import './globals.css'
 import './viewing.css'
+import './sitting.css'
 
 const gambetta = localFont({
   src: [

@@ -1,0 +1,97 @@
+/* ─── The Sitting ─────────────────────────────────────────────────────────────
+   The campaign hung in a deep studio. Each look tints the room: Rouge a warm rose,
+   Saffron honey, Noir the deepest champagne. */
+.sitting { --D: 540px; --fin: 0; --intro: 1; }
+@media (max-width: 767px) { .sitting { --D: 420px; } }
+
+.sit-room, .sit-room::before, .sit-room::after { position: absolute; inset: 0; transition: opacity 1400ms var(--ease-entry); }
+.sit-room { background: radial-gradient(70% 60% at 50% 46%, #f6e6c4 0%, #e8cfa0 45%, #c79c5f 100%); }
+.sit-room::before { content: ''; background: radial-gradient(70% 60% at 50% 46%, #f7e2cf 0%, #e7bea0 48%, #a8604a 100%); opacity: 1; }
+.sit-room::after { content: ''; background: radial-gradient(70% 60% at 50% 46%, #f1dfba 0%, #c49a5e 55%, #7d5826 100%); opacity: 0; }
+.sitting[data-look='1'] .sit-room::before { opacity: 0; }
+.sitting[data-look='2'] .sit-room::before { opacity: 0; }
+.sitting[data-look='2'] .sit-room::after { opacity: 1; }
+
+.sit-watermark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(calc(1 + var(--fin) * 0.15)); font-family: var(--font-display); font-style: italic; font-size: clamp(6rem, 2rem + 16vw, 22rem); line-height: 1; white-space: nowrap; color: rgb(255 246 220 / 0.22); pointer-events: none; user-select: none; }
+
+.sit-stage { position: absolute; inset: 0; perspective: 1000px; perspective-origin: 50% 46%; transform-style: preserve-3d; opacity: calc(1 - var(--fin) * 1.6); }
+.sit-world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
+.sit-node { position: absolute; left: 0; top: 0; transform: translate3d(calc(-50% + var(--x)), calc(-50% + var(--y)), var(--z)) rotateY(var(--r)); visibility: hidden; opacity: 0; transform-style: preserve-3d; }
+
+/* A print: a photograph in a cream mount, hung on a gold hairline. */
+.sit-print { display: block; width: clamp(16rem, 9rem + 16vw, 27rem); text-align: left; transform-style: preserve-3d; cursor: zoom-in; }
+.sit-full .sit-print { width: clamp(18rem, 10rem + 19vw, 31rem); }
+.sit-mount { position: relative; display: block; padding: 12px 12px 12px; background: var(--pearl); box-shadow: 0 50px 80px -40px rgb(43 29 14 / 0.75), 0 0 0 1px rgb(201 154 62 / 0.55); transition: transform 700ms var(--ease-entry), box-shadow 700ms var(--ease-entry); overflow: hidden; }
+.sit-mount::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 1px; height: 60vh; background: linear-gradient(to top, rgb(201 154 62 / 0.7), transparent); }
+.sit-mount img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #b7a68e; }
+.sit-print:hover .sit-mount, .sit-print:focus-visible .sit-mount { transform: translateZ(90px); box-shadow: 0 70px 100px -40px rgb(43 29 14 / 0.8), 0 0 0 1px var(--gold-bright); }
+.sit-fog { position: absolute; inset: 0; background: #ecd8ae; pointer-events: none; }
+.sit-sheen { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgb(255 244 214 / 0.55) 50%, transparent 65%); transform: translateX(-130%); pointer-events: none; mix-blend-mode: soft-light; }
+.sit-node[data-near='true'] .sit-sheen { animation: sit-sheen 1600ms var(--ease-camera) forwards; }
+@keyframes sit-sheen { to { transform: translateX(130%); } }
+.sit-caption { display: block; margin-top: 0.85rem; font-family: var(--font-display); font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.45rem); line-height: 1.2; color: var(--espresso); text-shadow: 0 1px 14px rgb(246 236 214 / 0.9); }
+
+/* The look cards: an announcement in the air. */
+.sit-card { width: min(90vw, 54rem); text-align: center; color: var(--espresso); }
+.sit-numeral { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-shadow); }
+.sit-card-title { margin-top: 0.3rem; font-family: var(--font-display); font-style: italic; font-size: clamp(5rem, 2rem + 12vw, 13rem); line-height: 0.9; background: linear-gradient(100deg, #6b4512 0%, #a87a34 35%, #e5c27a 50%, #a87a34 65%, #6b4512 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 18px 30px rgb(43 29 14 / 0.25)); }
+.sit-card-line { margin-top: 1rem; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.4rem); color: var(--espresso); }
+
+/* The chapter head stays fixed in the corner while you walk. */
+.sit-head { position: absolute; left: 0; top: calc(6.6rem + 5svh); max-width: 34rem; opacity: var(--intro); transform: translateY(calc((1 - var(--intro)) * -24px)); }
+@media (min-width: 768px) { .sit-head, .sit-looks { left: 2vw; } }
+.sit-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
+.sit-looks { position: absolute; left: 0; bottom: 5svh; display: flex; gap: 1.4rem; opacity: calc(1 - var(--fin) * 3); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso-muted); }
+.sit-looks span { position: relative; padding-bottom: 0.3rem; transition: color 600ms var(--ease-entry); }
+.sit-looks span::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright)); transform: scaleX(0); transform-origin: 0 50%; transition: transform 900ms var(--ease-entry); }
+.sitting[data-look='0'] .sit-looks [data-k='0'], .sitting[data-look='1'] .sit-looks [data-k='1'], .sitting[data-look='2'] .sit-looks [data-k='2'] { color: var(--espresso); }
+.sitting[data-look='0'] .sit-looks [data-k='0']::after, .sitting[data-look='1'] .sit-looks [data-k='1']::after, .sitting[data-look='2'] .sit-looks [data-k='2']::after { transform: none; }
+.sitting[data-look='2'] .sit-head { color: var(--espresso); }
+
+/* The strobe: a studio flash, warm-white, as you step into each look. */
+.sit-strobe { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(60% 60% at 50% 45%, #fffaf0 0%, rgb(255 246 220 / 0.85) 50%, rgb(255 236 190 / 0.4) 100%); }
+.sit-strobe.fire { animation: sit-strobe 900ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes sit-strobe { 0% { opacity: 0; } 6% { opacity: 0.92; } 100% { opacity: 0; } }
+
+/* The finale: three proofs fan out on the table. */
+.sit-finale { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.6rem; padding: 7rem 0 4svh; visibility: hidden; }
+.sit-fan { position: relative; display: flex; justify-content: center; height: min(52svh, 34rem); }
+.sit-proof { position: relative; height: 100%; aspect-ratio: 4 / 5.6; margin: 0 calc(-2vw + var(--fin) * 2.5vw); transform: translateY(calc((1 - var(--fin)) * 60svh)) rotate(calc(var(--k) * var(--fin) * 7deg)) translateX(calc(var(--k) * var(--fin) * 2vw)); transform-origin: 50% 120%; opacity: min(1, calc(var(--fin) * 2.2)); transition: filter 500ms; cursor: zoom-in; }
+.sit-proof:nth-child(2) { z-index: 1; transform: translateY(calc((1 - var(--fin)) * 70svh - var(--fin) * 2svh)); }
+.sit-proof-mount { position: relative; display: block; height: 100%; padding: 10px 10px 3.4rem; background: var(--pearl); box-shadow: 0 40px 70px -30px rgb(43 29 14 / 0.75), 0 0 0 1px rgb(201 154 62 / 0.6); transition: transform 600ms var(--ease-entry); }
+.sit-proof:hover .sit-proof-mount { transform: translateY(-14px); }
+.sit-proof-mount img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sit-proof-title { position: absolute; left: 0; right: 0; bottom: 0.7rem; text-align: center; font-family: var(--font-display); font-style: italic; font-size: clamp(1.4rem, 1rem + 1vw, 2.1rem); color: var(--espresso); }
+.sit-finale-copy { text-align: center; opacity: calc((var(--fin) - 0.55) * 2.2); transform: translateY(calc((1 - var(--fin)) * 30px)); }
+.sit-finale-line { font-family: var(--font-display); font-size: clamp(2rem, 1.2rem + 2.6vw, 3.8rem); line-height: 1; color: var(--espresso); }
+@media (max-width: 767px) {
+  .sit-fan { height: 40svh; }
+  .sit-proof { margin: 0 calc(-7vw + var(--fin) * 2vw); }
+  .sit-looks { gap: 0.9rem; font-size: 0.78rem; }
+}
+
+/* A print brought out full size. */
+.sit-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3rem; padding: 5rem clamp(1rem, 6vw, 7rem) 3rem; background: radial-gradient(80% 80% at 40% 50%, #2c1d0e, #120b04); color: var(--cream); animation: viewing-in 520ms var(--ease-entry); cursor: zoom-out; }
+.sit-lightbox[data-closing='true'] { animation: viewing-out 380ms var(--ease-exit) forwards; }
+.sit-lightbox-print { justify-self: center; height: 100%; max-height: calc(100svh - 8rem); padding: 14px; background: var(--pearl); box-shadow: 0 50px 90px -30px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(201 154 62 / 0.5); animation: sit-develop 1100ms var(--ease-entry); cursor: default; }
+.sit-lightbox-print img { height: 100%; width: auto; max-width: 60vw; object-fit: contain; display: block; }
+@keyframes sit-develop { from { opacity: 0; transform: translateY(26px) scale(0.96); filter: brightness(2.2) saturate(0.2); } 40% { opacity: 1; } to { filter: none; } }
+.sit-lightbox-caption { max-width: 20rem; cursor: default; }
+.sit-lightbox-caption .eyebrow { color: #e0c385; }
+.sit-lightbox-caption .eyebrow::before { background: #c99a3e; }
+.sit-lightbox-title { margin-top: 0.8rem; font-family: var(--font-display); font-size: clamp(1.8rem, 1.2rem + 1.6vw, 3rem); line-height: 1.05; color: #fbf3e2; }
+.sit-lightbox-flash { position: fixed; inset: 0; pointer-events: none; background: #fffaf0; animation: sit-strobe 700ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+.sit-arrow { position: absolute; top: 50%; width: 3.2rem; height: 3.2rem; border-radius: 50%; border: 1px solid rgb(246 236 214 / 0.35); font-family: var(--font-display); font-size: 2rem; line-height: 1; color: var(--cream); background: rgb(20 12 5 / 0.5); cursor: pointer; }
+.sit-arrow.left { left: 1.2rem; }
+.sit-arrow.right { right: 1.2rem; }
+.sit-arrow:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+@media (max-width: 900px) {
+  .sit-lightbox { grid-template-columns: 1fr; grid-template-rows: 1fr auto; gap: 1rem; padding: 4.5rem 1rem 2rem; }
+  .sit-lightbox-print { max-height: 66svh; }
+  .sit-lightbox-print img { max-width: 86vw; }
+  .sit-arrow { top: auto; bottom: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sit-strobe, .sit-lightbox-flash { display: none; }
+}

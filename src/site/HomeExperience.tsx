@@ -5,6 +5,7 @@ import { FallScene } from '@/scenes/fall/FallScene'
 import { HeroCopy } from '@/scenes/fall/HeroCopy'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import type { CollectionPiece } from '@/scenes/collection/collection'
+import { SittingScene } from '@/scenes/sitting/SittingScene'
 import { GiftScene } from '@/scenes/gift/GiftScene'
 import { StampScene } from '@/scenes/stamp/StampScene'
 import { TreasuryScene } from '@/scenes/treasury/TreasuryScene'
@@ -37,6 +38,7 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
           { id: 'chapter-promises', label: 'Six promises' },
           { id: 'chapter-hallmark', label: 'The hallmark' },
           { id: 'chapter-collection', label: 'The collection' },
+          { id: 'chapter-sitting', label: 'The sitting' },
           { id: 'chapter-treasury', label: 'The treasury' },
           { id: 'chapter-gift', label: 'The gift' },
           { id: 'chapter-counter', label: 'The counter' },
@@ -48,6 +50,7 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
       <StrandScene promises={promises} />
       <StampScene />
       <CollectionScene pieces={pieces} total={total} />
+      <SittingScene />
       <TreasuryScene rates={rates} />
       <GiftScene />
       <VisitScene {...visit} />
