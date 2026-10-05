@@ -1,0 +1,20 @@
+/* ─── The house: Platera in one line of silver ────────────────────────────────── */
+.house-wall { position: absolute; inset: 0; background: radial-gradient(110% 90% at 65% 45%, #fbf0d8 0%, #f3e0b8 55%, #e2c48b 100%); }
+.house-copy { position: absolute; left: 0; top: calc(7.2rem + 8svh); max-width: 34rem; pointer-events: none; opacity: 0; transform: translateY(26px); transition: opacity 700ms var(--ease-exit), transform 700ms var(--ease-exit); }
+.house-copy[data-on='true'] { opacity: 1; transform: none; pointer-events: auto; transition: opacity 1000ms var(--ease-entry) 120ms, transform 1200ms var(--ease-entry) 120ms; }
+@media (min-width: 768px) { .house-copy, .house-index { left: 2vw; } }
+.house-copy::before { content: ''; position: absolute; inset: -3rem -4rem -3rem -3rem; z-index: -1; background: radial-gradient(closest-side, rgb(251 242 220 / 0.85), rgb(251 242 220 / 0)); }
+.house-title { margin-top: 0.9rem; font-size: clamp(2.4rem, 1.2rem + 3.6vw, 4.8rem); line-height: 0.98; }
+.house-title { clip-path: inset(0 0 100% 0); transition: clip-path 900ms var(--ease-exit); }
+.house-copy[data-on='true'] .house-title { clip-path: inset(0 0 -12% 0); transition: clip-path 1300ms var(--ease-entry) 200ms; }
+.house-body { margin-top: 1.2rem; max-width: 28rem; font-size: var(--step-1); line-height: 1.55; color: var(--espresso-muted); }
+.house-index { position: absolute; left: 0; bottom: 4.5svh; display: flex; gap: 1.4rem; padding: 0 var(--gutter); font-size: 0.86rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso-muted); }
+.house-index li { position: relative; padding-bottom: 0.3rem; transition: color 600ms var(--ease-entry); }
+.house-index li::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright)); transform: scaleX(0); transform-origin: 0 50%; transition: transform 900ms var(--ease-entry); }
+.house-index li[data-on='true'] { color: var(--espresso); }
+.house-index li[data-on='true']::after { transform: none; }
+@media (max-width: 767px) {
+  .house-copy { top: auto; bottom: 11svh; }
+  .house-index { gap: 0.8rem; font-size: 0.7rem; }
+  .house-index li:not([data-on='true']) { display: none; }
+}

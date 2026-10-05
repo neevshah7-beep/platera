@@ -407,9 +407,9 @@ html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
 .chapter-rail { position: fixed; left: 0; right: 0; top: 4rem; z-index: 39; padding: 0 var(--gutter); background: color-mix(in oklab, var(--cream) 94%, transparent); border-bottom: 1px solid var(--rule); opacity: 0; transform: translateY(-8px); transition: opacity 900ms var(--ease-entry) 600ms, transform 900ms var(--ease-entry) 600ms; pointer-events: none; }
 .chapter-rail[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
 html[data-hero='1'] .chapter-rail { opacity: 0; transform: translateY(-8px); pointer-events: none; transition-delay: 0ms; }
-.chapter-rail ol { display: flex; gap: clamp(1rem, 0.2rem + 2vw, 2.6rem); max-width: 1600px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+.chapter-rail ol { display: flex; gap: clamp(0.9rem, 0rem + 1.6vw, 2.4rem); max-width: 1600px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .chapter-rail ol::-webkit-scrollbar { display: none; }
-.chapter-rail button { position: relative; display: flex; align-items: baseline; gap: 0.5rem; padding: 0.7rem 0 0.65rem; white-space: nowrap; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--espresso-muted); transition: color var(--dur-ui) var(--ease-entry); }
+.chapter-rail button { position: relative; display: flex; align-items: baseline; gap: 0.45rem; padding: 0.7rem 0 0.65rem; white-space: nowrap; font-size: clamp(0.76rem, 0.6rem + 0.25vw, 0.86rem); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--espresso-muted); transition: color var(--dur-ui) var(--ease-entry); }
 .chapter-rail button:hover { color: var(--espresso); }
 .chapter-rail button[data-on='true'] { color: var(--espresso); }
 .chapter-rail button[data-on='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold), var(--gold-bright)); }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { HouseScene } from '@/scenes/house/HouseScene'
 import Link from 'next/link'
 import { Prose, Section } from '@/components/site/Prose'
 import { STORE } from '@/lib/store'
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
+    <>
+    <HouseScene id="about-house" />
     <Prose title="How Platera works" intro="A small house with one idea: choose fewer pieces, choose them properly, and show the customer everything.">
       <Section title="We choose; we don’t make">
         <p>
@@ -43,5 +46,6 @@ export default function AboutPage() {
         </p>
       </Section>
     </Prose>
+    </>
   )
 }
