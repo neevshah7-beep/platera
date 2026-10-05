@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useMaterials } from '../materials/library'
+import { bloom } from '../post/layers'
 import { xp } from '../state'
 
 const URL = '/models/emblem.glb'
@@ -43,7 +44,7 @@ export function Emblem({ tier, stoneDetail = 'full' }: { tier: 'high' | 'mid' | 
   const stone = nodes.CenterStone
 
   return (
-    <group scale={JEWEL_SCALE} position={[0, offset * JEWEL_SCALE, 0]}>
+    <group ref={bloom} scale={JEWEL_SCALE} position={[0, offset * JEWEL_SCALE, 0]}>
       <group position={[0, 0, 0]}>
         {part('Band', m.silver)}
         {part('Claws', m.silver)}

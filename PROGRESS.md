@@ -7,7 +7,7 @@ Spec: `EXPERIENCE_BIBLE.md`. Protocol: one task, one verification (`/verify/`), 
 The protocol pins three@^0.169, @react-three/fiber@^8.17, @react-three/drei@^9.114 and
 @react-three/postprocessing@^2.16. Those are the React 18 generation: fiber 8 does not run on
 React 19, which this Next.js 15 app (and its commerce layer) is built on. The same libraries
-are installed at their current React 19 majors instead: three 0.186, fiber 9, drei 10,
+are installed at their current React 19 majors instead: three 0.186, fiber 9, drei 10, leva 0.10 (0.9 mounts with ReactDOM.render, removed in React 19),
 @react-three/postprocessing 3, postprocessing 6.39. Every API the bible needs exists in these
 versions (TSL is not used, so no WebGPU dependency). Everything else is installed as listed.
 

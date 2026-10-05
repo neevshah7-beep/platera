@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Director } from './camera/Director'
+import { Post } from './post/Post'
 import { registry } from './registry'
 import { Rooms } from './Rooms'
 import { xp } from './state'
@@ -75,6 +76,7 @@ export default function WorldCanvas() {
       <Rooms />
       <Ready />
       <DebugHandle />
+      <Post />
     </Canvas>
   )
 }

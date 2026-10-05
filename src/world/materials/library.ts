@@ -45,7 +45,7 @@ function build() {
     /** Hardened steel for the hallmark punch. */
     steel: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.55, 0.56, 0.58), metalness: 1, roughness: 0.35, envMapIntensity: 1.1 }),
     /** Small pavé stones: physical glass with a diamond's index; the environment gives the sparkle. */
-    pave: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1, 1, 1), metalness: 0, roughness: 0, ior: 2.4, specularIntensity: 1, envMapIntensity: 3, iridescence: 0.3, iridescenceIOR: 1.8 }),
+    pave: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1, 1, 1), metalness: 0, roughness: 0.02, ior: 2.4, specularIntensity: 1, envMapIntensity: 3 }),
     /** White Carrara marble with a polished top. */
     marble: new THREE.MeshPhysicalMaterial({ map: marbleMap, roughness: 0.22, clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 0.8 }),
     marbleMatte: new THREE.MeshStandardMaterial({ map: marbleMap, roughness: 0.6, envMapIntensity: 0.5 }),
@@ -53,6 +53,10 @@ function build() {
     plaster: new THREE.MeshStandardMaterial({ color: ground, roughness: 0.95, envMapIntensity: 0.6 }),
     /** Stone-coloured velvet for trays, pads and the neck form. */
     velvet: new THREE.MeshPhysicalMaterial({ color: raised, roughness: 1, sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color(1, 1, 1), envMapIntensity: 0.4 }),
+    /** Polished black obsidian: plinth and counter tops. Deep, glassy, mirror-dark. */
+    obsidian: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.018, 0.016, 0.015), roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.1 }),
+    /** Matte obsidian for plinth sides: honed, not polished. */
+    obsidianHoned: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.022, 0.02, 0.018), roughness: 0.42, metalness: 0, envMapIntensity: 0.6 }),
     marbleMap,
   }
 }

@@ -28,6 +28,12 @@ const csp = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Shaders live as commented .glsl files (src/world/shaders) and import as strings.
+  webpack(config) {
+    config.module.rules.push({ test: /\.(glsl|vert|frag)$/, type: 'asset/source' })
+    return config
+  },
+  turbopack: { rules: { '*.glsl': { loaders: ['raw-loader'], as: '*.js' } } },
   experimental: {
     // Admin photo uploads go through a server action; photos can be 10–20 MB each.
     serverActions: { bodySizeLimit: '60mb' },
