@@ -25,6 +25,8 @@ vec2 coverUv(vec2 uv) {
 void main() {
   float aspect = uRes.x / uRes.y;
   vec2 uv = coverUv(vUv);
+  // Set the box a little lower, so the bow has air beneath the chapter rail.
+  uv.y = min(uv.y + 0.05, 0.998);
   // Lean with the pull: the far silk shifts more than the box, a sense of depth.
   float depth = smoothstep(0.2, 0.9, uv.y);
   uv.x -= uPull * 0.008 * (0.4 + depth);
