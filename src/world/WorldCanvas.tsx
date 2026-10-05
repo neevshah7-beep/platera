@@ -63,7 +63,7 @@ export default function WorldCanvas() {
         const tier = guessTier(gl.getContext() as WebGL2RenderingContext)
         xp.set({ tier })
         setDpr(TIER.dpr[tier])
-        const ground = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--ground').trim() || '#f4efe7')
+        const ground = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--ground').trim() || '#0b0a09')
         scene.background = ground
         scene.fog = new THREE.Fog(ground, 9, 26)
       }}

@@ -4,15 +4,16 @@ import { ContactShadows, MeshTransmissionMaterial, useGLTF } from '@react-three/
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { JEWEL_SCALE } from '../layout'
 import { useMaterials } from '../materials/library'
-import { Plinth } from './Hall'
 import { xp } from '../state'
 
 const URL = '/models/emblem.glb'
 useGLTF.preload(URL, '/draco/')
 
 type Nodes = Record<string, THREE.Mesh>
+
+/** Jewellery is shown at ten times life size so it reads on screen. */
+export const JEWEL_SCALE = 10
 
 /**
  * The Platera emblem, modelled in Blender (scripts/blender/build_hero.py), standing on a
@@ -85,7 +86,6 @@ export function Arrival({ tier }: { tier: 'high' | 'mid' | 'low' }) {
   })
   return (
     <group>
-      <Plinth w={0.42} d={0.42} h={PLINTH} />
       <group ref={ring} position={[0, PLINTH, 0]}>
         <Emblem tier={tier} />
       </group>

@@ -21,7 +21,7 @@ function build() {
   marbleMap.wrapS = marbleMap.wrapT = THREE.RepeatWrapping
   marbleMap.anisotropy = 8
 
-  const ground = token('--ground', '#f4efe7')
+  const ground = token('--ground', '#0b0a09')
   const raised = token('--ground-raised', '#eae3d7')
 
   return {

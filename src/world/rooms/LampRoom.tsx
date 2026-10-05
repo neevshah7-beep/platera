@@ -5,7 +5,6 @@ import { useFrame } from '@react-three/fiber'
 import { Suspense, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { mediaBase } from '@/components/media/PieceImage'
-import { Plinth } from './Hall'
 import { useMaterials } from '../materials/library'
 import { makePieceMaterial } from '../materials/pieceLight'
 import { ANCHORS, registry, type Pose } from '../registry'
@@ -48,7 +47,9 @@ export function LampRoom({ piece }: { piece: TrayPiece }) {
   useEffect(() => registry.register({ key: 'lamp', anchor, pose, adjacent: ['tray'] }), [anchor, pose])
   return (
     <group position={ANCHORS.lamp}>
-      <Plinth w={0.7} d={0.6} h={0.93} />
+      <mesh material={m.marble} position={[0, 0.465, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.7, 0.93, 0.6]} />
+      </mesh>
       <mesh material={m.velvet} position={[0, 0.94, 0]} receiveShadow>
         <cylinderGeometry args={[0.3, 0.3, 0.02, 64]} />
       </mesh>

@@ -2,50 +2,64 @@
 
 /* ─── Tokens. The only place a colour value is written. ──────────────── */
 :root {
-  /* Grounds: Ivory Gallery. Warm ivory walls, white marble, daylight. */
-  --ground: #f4efe7;
-  --ground-raised: #eae3d7;
-  --ivory: #fbf8f3;
+  /* NOIR CHAMPAGNE. Obsidian velvet as the ground, so metal and stones carry the light;
+     champagne gold, platinum silver and diamond ice as the only colours that glow.
+     Contrast (checked): ivory/obsidian 17.0:1 · muted/obsidian 7.6:1 · gold/obsidian 8.5:1
+     · obsidian on gold 8.5:1 · garnet-bright/obsidian 4.6:1. */
+  --ground: #0b0a09;
+  --ground-raised: #16130f;
+  --ivory: #f6f1e7;
 
-  /* Type */
-  --ink-on-dark: #1c1b19;
-  --ink-on-dark-muted: #655e55;
-  --ink-on-light: #1c1b19;
-  --ink-on-light-muted: #5e584f;
+  /* Type (names kept from the commerce build: "on-dark" is the house text colour) */
+  --ink-on-dark: #f3ede2;
+  --ink-on-dark-muted: #a89f91;
+  --ink-on-light: #f3ede2;
+  --ink-on-light-muted: #a89f91;
 
-  /* Metal. Silver is the house metal; gold appears only on gold and gold-plated pieces.
-     Neither is ever used as a flat fill: only as a hairline or a moving three-stop surface. */
-  --argent: #7a7f84;
-  --argent-shadow: #4f5357;
-  --argent-light: #e6e8ea;
-  --gold: #a8844f;
-  --gold-shadow: #6f5530;
-  --gold-light: #e9d5ac;
+  /* Metal. Never a flat fill: only hairlines and moving three-stop surfaces. */
+  --argent: #b9bec4;
+  --argent-shadow: #5e646a;
+  --argent-light: #f1f4f7;
+  --gold: #c9a46a;
+  --gold-shadow: #6e5229;
+  --gold-light: #efd9a9;
+  --ice: #dfeaf5;             /* diamond fire: the cool white in a stone's highlight */
 
-  /* Ruby: bridal and critical UI only. */
-  --ruby: #8e2436;
-  --ruby-bright: #8e2436;
+  /* Garnet: bridal (the Chamber) and critical UI only. */
+  --ruby: #8e1a2e;
+  --ruby-bright: #d24a63;
 
   /* Hairlines */
-  --rule-on-dark: rgb(28 27 25 / 0.14);
-  --rule-on-light: rgb(28 27 25 / 0.16);
+  --rule-on-dark: rgb(243 237 226 / 0.14);
+  --rule-on-light: rgb(243 237 226 / 0.16);
 
-  --focus: #1f4d46;
+  --focus: #efd9a9;
 
-  /* The 3D house. Read by the WebGL world at runtime (components/world/palette.ts). */
-  --lamp: #fff8ee;            /* warm jeweller's lamp */
-  --spec-silver: #eef2f5;     /* highlight tint on silver */
-  --spec-gold: #e2c48c;       /* highlight tint on gold plating */
-  --stone: #e4ded4;           /* green marble of the plinths and counter */
-  --velvet-sheen: #ffffff;    /* the soft lighter green velvet shows at grazing angles */
-  --shadow-ink: #5a5248;      /* contact shadows on velvet */
+  /* The world. Read by the WebGL code at runtime so DOM and 3D share one palette. */
+  --lamp: #fff1dc;            /* key light, 4200 K */
+  --fill: #dfe8ff;            /* fill light, 6000 K */
+  --spec-silver: #f2f6fa;
+  --spec-gold: #f3d79c;
+  --stone: #1a1714;
+  --velvet: #120f0d;          /* tray velvet: near-black with a warm nap */
+  --velvet-sheen: #6b5a46;    /* the nap catching light at grazing angles */
+  --shadow-ink: #000000;
 
-  /* Light Moods: the lamp's colour for each occasion (product page). */
-  --mood-daylight: #f4f7ff;   /* north window, late morning */
-  --mood-diya: #ffb25e;       /* oil lamp flame, about 1800 K */
-  --mood-evening: #ffd9b8;    /* warm room light at a party */
-  --mood-mandap: #ffc36b;     /* marigold-filtered wedding light */
-  --mood-mandap-rose: #ff8a7a;/* the rose fill under a mandap canopy */
+  /* Light Moods */
+  --mood-daylight: #f4f7ff;
+  --mood-diya: #ffb25e;
+  --mood-evening: #ffd9b8;
+  --mood-mandap: #ffc36b;
+  --mood-mandap-rose: #ff8a7a;
+
+  /* Motion tokens (Experience Bible §7; mirrored from tokens/motion.ts) */
+  --ease-entry: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-camera: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 180ms;
+  --dur-ui: 420ms;
+  --dur-camera: 1600ms;
+  --stagger-base: 40ms;
 
   /* Motion: one easing set, ~30% slower than a product UI. */
   --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
@@ -197,7 +211,8 @@ p { text-wrap: pretty; }
 }
 .link:hover { background-size: 0% 1px; background-position: 100% 100%; }
 
-/* Buttons. Primary is ivory on velvet; there is no gold button. */
+/* Buttons. Primary is a champagne metal surface: three stops with a highlight that
+   follows the pointer (--sheen-x), never a flat gold fill. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -217,11 +232,13 @@ p { text-wrap: pretty; }
   cursor: pointer;
   text-align: center;
 }
-.btn-primary { background: var(--ink-on-dark); color: var(--ground); }
-.btn-primary:hover { background: var(--focus); }
+.btn-primary {
+  color: var(--ground);
+  background: linear-gradient(105deg, var(--gold-shadow) -10%, var(--gold) calc(var(--sheen-x, 50%) - 30%), var(--gold-light) var(--sheen-x, 50%), var(--gold) calc(var(--sheen-x, 50%) + 30%), var(--gold-shadow) 120%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), inset 0 -1px 0 rgb(0 0 0 / 0.35);
+}
 .btn-quiet { border-color: var(--rule-on-dark); color: var(--ink-on-dark); }
 .btn-quiet:hover { border-color: var(--argent); }
-.ground-light .btn-primary { background: var(--ink-on-dark); color: var(--ground); }
 .ground-light .btn-quiet { border-color: var(--rule-on-light); color: var(--ink-on-light); }
 .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
@@ -267,24 +284,6 @@ html[data-world='on'] body { background: transparent; }
   text-shadow: 0 1px 18px color-mix(in srgb, var(--ground) 85%, transparent), 0 0 2px color-mix(in srgb, var(--ground) 70%, transparent);
 }
 
-/* The page transition: one pass of light across the screen. */
-@keyframes sheen-wipe {
-  0% { transform: translateX(-110%) skewX(-12deg); opacity: 0; }
-  12% { opacity: 1; }
-  100% { transform: translateX(110%) skewX(-12deg); opacity: 0; }
-}
-.sheen-wipe {
-  background: linear-gradient(
-    100deg,
-    transparent 30%,
-    color-mix(in srgb, var(--ivory) 30%, transparent) 42%,
-    color-mix(in srgb, var(--ivory) 75%, transparent) 50%,
-    color-mix(in srgb, var(--gold-light) 25%, transparent) 56%,
-    transparent 70%
-  );
-  animation: sheen-wipe 1.15s var(--ease-turn) both;
-}
-
 /* The hero render drifts up and settles slightly closer as the page scrolls away from
    it: a camera easing back, not a parallax trick. Scroll-driven, so no JavaScript. */
 @supports (animation-timeline: view()) {
@@ -309,15 +308,7 @@ html[data-world='on'] body { background: transparent; }
   mask-composite: intersect;
 }
 
-/* ── The hall: text cards standing over the 3D walk ─────────────────────── */
-.card-over-hall {
-  background: color-mix(in oklab, var(--ground) 84%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  backdrop-filter: blur(14px) saturate(1.1);
-  border: 1px solid var(--rule-on-light);
-  padding: clamp(1.25rem, 0.9rem + 1.6vw, 2.25rem);
-  box-shadow: 0 30px 80px -40px rgb(28 27 25 / 0.35);
-}
+
 .scroll-cue::after {
   content: '';
   display: block;
