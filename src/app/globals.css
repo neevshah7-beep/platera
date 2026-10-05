@@ -1,72 +1,45 @@
 @import 'tailwindcss';
 
-/* ─── Tokens. The only place a colour value is written. ──────────────── */
+/* ════════════════════════════════════════════════════════════════════════════
+   PLATERA — CHAMPAGNE GOLD
+   A sunlit jewellery counter: champagne and honey grounds, espresso type, polished
+   yellow gold that is always a material (a moving metal surface or a hairline), never a
+   flat fill. Contrast (checked, WCAG): espresso on champagne 11.1:1 · on honey 6.7:1 ·
+   on cream 13.9:1 · muted on champagne 5.2:1 · deep gold on champagne 4.6:1 (large text
+   and UI only) · cream on espresso 13.2:1 · garnet on champagne 6.8:1.
+   ════════════════════════════════════════════════════════════════════════════ */
 :root {
-  /* NOIR CHAMPAGNE. Obsidian velvet as the ground, so metal and stones carry the light;
-     champagne gold, platinum silver and diamond ice as the only colours that glow.
-     Contrast (checked): ivory/obsidian 17.0:1 · muted/obsidian 7.6:1 · gold/obsidian 8.5:1
-     · obsidian on gold 8.5:1 · garnet-bright/obsidian 4.6:1. */
-  --ground: #0b0a09;
-  --ground-raised: #16130f;
-  --ivory: #f6f1e7;
+  /* Grounds */
+  --cream: #f6ecd6;          /* lightest: pages of reading, forms */
+  --champagne: #e8d3a6;      /* the house ground */
+  --honey: #c9a05a;          /* the deep end of the gradient */
+  --amber: #a87a34;          /* shadowed gold in the ground gradient */
 
-  /* Type (names kept from the commerce build: "on-dark" is the house text colour) */
-  --ink-on-dark: #f3ede2;
-  --ink-on-dark-muted: #a89f91;
-  --ink-on-light: #f3ede2;
-  --ink-on-light-muted: #a89f91;
+  /* Type */
+  --espresso: #2b1d0e;
+  --espresso-muted: #6b4e2a;
 
-  /* Metal. Never a flat fill: only hairlines and moving three-stop surfaces. */
-  --argent: #b9bec4;
-  --argent-shadow: #5e646a;
-  --argent-light: #f1f4f7;
-  --gold: #c9a46a;
-  --gold-shadow: #6e5229;
-  --gold-light: #efd9a9;
-  --ice: #dfeaf5;             /* diamond fire: the cool white in a stone's highlight */
+  /* Metal: used only as gradients and hairlines */
+  --gold-shadow: #7a5418;
+  --gold: #c99a3e;
+  --gold-bright: #f1d488;
+  --gold-white: #fff6dc;
+  --pearl: #fbf6ee;
 
-  /* Garnet: bridal (the Chamber) and critical UI only. */
-  --ruby: #8e1a2e;
-  --ruby-bright: #d24a63;
+  /* Bridal and critical UI only */
+  --garnet: #7e1f2b;
 
-  /* Hairlines */
-  --rule-on-dark: rgb(243 237 226 / 0.14);
-  --rule-on-light: rgb(243 237 226 / 0.16);
+  --rule: rgb(43 29 14 / 0.16);
+  --rule-strong: rgb(43 29 14 / 0.32);
+  --focus: #2b1d0e;
 
-  --focus: #efd9a9;
-
-  /* The world. Read by the WebGL code at runtime so DOM and 3D share one palette. */
-  --lamp: #fff1dc;            /* key light, 4200 K */
-  --fill: #dfe8ff;            /* fill light, 6000 K */
-  --spec-silver: #f2f6fa;
-  --spec-gold: #f3d79c;
-  --stone: #1a1714;
-  --velvet: #120f0d;          /* tray velvet: near-black with a warm nap */
-  --velvet-sheen: #6b5a46;    /* the nap catching light at grazing angles */
-  --shadow-ink: #000000;
-
-  /* Light Moods */
-  --mood-daylight: #f4f7ff;
-  --mood-diya: #ffb25e;
-  --mood-evening: #ffd9b8;
-  --mood-mandap: #ffc36b;
-  --mood-mandap-rose: #ff8a7a;
-
-  /* Motion tokens (Experience Bible §7; mirrored from tokens/motion.ts) */
+  /* Motion: ~30% slower than a product UI. Weight, not speed. */
   --ease-entry: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
   --ease-camera: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 180ms;
   --dur-ui: 420ms;
-  --dur-camera: 1600ms;
-  --stagger-base: 40ms;
-
-  /* Motion: one easing set, ~30% slower than a product UI. */
-  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-turn: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-quick: 260ms;
-  --dur-calm: 560ms;
-  --dur-slow: 980ms;
+  --dur-slow: 900ms;
 
   /* Modular scale, ratio 1.25, fluid between 360px and 1440px. */
   --step--1: clamp(0.8rem, 0.78rem + 0.08vw, 0.85rem);
@@ -77,26 +50,31 @@
   --step-4: clamp(2.07rem, 1.8rem + 1.2vw, 2.6rem);
   --step-5: clamp(2.49rem, 2.03rem + 2vw, 3.25rem);
   --step-6: clamp(2.99rem, 2.2rem + 3.6vw, 4.9rem);
+  --step-display: clamp(3.4rem, 1.6rem + 8vw, 10rem);
 
-  --measure: 66ch;
-  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --measure: 64ch;
+  --gutter: clamp(1.1rem, 0.6rem + 2.2vw, 2.75rem);
 }
 
 @theme inline {
-  --color-ground: var(--ground);
-  --color-ground-raised: var(--ground-raised);
-  --color-ivory: var(--ivory);
-  --color-ink: var(--ink-on-dark);
-  --color-ink-muted: var(--ink-on-dark-muted);
-  --color-ink-light: var(--ink-on-light);
-  --color-ink-light-muted: var(--ink-on-light-muted);
-  --color-argent: var(--argent);
+  --color-cream: var(--cream);
+  --color-champagne: var(--champagne);
+  --color-honey: var(--honey);
+  --color-espresso: var(--espresso);
+  --color-muted: var(--espresso-muted);
   --color-gold: var(--gold);
-  --color-ruby: var(--ruby);
-  --color-ruby-bright: var(--ruby-bright);
-  --color-rule: var(--rule-on-dark);
-  --color-rule-light: var(--rule-on-light);
-  --color-focus: var(--focus);
+  --color-gold-shadow: var(--gold-shadow);
+  --color-garnet: var(--garnet);
+  --color-rule: var(--rule);
+  /* Names kept for the admin panel */
+  --color-ground: var(--champagne);
+  --color-ground-raised: var(--cream);
+  --color-ink: var(--espresso);
+  --color-ink-muted: var(--espresso-muted);
+  --color-ink-light: var(--espresso);
+  --color-ink-light-muted: var(--espresso-muted);
+  --color-rule-light: var(--rule);
+  --color-ruby: var(--garnet);
 
   --font-display: var(--font-gambetta), 'Iowan Old Style', Georgia, serif;
   --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
@@ -109,15 +87,16 @@
   --text-step-4: var(--step-4);
   --text-step-5: var(--step-5);
   --text-step-6: var(--step-6);
+  --text-display: var(--step-display);
 
-  --ease-settle: var(--ease-settle);
-  --ease-turn: var(--ease-turn);
+  --ease-entry: var(--ease-entry);
+  --ease-camera: var(--ease-camera);
 }
 
-/* ─── Base ───────────────────────────────────────────────────────────── */
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
 html {
-  background: var(--ground);
-  color: var(--ink-on-dark);
+  background: var(--champagne);
+  color: var(--espresso);
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
 }
@@ -125,140 +104,103 @@ body {
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--step-0);
   line-height: 1.6;
-  font-weight: 400;
-  background: var(--ground);
+  background: var(--champagne);
   -webkit-font-smoothing: antialiased;
 }
-
 h1, h2, h3, .display {
   font-family: var(--font-gambetta), Georgia, serif;
   font-weight: 400;
-  line-height: 1.04;
+  line-height: 1.02;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
 p { text-wrap: pretty; }
+::selection { background: var(--gold-bright); color: var(--espresso); }
+:focus-visible { outline: 1.5px solid var(--focus); outline-offset: 3px; border-radius: 1px; }
 
-::selection { background: var(--gold-light); color: var(--ink-on-dark); }
-
-:focus-visible {
-  outline: 1.5px solid var(--focus);
-  outline-offset: 3px;
-  border-radius: 1px;
-}
-.ground-light :focus-visible { outline-color: var(--ground); }
-
-/* Every price, weight, purity and measurement. */
 .num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
-
 .measure { max-width: var(--measure); }
+.eyebrow { font-size: var(--step--1); letter-spacing: 0.22em; text-transform: uppercase; color: var(--espresso-muted); }
 
-/* A light section: ivory ground, velvet type. */
-.ground-light { background: var(--ground-raised); color: var(--ink-on-light); }
+/* A lighter reading surface (forms, admin). */
+.ground-light { background: var(--cream); color: var(--espresso); }
 
-/* ─── Metal ──────────────────────────────────────────────────────────────
-   A hairline that behaves like polished metal: three tonal stops with a highlight
-   that follows the pointer (--sheen-x is set by <MetalRule>). It's the highlight
-   of a light source travelling along a polished edge, not decoration. */
-.metal-rule {
-  height: 1px;
+/* ─── Metal ────────────────────────────────────────────────────────────────────
+   Polished gold as a surface: five stops with a highlight that follows the pointer
+   (--sheen-x), so a hairline or button behaves like metal under a moving light. */
+.metal {
   background: linear-gradient(
-    90deg,
-    var(--argent-shadow) 0%,
-    var(--argent) calc(var(--sheen-x, 50%) - 22%),
-    var(--argent-light) var(--sheen-x, 50%),
-    var(--argent) calc(var(--sheen-x, 50%) + 22%),
-    var(--argent-shadow) 100%
-  );
-}
-.metal-rule[data-metal='gold'] {
-  background: linear-gradient(
-    90deg,
+    100deg,
     var(--gold-shadow) 0%,
-    var(--gold) calc(var(--sheen-x, 50%) - 22%),
-    var(--gold-light) var(--sheen-x, 50%),
-    var(--gold) calc(var(--sheen-x, 50%) + 22%),
+    var(--gold) calc(var(--sheen-x, 50%) - 26%),
+    var(--gold-white) var(--sheen-x, 50%),
+    var(--gold) calc(var(--sheen-x, 50%) + 26%),
     var(--gold-shadow) 100%
   );
 }
-
-/* One slow pass of light across the hero photograph, like a lamp moving over a
-   tray. It runs once on load and then holds still. */
-@property --lp-x { syntax: '<percentage>'; inherits: false; initial-value: -30%; }
-.light-pass { position: relative; isolation: isolate; overflow: hidden; }
-.light-pass::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(38% 55% at var(--lp-x) 42%, rgb(238 240 240 / 0.11), transparent 70%);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  animation: light-pass 5.6s var(--ease-turn) 0.4s 1 both;
+.metal-text {
+  background: linear-gradient(100deg, var(--gold-shadow) 0%, var(--gold) 30%, var(--gold-bright) 48%, var(--gold-white) 52%, var(--gold) 70%, var(--gold-shadow) 100%);
+  background-size: 220% 100%;
+  background-position: var(--sheen-pos, 50%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-@keyframes light-pass {
-  from { --lp-x: -30%; }
-  to { --lp-x: 130%; }
+.metal-text-deep { /* for gold type on the light veil: never fades into the cream */
+  background: linear-gradient(100deg, var(--gold-shadow) 0%, #9a6c22 25%, var(--gold) 45%, #e4bd6a 52%, var(--gold) 60%, #9a6c22 80%, var(--gold-shadow) 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
+.rule-gold { height: 1px; background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold-bright) 50%, var(--gold) 80%, transparent); }
 
-/* Links: a hairline under the word that withdraws on hover. */
+/* ─── Links, buttons, fields ─────────────────────────────────────────────────── */
 .link {
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 100% 1px;
   background-position: 0 100%;
   background-repeat: no-repeat;
   padding-bottom: 1px;
-  transition: background-size var(--dur-calm) var(--ease-settle);
+  transition: background-size var(--dur-ui) var(--ease-entry);
 }
 .link:hover { background-size: 0% 1px; background-position: 100% 100%; }
 
-/* Buttons. Primary is a champagne metal surface: three stops with a highlight that
-   follows the pointer (--sheen-x), never a flat gold fill. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6em;
-  min-height: 3rem;
-  padding: 0.8rem 1.5rem;
+  min-height: 3.1rem;
+  padding: 0.85rem 1.6rem;
   font-size: var(--step-0);
   font-weight: 500;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.01em;
   border: 1px solid transparent;
-  border-radius: 1px;
-  transition:
-    background-color var(--dur-calm) var(--ease-settle),
-    color var(--dur-calm) var(--ease-settle),
-    border-color var(--dur-calm) var(--ease-settle);
+  border-radius: 999px;
   cursor: pointer;
-  text-align: center;
+  transition: background-color var(--dur-ui) var(--ease-entry), color var(--dur-ui) var(--ease-entry), border-color var(--dur-ui) var(--ease-entry);
 }
-.btn-primary {
-  color: var(--ground);
-  background: linear-gradient(105deg, var(--gold-shadow) -10%, var(--gold) calc(var(--sheen-x, 50%) - 30%), var(--gold-light) var(--sheen-x, 50%), var(--gold) calc(var(--sheen-x, 50%) + 30%), var(--gold-shadow) 120%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), inset 0 -1px 0 rgb(0 0 0 / 0.35);
-}
-.btn-quiet { border-color: var(--rule-on-dark); color: var(--ink-on-dark); }
-.btn-quiet:hover { border-color: var(--argent); }
-.ground-light .btn-quiet { border-color: var(--rule-on-light); color: var(--ink-on-light); }
+.btn-primary { background: var(--espresso); color: var(--cream); }
+.btn-primary:hover { background: #3d2a15; }
+.btn-quiet { border-color: var(--rule-strong); color: var(--espresso); }
+.btn-quiet:hover { border-color: var(--espresso); }
 .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
-/* Form fields: a bottom hairline, the way a ledger is ruled. */
 .field {
   width: 100%;
   min-height: 3rem;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid var(--rule-on-dark);
+  border-bottom: 1px solid var(--rule-strong);
   padding: 0.6rem 0;
   color: inherit;
   font: inherit;
-  transition: border-color var(--dur-calm) var(--ease-settle);
+  transition: border-color var(--dur-ui) var(--ease-entry);
 }
-.field:focus { outline: none; border-bottom-color: var(--argent); }
+.field:focus { outline: none; border-bottom-color: var(--espresso); }
 .field:focus-visible { outline: 1.5px solid var(--focus); outline-offset: 2px; }
-.ground-light .field { border-bottom-color: var(--rule-on-light); }
-.label { display: block; font-size: var(--step--1); color: var(--ink-on-dark-muted); }
-.ground-light .label { color: var(--ink-on-light-muted); }
+.label { display: block; font-size: var(--step--1); color: var(--espresso-muted); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -267,63 +209,97 @@ p { text-wrap: pretty; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .light-pass::after { display: none; }
 }
 
-/* ─── The 3D house ──────────────────────────────────────────────────────── */
-
-/* With the world on, the page ground is the 3D velvet behind it. */
-html[data-world='on'] body { background: transparent; }
-
-/* A section drawn over the world that needs a calm, solid ground (long text, forms). */
-.ground-solid { background: var(--ground); position: relative; }
-
-/* Text set over the 3D scene: a soft pool of velvet behind it keeps it readable
-   wherever the camera is, without a visible box. */
-.over-world {
-  text-shadow: 0 1px 18px color-mix(in srgb, var(--ground) 85%, transparent), 0 0 2px color-mix(in srgb, var(--ground) 70%, transparent);
+/* ─── Hero type over the fall ──────────────────────────────────────────────── */
+.hero-letter-mask { display: inline-block; overflow: hidden; padding: 0 0.01em; line-height: 0.86; }
+.hero-letter {
+  display: inline-block;
+  font-size: clamp(3.6rem, 0.8rem + 11.5vw, 13rem);
+  letter-spacing: -0.02em;
+  line-height: 0.86;
+  transform: translateY(105%) rotate(4deg);
+  transform-origin: 0 100%;
+  transition: transform 1500ms var(--ease-entry);
 }
+.hero-rise { opacity: 0; transform: translateY(22px); transition: opacity 1100ms var(--ease-entry), transform 1300ms var(--ease-entry); }
+.hero-copy[data-landed='true'] .hero-letter { transform: translateY(0) rotate(0); }
+.hero-copy[data-landed='true'] .hero-rise { opacity: 1; transform: none; }
 
-/* The hero render drifts up and settles slightly closer as the page scrolls away from
-   it: a camera easing back, not a parallax trick. Scroll-driven, so no JavaScript. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-drift {
-      animation: hero-drift linear both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
-    }
-  }
+/* ─── The entry veil ───────────────────────────────────────────────────────── */
+.entry-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 90% at 50% 40%, var(--cream) 0%, var(--champagne) 55%, var(--honey) 130%);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1500ms var(--ease-camera);
 }
-@keyframes hero-drift {
-  to { transform: translateY(-7%) scale(1.035); opacity: 0.85; }
-}
-
-/* The hero render dissolves into the page at its edges, so no rectangle is ever visible.
-   (A mask is an alpha ramp, not a colour: black here means "fully shown".) */
-.hero-fade {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 72%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 72%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
-  mask-composite: intersect;
-}
-
-
-.scroll-cue::after {
+.entry-gate::after { /* the bright edge that leads the lift */
   content: '';
-  display: block;
-  width: 1px;
-  height: 3.5rem;
-  margin: 0.75rem auto 0;
-  background: linear-gradient(var(--ink-on-light), transparent);
-  animation: cue 2.4s var(--ease-settle) infinite;
-  transform-origin: top;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--gold-white), var(--gold-bright), transparent);
+  opacity: 0;
+  transition: opacity 400ms;
 }
-@keyframes cue {
-  0% { transform: scaleY(0); opacity: 1; }
-  70% { transform: scaleY(1); opacity: 1; }
-  100% { transform: scaleY(1); opacity: 0; }
+.entry-gate[data-entered='true'] { clip-path: inset(0 0 100% 0); pointer-events: none; }
+.entry-gate[data-entered='true']::after { opacity: 1; }
+.entry-inner { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; text-align: center; padding: 0 var(--gutter); }
+.entry-word { font-size: clamp(3.6rem, 1.5rem + 9vw, 9rem); line-height: 0.9; letter-spacing: -0.02em; background-size: 300% 100%; animation: entry-sheen 4.5s var(--ease-camera) infinite alternate; }
+@keyframes entry-sheen { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+.entry-bar { width: min(22rem, 70vw); height: 1px; background: var(--rule); overflow: hidden; }
+.entry-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright), var(--gold)); transform-origin: 0 50%; }
+.entry-enter {
+  margin-top: 0.6rem;
+  font-family: var(--font-gambetta), serif;
+  font-size: var(--step-2);
+  letter-spacing: 0.02em;
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  color: var(--espresso);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 900ms var(--ease-entry), transform 900ms var(--ease-entry), background-color 420ms var(--ease-entry), color 420ms var(--ease-entry);
+  cursor: pointer;
 }
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue::after { animation: none; }
+.entry-enter[data-ready='true'] { opacity: 1; transform: none; }
+.entry-enter:hover { background: var(--espresso); color: var(--cream); }
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+.site-header { color: var(--espresso); }
+.link-underline { position: relative; }
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+  transition: transform var(--dur-ui) var(--ease-entry);
 }
+.link-underline:hover::after { transform: scaleX(1); transform-origin: 0 50%; }
+
+/* ─── Scene 2 · the strand ─────────────────────────────────────────────────── */
+.strand { background: radial-gradient(120% 80% at 60% 45%, var(--cream) 0%, var(--champagne) 48%, var(--honey) 125%); }
+.strand-promise { position: absolute; left: var(--gutter); bottom: 14svh; width: min(34rem, calc(100% - 2 * var(--gutter))); }
+@media (min-width: 768px) { .strand-promise { left: calc(var(--gutter) + 2vw); bottom: auto; top: 38svh; } }
+.strand-thread {
+  position: absolute; left: 0; top: -1.6rem; width: 100%; height: 1px;
+  background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright) 60%, transparent);
+  transform: scaleX(0); transform-origin: 100% 50%;
+  transition: transform 900ms var(--ease-camera);
+}
+.strand-words { clip-path: inset(0 100% 0 0); transition: clip-path 1100ms var(--ease-entry) 0ms; }
+.strand-index { font-size: var(--step--1); letter-spacing: 0.2em; color: var(--espresso-muted); }
+.strand-title { margin-top: 0.6rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
+.strand-body { margin-top: 1rem; color: var(--espresso-muted); font-size: var(--step-1); }
+.strand-promise[data-on='true'] .strand-thread { transform: scaleX(1); }
+.strand-promise[data-on='true'] .strand-words { clip-path: inset(0 0 0 0); transition-delay: 420ms; }
+.strand-promise[data-on='false'] .strand-thread { transform-origin: 0 50%; transition-duration: 600ms; }
+.strand-hint { position: absolute; right: var(--gutter); bottom: 5svh; }
