@@ -1,7 +1,9 @@
 import 'server-only'
-import type { TrayPiece as PieceRef } from '@/world/state'
 import { isSold, type Pricing, type ProductWithMedia } from '@/lib/catalogue'
 import { formatINRWhole } from '@/lib/pricing/format'
+
+/** A piece as the storefront presents it: its cut-out photo, size and label. */
+export type PieceRef = { slug: string; name: string; src: string; width: number; height: number; price: string; gold: boolean }
 
 /** What the 3D world needs to lay a piece on a tray: its cut-out photo, size and label. */
 export function toPieceRef(product: ProductWithMedia, pricing: Pricing): PieceRef | null {
