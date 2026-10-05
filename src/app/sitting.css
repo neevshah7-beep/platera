@@ -1,52 +1,68 @@
 /* ─── The Sitting ─────────────────────────────────────────────────────────────
-   The campaign hung in a deep studio. Each look tints the room: Rouge a warm rose,
-   Saffron honey, Noir the deepest champagne. */
-.sitting { --D: 540px; --fin: 0; --intro: 1; }
-@media (max-width: 767px) { .sitting { --D: 420px; } }
+   The campaign hung as an exhibition: one long gallery wall standing at an angle, walked
+   beside. Each look has its own room and wall colour; an architrave of gold leaf marks
+   each doorway; every print is framed and lit by a brass picture light. */
+.sitting { --fin: 0; --intro: 1; --wall-h: 70svh; }
+.sit-floor { position: absolute; inset: 0; background: linear-gradient(180deg, #f4e6c9 0%, #ecd7ad 55%, #d9b67c 100%); }
+.sit-stage { position: absolute; inset: 0; perspective: 1300px; perspective-origin: 50% 46%; opacity: calc(1 - var(--fin) * 1.6); }
+.sit-wall { position: absolute; left: 30vw; top: calc(50% - var(--wall-h) / 2 + 7svh); height: var(--wall-h); display: flex; transform-origin: 0 50%; transform-style: preserve-3d; will-change: transform; }
+/* The floor runs from the foot of the wall toward you, catching a warm reflection. */
+.sit-wall::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 70svh; transform-origin: 50% 0; transform: rotateX(-90deg); background: linear-gradient(180deg, rgb(120 80 35 / 0.32), rgb(201 154 62 / 0.10) 40%, transparent 85%); pointer-events: none; }
 
-.sit-room, .sit-room::before, .sit-room::after { position: absolute; inset: 0; transition: opacity 1400ms var(--ease-entry); }
-.sit-room { background: radial-gradient(70% 60% at 50% 46%, #f6e6c4 0%, #e8cfa0 45%, #c79c5f 100%); }
-.sit-room::before { content: ''; background: radial-gradient(70% 60% at 50% 46%, #f7e2cf 0%, #e7bea0 48%, #a8604a 100%); opacity: 1; }
-.sit-room::after { content: ''; background: radial-gradient(70% 60% at 50% 46%, #f1dfba 0%, #c49a5e 55%, #7d5826 100%); opacity: 0; }
-.sitting[data-look='1'] .sit-room::before { opacity: 0; }
-.sitting[data-look='2'] .sit-room::before { opacity: 0; }
-.sitting[data-look='2'] .sit-room::after { opacity: 1; }
+.sit-room { position: relative; flex: none; display: flex; align-items: center; gap: 7vh; height: 100%; padding: 0 9vh 0 10vh; transform-style: preserve-3d;
+  background: linear-gradient(180deg, rgb(255 251 238 / 0.45) 0%, transparent 28%, transparent 70%, rgb(70 42 14 / 0.10) 100%), var(--wall);
+  box-shadow: inset 0 -12px 0 rgb(90 60 25 / 0.18); }
+/* The doorway into each room: a pilaster in gold leaf. */
+.sit-room + .sit-room::before { content: ''; position: absolute; left: -7px; top: -2svh; bottom: -1px; width: 14px; background: linear-gradient(90deg, #8a6222, #f1d488 45%, #c99a3e 60%, #7a5418); box-shadow: 0 0 24px rgb(120 80 30 / 0.35); }
+.sit-intro { padding-left: 4vh; }
+.sit-end { width: 40vw; }
 
-.sit-watermark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(calc(1 + var(--fin) * 0.15)); font-family: var(--font-display); font-style: italic; font-size: clamp(6rem, 2rem + 16vw, 22rem); line-height: 1; white-space: nowrap; color: rgb(255 246 220 / 0.22); pointer-events: none; user-select: none; }
-
-.sit-stage { position: absolute; inset: 0; perspective: 1000px; perspective-origin: 50% 46%; transform-style: preserve-3d; opacity: calc(1 - var(--fin) * 1.6); }
-.sit-world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
-.sit-node { position: absolute; left: 0; top: 0; transform: translate3d(calc(-50% + var(--x)), calc(-50% + var(--y)), var(--z)) rotateY(var(--r)); visibility: hidden; opacity: 0; transform-style: preserve-3d; }
-
-/* A print: a photograph in a cream mount, hung on a gold hairline. */
-.sit-print { display: block; width: clamp(16rem, 9rem + 16vw, 27rem); text-align: left; transform-style: preserve-3d; cursor: zoom-in; }
-.sit-full .sit-print { width: clamp(18rem, 10rem + 19vw, 31rem); }
-.sit-mount { position: relative; display: block; padding: 12px 12px 12px; background: var(--pearl); box-shadow: 0 50px 80px -40px rgb(43 29 14 / 0.75), 0 0 0 1px rgb(201 154 62 / 0.55); transition: transform 700ms var(--ease-entry), box-shadow 700ms var(--ease-entry); overflow: hidden; }
-.sit-mount::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 1px; height: 60vh; background: linear-gradient(to top, rgb(201 154 62 / 0.7), transparent); }
-.sit-mount img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #b7a68e; }
-.sit-print:hover .sit-mount, .sit-print:focus-visible .sit-mount { transform: translateZ(90px); box-shadow: 0 70px 100px -40px rgb(43 29 14 / 0.8), 0 0 0 1px var(--gold-bright); }
-.sit-fog { position: absolute; inset: 0; background: #ecd8ae; pointer-events: none; }
-.sit-sheen { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgb(255 244 214 / 0.55) 50%, transparent 65%); transform: translateX(-130%); pointer-events: none; mix-blend-mode: soft-light; }
-.sit-node[data-near='true'] .sit-sheen { animation: sit-sheen 1600ms var(--ease-camera) forwards; }
-@keyframes sit-sheen { to { transform: translateX(130%); } }
-.sit-caption { display: block; margin-top: 0.85rem; font-family: var(--font-display); font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.45rem); line-height: 1.2; color: var(--espresso); text-shadow: 0 1px 14px rgb(246 236 214 / 0.9); }
-
-/* The look cards: an announcement in the air. */
-.sit-card { width: min(90vw, 54rem); text-align: center; color: var(--espresso); }
+.sit-panel { flex: none; width: max(21rem, 48vh); color: var(--espresso); }
+.sit-title { margin-top: 0.9rem; font-size: clamp(2.4rem, 1rem + 6vh, 5rem); line-height: 0.98; }
+.sit-intro-body { margin-top: 1.2rem; font-size: var(--step-1); line-height: 1.55; color: var(--espresso-muted); max-width: 26rem; }
+.sit-look { width: auto; min-width: 18rem; padding-right: 2vh; }
 .sit-numeral { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-shadow); }
-.sit-card-title { margin-top: 0.3rem; font-family: var(--font-display); font-style: italic; font-size: clamp(5rem, 2rem + 12vw, 13rem); line-height: 0.9; background: linear-gradient(100deg, #6b4512 0%, #a87a34 35%, #e5c27a 50%, #a87a34 65%, #6b4512 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 18px 30px rgb(43 29 14 / 0.25)); }
-.sit-card-line { margin-top: 1rem; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.4rem); color: var(--espresso); }
+.sit-look-title { margin-top: 0.2rem; font-style: italic; font-size: clamp(4.2rem, 1rem + 15vh, 10rem); line-height: 0.95; white-space: nowrap; padding: 0 0.12em 0.08em 0; background: linear-gradient(100deg, #6b4512 0%, #a87a34 35%, #e5c27a 50%, #a87a34 65%, #6b4512 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sit-look-line { margin-top: 1rem; font-size: var(--step-1); color: var(--espresso); }
 
-/* The chapter head stays fixed in the corner while you walk. */
-.sit-head { position: absolute; left: 0; top: calc(6.6rem + 5svh); max-width: 34rem; opacity: var(--intro); transform: translateY(calc((1 - var(--intro)) * -24px)); }
-@media (min-width: 768px) { .sit-head, .sit-looks { left: 2vw; } }
-.sit-title { margin-top: 0.8rem; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
-.sit-looks { position: absolute; left: 0; bottom: 5svh; display: flex; gap: 1.4rem; opacity: calc(1 - var(--fin) * 3); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso-muted); }
+/* A framed print: a white mat in a slim espresso frame with a gold fillet, standing off
+   the wall by its depth, its shadow cast down onto the wall. */
+.sit-col { flex: none; display: flex; flex-direction: column; gap: 4.5vh; transform-style: preserve-3d; }
+.sit-frame { position: relative; flex: none; margin: 0; transform: translateZ(var(--z)); transform-style: preserve-3d; }
+.sit-print { position: relative; display: block; padding: 1.4vh; background: #fbf7ee; cursor: zoom-in; transition: transform 700ms var(--ease-entry), box-shadow 700ms var(--ease-entry);
+  box-shadow: 0 0 0 7px #2b1d0e, 0 0 0 8px #c99a3e, 0 calc(18px + var(--z) * 0.35) calc(30px + var(--z) * 0.5) calc(-6px) rgb(43 29 14 / 0.5); }
+.sit-print img { display: block; aspect-ratio: 4 / 5; object-fit: cover; background: #b7a68e; }
+.sit-hero .sit-print img { height: 50vh; }
+.sit-large .sit-print img { height: 42vh; }
+.sit-small .sit-print img { height: 19vh; }
+.sit-print:hover, .sit-print:focus-visible { transform: translateZ(70px) scale(1.02); box-shadow: 0 0 0 7px #2b1d0e, 0 0 0 8px #f1d488, 0 60px 80px -30px rgb(43 29 14 / 0.6); }
+.sit-sheen { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgb(255 244 214 / 0.5) 50%, transparent 65%); transform: translateX(-130%); pointer-events: none; mix-blend-mode: soft-light; }
+.sit-print:hover .sit-sheen { animation: sit-sheen 1300ms var(--ease-camera) forwards; }
+@keyframes sit-sheen { to { transform: translateX(130%); } }
+/* The brass picture light, and the pool of warm light it throws down the print. */
+.sit-lamp { position: absolute; left: 50%; top: -3.6vh; width: 46%; height: 9px; transform: translateX(-50%); border-radius: 5px; background: linear-gradient(180deg, #f6dc95, #b98a34 60%, #7a5418); box-shadow: 0 3px 6px rgb(43 29 14 / 0.4); z-index: 2; pointer-events: none; }
+.sit-lamp::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 3px; height: 2vh; transform: translateX(-50%); background: #8a6222; }
+.sit-lamp::after { content: ''; position: absolute; left: 50%; top: 6px; width: 260%; height: 48vh; transform: translateX(-50%); background: radial-gradient(50% 60% at 50% 0%, rgb(255 244 210 / 0.32), rgb(255 236 190 / 0.1) 45%, transparent 75%); mix-blend-mode: screen; pointer-events: none; }
+.sit-small .sit-lamp::after { height: 24vh; }
+/* The gallery label. */
+.sit-label { margin-top: 1.6vh; max-width: 100%; font-size: clamp(0.92rem, 0.8rem + 0.4vh, 1.06rem); line-height: 1.3; color: var(--espresso); }
+.sit-label .num { margin-right: 0.35rem; font-weight: 600; color: var(--gold-shadow); }
+
+/* The rooms, as a legend that follows the walk. */
+.sit-looks { position: absolute; left: 0; bottom: 4.5svh; z-index: 2; display: flex; gap: 1.4rem; opacity: calc(1 - var(--fin) * 3); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso-muted); }
+@media (min-width: 768px) { .sit-looks { left: 2vw; } }
 .sit-looks span { position: relative; padding-bottom: 0.3rem; transition: color 600ms var(--ease-entry); }
 .sit-looks span::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, var(--gold-shadow), var(--gold-bright)); transform: scaleX(0); transform-origin: 0 50%; transition: transform 900ms var(--ease-entry); }
 .sitting[data-look='0'] .sit-looks [data-k='0'], .sitting[data-look='1'] .sit-looks [data-k='1'], .sitting[data-look='2'] .sit-looks [data-k='2'] { color: var(--espresso); }
 .sitting[data-look='0'] .sit-looks [data-k='0']::after, .sitting[data-look='1'] .sit-looks [data-k='1']::after, .sitting[data-look='2'] .sit-looks [data-k='2']::after { transform: none; }
-.sitting[data-look='2'] .sit-head { color: var(--espresso); }
+@media (max-width: 767px) {
+  .sitting { --wall-h: 68svh; }
+  .sit-wall { left: 12vw; }
+  .sit-hero .sit-print img { height: 44vh; }
+  .sit-large .sit-print img { height: 38vh; }
+  .sit-small .sit-print img { height: 17vh; }
+  .sit-room { gap: 5vh; padding: 0 6vh; }
+}
 
 /* The strobe: a studio flash, warm-white, as you step into each look. */
 .sit-strobe { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(60% 60% at 50% 45%, #fffaf0 0%, rgb(255 246 220 / 0.85) 50%, rgb(255 236 190 / 0.4) 100%); }

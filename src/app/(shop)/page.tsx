@@ -29,10 +29,6 @@ export default async function HomePage() {
   return (
     <HomeExperience
       pieces={featured}
-      rates={[
-        { label: 'Silver 925, a gram', value: silver ? formatINR(silver.paisePerGram) : '—' },
-        ...(rates.GOLD_22K ? [{ label: 'Gold 22k, a gram', value: formatINR(rates.GOLD_22K.paisePerGram) }] : []),
-      ]}
       visit={{
         days,
         address: [STORE.address.line1, `${STORE.address.line2}, ${STORE.address.city} ${STORE.address.postalCode}`],

@@ -8,14 +8,13 @@ import type { CollectionPiece } from '@/scenes/collection/collection'
 import { SittingScene } from '@/scenes/sitting/SittingScene'
 import { GiftScene } from '@/scenes/gift/GiftScene'
 import { StampScene } from '@/scenes/stamp/StampScene'
-import { TreasuryScene } from '@/scenes/treasury/TreasuryScene'
 import { VisitScene } from '@/scenes/visit/VisitScene'
 import { StrandScene, type StrandPromise } from '@/scenes/strand/StrandScene'
 import { ChapterRail } from './ChapterRail'
 import { EntryGate } from './EntryGate'
 
 /** The homepage as a sequence of scenes. Scene 1 now; the strand, the stamp and the rest follow. */
-export function HomeExperience({ line, collaboration, promises, pieces, total, visit, rates }: { line: string; collaboration: string; promises: StrandPromise[]; pieces: (CollectionPiece & { href: string })[]; total: number; visit: React.ComponentProps<typeof VisitScene>; rates: { label: string; value: string }[] }) {
+export function HomeExperience({ line, collaboration, promises, pieces, total, visit }: { line: string; collaboration: string; promises: StrandPromise[]; pieces: (CollectionPiece & { href: string })[]; total: number; visit: React.ComponentProps<typeof VisitScene> }) {
   const [landed, setLanded] = useState(false)
   const onLanded = useCallback(() => setLanded(true), [])
   // While the hero wordmark is on screen, the header's small one would only repeat it.
@@ -39,7 +38,6 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
           { id: 'chapter-hallmark', label: 'The hallmark' },
           { id: 'chapter-collection', label: 'The collection' },
           { id: 'chapter-sitting', label: 'The sitting' },
-          { id: 'chapter-treasury', label: 'The treasury' },
           { id: 'chapter-gift', label: 'The gift' },
           { id: 'chapter-counter', label: 'The counter' },
         ]}
@@ -51,7 +49,6 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
       <StampScene />
       <CollectionScene pieces={pieces} total={total} />
       <SittingScene />
-      <TreasuryScene rates={rates} />
       <GiftScene />
       <VisitScene {...visit} />
     </div>

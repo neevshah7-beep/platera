@@ -5,65 +5,63 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { scroller } from '@/site/SmoothScroll'
 
 /**
- * SCENE · THE SITTING. The Platera campaign, walked through rather than scrolled past.
- * The photographs of the sitting hang in a deep studio; scroll moves you forward through
- * them, one look after another (Rouge, Saffron, Noir), and a studio strobe fires as
- * you step into each new look. The room leans with your hand; a print you point at comes
- * toward you, and a click brings it out full size. At the end of the walk the three looks
- * fan out together, like proofs laid on the table.
+ * SCENE · THE SITTING. The Platera campaign, hung as an exhibition you walk along.
+ * A long gallery wall stands at an angle in the room; scroll walks you beside it, so the
+ * prints ahead are small and far and the ones you pass are large and near. Each look has
+ * its own room and wall colour (Rouge, Saffron, Noir); a studio strobe fires as you step
+ * into each. Every print is framed, lit from above by a brass picture light, and some
+ * stand proud of the wall. Labels sit beside them as in a gallery. The room leans with
+ * your hand; a print you point at lifts toward you, and a click brings it out full size.
+ * At the end of the walk the three looks fan out together, like proofs on the table.
  */
 
-type Print = { kind: 'print'; id: string; caption: string; full?: boolean }
-type Card = { kind: 'card'; numeral: string; title: string; line: string; look: number }
-type Node = Print | Card
+type Print = { id: string; caption: string }
+type Column = { prints: Print[]; depth: number } // one large print, or two small stacked
+type Room = { numeral: string; title: string; line: string; wall: string; hero: Print; columns: Column[] }
 
-const LOOKS = [
-  { numeral: 'I', title: 'Rouge', line: 'Merreeda, in red satin and silver', portrait: 'merreeda-1' },
-  { numeral: 'II', title: 'Saffron', line: 'Aarya, in saffron and garnet', portrait: 'aarya-1' },
-  { numeral: 'III', title: 'Noir', line: 'Aarya, in black, set with light', portrait: 'aarya-14' },
+const ROOMS: Room[] = [
+  {
+    numeral: 'I', title: 'Rouge', line: 'Merreeda, in red satin and silver', wall: '#ecd0bb',
+    hero: { id: 'merreeda-1', caption: 'Rouge, the full look' },
+    columns: [
+      { prints: [{ id: 'merreeda-2', caption: 'Long drops and the solitaire' }], depth: 40 },
+      { prints: [{ id: 'merreeda-3', caption: 'The drop earring, close' }, { id: 'merreeda-4', caption: 'The solitaire pendant' }], depth: 0 },
+      { prints: [{ id: 'merreeda-6', caption: 'The wishbone ring' }], depth: 70 },
+      { prints: [{ id: 'merreeda-10', caption: 'A line of stones, wrist-close' }, { id: 'merreeda-8', caption: 'The statement ring' }], depth: 20 },
+      { prints: [{ id: 'merreeda-13', caption: 'Payal, two rows' }], depth: 50 },
+    ],
+  },
+  {
+    numeral: 'II', title: 'Saffron', line: 'Aarya, in saffron and garnet', wall: '#efd6a2',
+    hero: { id: 'aarya-1', caption: 'Saffron, the full look' },
+    columns: [
+      { prints: [{ id: 'aarya-2', caption: 'The fish pendant, worn' }], depth: 50 },
+      { prints: [{ id: 'aarya-5', caption: 'Swan studs' }, { id: 'aarya-6', caption: 'The fish pendant, close' }], depth: 10 },
+      { prints: [{ id: 'aarya-3', caption: 'A glance, and a swan' }], depth: 70 },
+      { prints: [{ id: 'aarya-9', caption: 'Bracelet in colour' }, { id: 'aarya-12', caption: 'Payal, in step' }], depth: 25 },
+    ],
+  },
+  {
+    numeral: 'III', title: 'Noir', line: 'Aarya, in black, set with light', wall: '#d9c09a',
+    hero: { id: 'aarya-14', caption: 'Noir, the full look' },
+    columns: [
+      { prints: [{ id: 'aarya-18', caption: 'The bow drop' }], depth: 60 },
+      { prints: [{ id: 'aarya-15', caption: 'Silver against black' }, { id: 'aarya-19', caption: 'A leaping pendant' }], depth: 15 },
+      { prints: [{ id: 'aarya-22', caption: 'The flower ring' }], depth: 70 },
+      { prints: [{ id: 'aarya-21', caption: 'Hearts, stacked' }, { id: 'aarya-24', caption: 'The wave cuff' }], depth: 30 },
+    ],
+  },
 ]
+const PRINTS: (Print & { room: number })[] = ROOMS.flatMap((r, k) => [r.hero, ...r.columns.flatMap((c) => c.prints)].map((p) => ({ ...p, room: k })))
 
-const NODES: Node[] = [
-  { kind: 'card', numeral: LOOKS[0].numeral, title: LOOKS[0].title, line: LOOKS[0].line, look: 0 },
-  { kind: 'print', id: 'merreeda-1', caption: 'Rouge · the full look', full: true },
-  { kind: 'print', id: 'merreeda-2', caption: 'Long drops and the solitaire' },
-  { kind: 'print', id: 'merreeda-3', caption: 'The drop earring, close' },
-  { kind: 'print', id: 'merreeda-4', caption: 'The solitaire pendant' },
-  { kind: 'print', id: 'merreeda-6', caption: 'The wishbone ring' },
-  { kind: 'print', id: 'merreeda-10', caption: 'A line of stones, wrist-close' },
-  { kind: 'print', id: 'merreeda-8', caption: 'The statement ring' },
-  { kind: 'print', id: 'merreeda-13', caption: 'Payal, two rows' },
-  { kind: 'card', numeral: LOOKS[1].numeral, title: LOOKS[1].title, line: LOOKS[1].line, look: 1 },
-  { kind: 'print', id: 'aarya-1', caption: 'Saffron · the full look', full: true },
-  { kind: 'print', id: 'aarya-2', caption: 'The fish pendant, worn' },
-  { kind: 'print', id: 'aarya-5', caption: 'Swan studs' },
-  { kind: 'print', id: 'aarya-6', caption: 'The fish pendant, close' },
-  { kind: 'print', id: 'aarya-3', caption: 'A glance, and a swan' },
-  { kind: 'print', id: 'aarya-9', caption: 'Bracelet in colour' },
-  { kind: 'print', id: 'aarya-12', caption: 'Payal, in step' },
-  { kind: 'card', numeral: LOOKS[2].numeral, title: LOOKS[2].title, line: LOOKS[2].line, look: 2 },
-  { kind: 'print', id: 'aarya-14', caption: 'Noir · the full look', full: true },
-  { kind: 'print', id: 'aarya-18', caption: 'The bow drop' },
-  { kind: 'print', id: 'aarya-15', caption: 'Silver against black' },
-  { kind: 'print', id: 'aarya-19', caption: 'A leaping pendant' },
-  { kind: 'print', id: 'aarya-21', caption: 'Hearts, stacked' },
-  { kind: 'print', id: 'aarya-22', caption: 'The flower ring' },
-  { kind: 'print', id: 'aarya-24', caption: 'The wave cuff' },
-]
-const PRINTS = NODES.filter((n): n is Print => n.kind === 'print')
-// Depth of each node, in hanging-slots: a look's card hangs alone, with air after it.
-const SLOTS: number[] = []
-NODES.reduce((z, n) => (SLOTS.push(z), z + (n.kind === 'card' ? 2.2 : 1)), 0)
-const LAST = SLOTS[SLOTS.length - 1]
-
-const WALK = 0.84 // share of the section spent walking; the rest is the finale
+const WALK = 0.84 // share of the section spent walking the wall; the rest is the finale
 
 export function SittingScene() {
   const section = useRef<HTMLElement>(null)
-  const world = useRef<HTMLDivElement>(null)
+  const wall = useRef<HTMLDivElement>(null)
   const strobe = useRef<HTMLDivElement>(null)
   const finale = useRef<HTMLDivElement>(null)
-  const nodes = useRef<(HTMLDivElement | null)[]>([])
+  const rooms = useRef<(HTMLDivElement | null)[]>([])
   const [near, setNear] = useState(false)
   const [open, setOpen] = useState<number | null>(null)
 
@@ -85,139 +83,130 @@ export function SittingScene() {
     }
     addEventListener('pointermove', onMove, { passive: true })
 
-    let lastLook = -1
+    // The wall's length and where each room begins, measured once laid out.
+    let length = 0
+    let starts: number[] = []
+    const measure = () => {
+      const w = wall.current
+      if (!w) return
+      length = w.scrollWidth
+      starts = rooms.current.map((r) => r?.offsetLeft ?? 0)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    if (wall.current) ro.observe(wall.current)
+
+    let lastRoom = -1
     let lastKey = ''
     const loop = () => {
       raf = requestAnimationFrame(loop)
-      if (!visible) return
+      if (!visible || !wall.current) return
       const r = sec.getBoundingClientRect()
       const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)))
       pointer.sx += (pointer.x - pointer.sx) * 0.06
       pointer.sy += (pointer.y - pointer.sy) * 0.06
-      const narrow = innerWidth < 768
-      const D = narrow ? 420 : 540 // depth between hanging prints, px
       const walk = Math.min(1, p / WALK)
-      // The walk begins a little way back, so the first look's card is seen hanging ahead.
-      const LEAD = 1.8
-      const cam = (walk * (LAST + 0.6 + LEAD) - LEAD) * D
-      const key = `${cam.toFixed(1)}|${pointer.sx.toFixed(4)}|${pointer.sy.toFixed(4)}`
-      if (key === lastKey) return
-      lastKey = key
-
-      // The camera dollies forward, with a slow lateral drift, and the room leans to the hand.
-      const drift = Math.sin(walk * Math.PI * 3) * (narrow ? 10 : 40)
-      if (world.current) world.current.style.transform = `translate3d(${drift}px,0,${cam}px) rotateY(${pointer.sx * 5}deg) rotateX(${-pointer.sy * 3}deg)`
-
-      let look = 0
-      // While a look's card is announced, the prints around it step back into the haze.
-      let focus = 0
-      NODES.forEach((n, i) => {
-        if (n.kind !== 'card') return
-        const d = SLOTS[i] * D - cam
-        focus = Math.max(focus, Math.max(0, 1 - Math.abs(d - 1.1 * D) / (1.1 * D)))
-      })
-      nodes.current.forEach((el, i) => {
-        if (!el) return
-        const d = SLOTS[i] * D - cam // distance ahead of the camera
-        const n = NODES[i]
-        if (n.kind === 'card' && d < D * 0.5) look = n.look
-        const center = n.kind === 'card' || (n as Print).full
-        // Far prints come out of the haze; centre pieces dissolve as you pass through them.
-        let o = d > 6 * D ? 0 : d > 4 * D ? (6 * D - d) / (2 * D) : 1
-        if (n.kind !== 'card') o *= 1 - 0.95 * focus
-        const pass = center ? 0.9 * D : 0.25 * D
-        if (d < pass) o *= Math.max(0, d / pass)
-        if (d < 0) o = 0
-        el.style.opacity = o.toFixed(3)
-        el.style.visibility = o > 0.01 ? 'visible' : 'hidden'
-        el.dataset.near = String(d > 0.6 * D && d < 2.2 * D)
-        const fog = el.querySelector<HTMLElement>('.sit-fog')
-        if (fog) fog.style.opacity = Math.min(0.7, Math.max(0, (d - 1.6 * D) / (4.4 * D))).toFixed(3)
-      })
-
-      // A strobe as you step into each look.
-      if (look !== lastLook) {
-        if (lastLook !== -1 && !reduced && strobe.current) {
+      const narrow = innerWidth < 768
+      // Walk from the start of the wall to its end; the wall stands angled away to the right.
+      // The walk starts with the wall's beginning near the left edge and ends at its far end.
+      const x0 = -innerWidth * (narrow ? 0.08 : 0.24)
+      const x = x0 + walk * (Math.max(0, length - innerWidth * (narrow ? 0.7 : 0.55)) - x0)
+      const key = `${x.toFixed(1)}|${pointer.sx.toFixed(4)}|${pointer.sy.toFixed(4)}`
+      if (key !== lastKey) {
+        lastKey = key
+        const ang = (narrow ? 9 : 17) + pointer.sx * 4
+        wall.current.style.transform = `rotateY(${ang}deg) rotateX(${-pointer.sy * 2}deg) translate3d(${-x}px,0,0)`
+      }
+      // Which room you are standing in: the strobe fires as you step into each.
+      const at = x + innerWidth * 0.35
+      let room = 0
+      starts.forEach((s, i) => i > 0 && at >= s && (room = i - 1))
+      if (room !== lastRoom) {
+        if (lastRoom !== -1 && !reduced && strobe.current) {
           strobe.current.classList.remove('fire')
           void strobe.current.offsetWidth
           strobe.current.classList.add('fire')
         }
-        lastLook = look
-        sec.dataset.look = String(look)
+        lastRoom = room
+        sec.dataset.look = String(room)
       }
-
-      // The finale: the three looks fan out like proofs on the table.
-      const f = Math.min(1, Math.max(0, (p - WALK) / (1 - WALK) * 1.25))
+      const f = Math.min(1, Math.max(0, ((p - WALK) / (1 - WALK)) * 1.25))
       sec.style.setProperty('--fin', f.toFixed(4))
-      sec.style.setProperty('--intro', Math.max(0, 1 - walk / 0.07).toFixed(4))
+      sec.style.setProperty('--intro', Math.max(0, 1 - walk / 0.05).toFixed(4))
       if (finale.current) finale.current.style.visibility = f > 0.001 ? 'visible' : 'hidden'
     }
     raf = requestAnimationFrame(loop)
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
+      ro.disconnect()
       removeEventListener('pointermove', onMove)
     }
   }, [])
 
   const show = useCallback((id: string) => setOpen(PRINTS.findIndex((p) => p.id === id)), [])
+  let n = 0
+  const frame = (pr: Print, size: 'hero' | 'large' | 'small', depth: number) => {
+    n += 1
+    const num = String(n).padStart(2, '0')
+    return (
+      <figure key={pr.id} className={`sit-frame sit-${size}`} style={{ ['--z' as string]: `${depth}px` }}>
+        <span className="sit-lamp" aria-hidden />
+        <button type="button" className="sit-print" onClick={() => show(pr.id)} aria-label={`Open the photograph: ${pr.caption}`}>
+          {near && <img src={`/media/shoot/${pr.id}-900.webp`} alt="" decoding="async" draggable={false} />}
+          <span className="sit-sheen" aria-hidden />
+        </button>
+        <figcaption className="sit-label">
+          <span className="num">{num}</span> {pr.caption}
+        </figcaption>
+      </figure>
+    )
+  }
 
   return (
-    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[820svh]" data-look="0">
+    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[640svh]" data-look="0">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <div className="sit-room" aria-hidden />
-        <p className="sit-watermark" aria-hidden>The Sitting</p>
+        <div className="sit-floor" aria-hidden />
         <div className="sit-stage">
-          <div ref={world} className="sit-world">
-            {/* Far prints first, so the nearer always paint over them. */}
-            {NODES.map((n, i) => [n, i] as const).reverse().map(([n, i]) => {
-              const side = n.kind === 'print' && !n.full ? (PRINTS.indexOf(n) % 2 ? 1 : -1) : 0
-              const style = {
-                ['--x' as string]: n.kind === 'card' ? '0px' : n.full ? `${(NODES.slice(0, i).filter((m) => m.kind === 'card').length % 2 ? 1 : -1) * 21}vw` : `${side * 25}vw`,
-                ['--y' as string]: n.kind === 'card' ? '-2vh' : n.full ? '0' : `${((i * 37) % 9) - 4}vh`,
-                ['--z' as string]: `calc(${-SLOTS[i]} * var(--D))`,
-                ['--r' as string]: `${-side * 14}deg`,
-              }
-              return (
-                <div key={i} ref={(el) => void (nodes.current[i] = el)} className={`sit-node sit-node-${n.kind}${n.kind === 'print' && n.full ? ' sit-full' : ''}`} style={style}>
-                  {n.kind === 'card' ? (
-                    <div className="sit-card">
-                      <p className="sit-numeral">Look {n.numeral}</p>
-                      <p className="sit-card-title">{n.title}</p>
-                      <p className="sit-card-line">{n.line}</p>
-                    </div>
-                  ) : (
-                    <button type="button" className="sit-print" onClick={() => show(n.id)} aria-label={`Open the photograph: ${n.caption}`}>
-                      <span className="sit-mount">
-                        {near && <img src={`/media/shoot/${n.id}-900.webp`} alt="" decoding="async" draggable={false} />}
-                        <span className="sit-sheen" aria-hidden />
-                        <span className="sit-fog" aria-hidden />
-                      </span>
-                      <span className="sit-caption">{n.caption}</span>
-                    </button>
-                  )}
+          <div ref={wall} className="sit-wall">
+            <div ref={(el) => void (rooms.current[0] = el)} className="sit-room sit-intro" style={{ ['--wall' as string]: '#f2e2c4' }}>
+              <div className="sit-panel">
+                <p className="eyebrow">The sitting · Autumn 2026</p>
+                <h2 id="sitting-title" className="sit-title">Worn, <em className="accent">and photographed.</em></h2>
+                <p className="sit-intro-body">Three looks from the Platera sitting, hung for you. Walk the wall; tap any print to see it close.</p>
+              </div>
+            </div>
+            {ROOMS.map((room, k) => (
+              <div key={room.title} ref={(el) => void (rooms.current[k + 1] = el)} className="sit-room" style={{ ['--wall' as string]: room.wall }}>
+                <div className="sit-panel sit-look">
+                  <p className="sit-numeral">Look {room.numeral}</p>
+                  <p className="sit-look-title font-display">{room.title}</p>
+                  <p className="sit-look-line">{room.line}</p>
                 </div>
-              )
-            })}
+                {frame(room.hero, 'hero', 30)}
+                {room.columns.map((col, c) => (
+                  <div key={c} className="sit-col" style={{ ['--z' as string]: `${col.depth}px` }}>
+                    {col.prints.map((pr) => frame(pr, col.prints.length > 1 ? 'small' : 'large', col.depth))}
+                  </div>
+                ))}
+              </div>
+            ))}
+            <div ref={(el) => void (rooms.current[ROOMS.length + 1] = el)} className="sit-room sit-end" style={{ ['--wall' as string]: '#e6cfa4' }} />
           </div>
         </div>
 
-        <div className="sit-head pointer-events-none px-[var(--gutter)]">
-          <p className="eyebrow">The sitting · Autumn 2026</p>
-          <h2 id="sitting-title" className="sit-title">Worn, <em className="accent">and photographed.</em></h2>
-        </div>
         <p className="sit-looks px-[var(--gutter)]" aria-hidden>
-          {LOOKS.map((l, k) => (
+          {ROOMS.map((l, k) => (
             <span key={l.title} data-k={k}>{l.numeral} · {l.title}</span>
           ))}
         </p>
 
         <div ref={finale} className="sit-finale">
           <div className="sit-fan">
-            {LOOKS.map((l, k) => (
-              <button key={l.title} type="button" className="sit-proof" style={{ ['--k' as string]: k - 1 }} onClick={() => show(l.portrait)} aria-label={`Open the ${l.title} look`}>
+            {ROOMS.map((l, k) => (
+              <button key={l.title} type="button" className="sit-proof" style={{ ['--k' as string]: k - 1 }} onClick={() => show(l.hero.id)} aria-label={`Open the ${l.title} look`}>
                 <span className="sit-proof-mount">
-                  {near && <img src={`/media/shoot/${l.portrait}-900.webp`} alt="" decoding="async" draggable={false} />}
+                  {near && <img src={`/media/shoot/${l.hero.id}-900.webp`} alt="" decoding="async" draggable={false} />}
                   <span className="sit-proof-title">{l.numeral} · {l.title}</span>
                 </span>
               </button>
@@ -261,7 +250,7 @@ function SittingPrint({ index, onIndex, onClose }: { index: number; onIndex: (i:
     }
   }, [close, go])
   const p = PRINTS[index]
-  const look = LOOKS[p.id.startsWith('merreeda') ? 0 : Number(p.id.split('-')[1]) >= 14 ? 2 : 1]
+  const look = ROOMS[p.room]
   return (
     <div className="sit-lightbox" data-closing={closing} role="dialog" aria-modal="true" aria-label={p.caption} onClick={close}>
       <div key={p.id} className="sit-lightbox-print" onClick={(e) => e.stopPropagation()}>
