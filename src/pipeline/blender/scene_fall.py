@@ -201,4 +201,6 @@ if __name__ == "__main__":
         d = os.path.join(OUT, ("fall_portrait" if portrait else "fall") + ("_mask" if mask else ""))
         os.makedirs(d, exist_ok=True)
         scene.render.filepath = os.path.join(d, "")
+        if "--start" in args:  # resume an interrupted sequence
+            scene.frame_start = int(arg("--start"))
         bpy.ops.render.render(animation=True)

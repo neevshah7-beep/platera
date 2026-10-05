@@ -303,3 +303,8 @@ p { text-wrap: pretty; }
 .strand-promise[data-on='true'] .strand-words { clip-path: inset(0 0 0 0); transition-delay: 420ms; }
 .strand-promise[data-on='false'] .strand-thread { transform-origin: 0 50%; transition-duration: 600ms; }
 .strand-hint { position: absolute; right: var(--gutter); bottom: 5svh; }
+
+.site-brand { transition: opacity var(--dur-slow) var(--ease-entry), transform var(--dur-slow) var(--ease-entry); }
+html[data-hero='1'] .site-brand { opacity: 0; transform: translateY(-6px); }
+.strand-eyebrow { left: 0; top: 12svh; }
+@media (min-width: 768px) { .strand-eyebrow { left: 2vw; top: 27svh; } }

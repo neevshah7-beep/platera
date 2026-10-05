@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FallScene } from '@/scenes/fall/FallScene'
 import { HeroCopy } from '@/scenes/fall/HeroCopy'
 import { StrandScene, type StrandPromise } from '@/scenes/strand/StrandScene'
@@ -10,6 +10,16 @@ import { EntryGate } from './EntryGate'
 export function HomeExperience({ line, collaboration, promises }: { line: string; collaboration: string; promises: StrandPromise[] }) {
   const [landed, setLanded] = useState(false)
   const onLanded = useCallback(() => setLanded(true), [])
+  // While the hero wordmark is on screen, the header's small one would only repeat it.
+  useEffect(() => {
+    const on = () => (document.documentElement.dataset.hero = scrollY < innerHeight * 1.2 ? '1' : '0')
+    on()
+    addEventListener('scroll', on, { passive: true })
+    return () => {
+      removeEventListener('scroll', on)
+      delete document.documentElement.dataset.hero
+    }
+  }, [])
   return (
     <>
       <EntryGate />

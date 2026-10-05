@@ -17,8 +17,8 @@ export function engraving(mark: string, size = 512): { normal: THREE.CanvasTextu
   g.fillStyle = '#000'
   g.textAlign = 'center'
   g.textBaseline = 'middle'
-  const fontSize = mark.length > 3 ? size * 0.13 : size * 0.2
-  g.font = `400 ${fontSize}px Gambetta, Georgia, serif`
+  const fontSize = mark.length > 2 ? size * 0.17 : size * 0.23
+  g.font = `600 ${fontSize}px Gambetta, Georgia, serif`
   g.save()
   g.translate(size * 0.5, size * 0.5)
   g.scale(0.55, 1) // compensate the sphere's horizontal UV stretch at the equator
@@ -35,7 +35,7 @@ export function engraving(mark: string, size = 512): { normal: THREE.CanvasTextu
   const soft = document.createElement('canvas')
   soft.width = soft.height = size
   const s = soft.getContext('2d')!
-  s.filter = `blur(${size * 0.004}px)`
+  s.filter = `blur(${size * 0.003}px)`
   s.drawImage(c, 0, 0)
   const h = s.getImageData(0, 0, size, size).data
 
@@ -48,7 +48,7 @@ export function engraving(mark: string, size = 512): { normal: THREE.CanvasTextu
   const rg = r.getContext('2d')!
   const rout = rg.createImageData(size, size)
   const at = (x: number, y: number) => h[(((y + size) % size) * size + ((x + size) % size)) * 4] / 255
-  const strength = 3.2
+  const strength = 4.5
   for (let y = 0; y < size; y++)
     for (let x = 0; x < size; x++) {
       const dx = (at(x + 1, y - 1) + 2 * at(x + 1, y) + at(x + 1, y + 1) - at(x - 1, y - 1) - 2 * at(x - 1, y) - at(x - 1, y + 1)) * strength
