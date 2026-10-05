@@ -50,7 +50,9 @@ export function EntryGate() {
         sessionStorage.setItem('platera:entered', '1')
       } catch {}
       scroller.lenis?.start()
+      return
     }
+    // Scroll waits behind the veil until the visitor enters.
     scroller.lenis?.stop()
   }, [entered])
 
