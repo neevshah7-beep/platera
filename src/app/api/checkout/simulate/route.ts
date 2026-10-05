@@ -17,5 +17,5 @@ export async function POST(req: Request) {
   const order = await db.order.findUnique({ where: { number: parsed.data.orderNumber } })
   if (!order || !checkOrderToken(order.id, parsed.data.token)) return NextResponse.json({ message: 'Order not found.' }, { status: 404 })
   await settlePaidOrder(order.id, `pay_sim_${order.number}`)
-  return NextResponse.json({ redirect: `/order/${order.number}?t=${parsed.data.token}` })
+  return NextResponse.json({ redirect: `/order/${order.number}?t=${parsed.data.token}&welcome=1` })
 }

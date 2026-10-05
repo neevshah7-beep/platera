@@ -94,7 +94,7 @@ export default async function BagPage({ searchParams }: { searchParams: Promise<
           {bag.blocked || bag.changed ? (
             <p className="mt-8 text-step--1 text-ink-muted">{bag.changed ? 'Confirm the new prices above to continue.' : 'Remove the unavailable piece to continue.'}</p>
           ) : (
-            <Link href="/checkout" className="btn btn-primary mt-8 w-full">Continue to checkout</Link>
+            <Link href="/checkout/prepare" className="btn btn-primary mt-8 w-full">Continue to checkout</Link>
           )}
           <p className="mt-6 text-step--1 text-ink-muted">
             Prepaid only: UPI, cards, net banking. Making charges and GST are not refundable on returns. <Link href="/policies/returns" className="link">Read the returns policy</Link>.

@@ -4,6 +4,7 @@ import { siteUrl } from '@/lib/store'
 import './globals.css'
 import './viewing.css'
 import './sitting.css'
+import './welcome.css'
 
 const gambetta = localFont({
   src: [

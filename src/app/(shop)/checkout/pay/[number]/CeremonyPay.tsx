@@ -2,15 +2,14 @@
 
 import { useCallback, useState } from 'react'
 import { Ceremony } from '@/scenes/ceremony/Ceremony'
-import type { PackPiece } from '@/scenes/ceremony/packing'
 import { PayLauncher } from './PayLauncher'
 
-/** The ceremony, then the payment: sealing the wax opens the secure payment window. */
+/** The seal, then the payment: sealing the wax opens the secure payment window. */
 export function CeremonyPay({
   ceremony,
   launcher,
 }: {
-  ceremony: { pieces: PackPiece[]; names: string[]; city: string; pincode: string; eta: string; total: string }
+  ceremony: { total: string }
   launcher: Omit<React.ComponentProps<typeof PayLauncher>, 'openSignal'>
 }) {
   const [signal, setSignal] = useState(0)

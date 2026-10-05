@@ -6,6 +6,7 @@ import { db } from '@/lib/db'
 import { checkOrderToken } from '@/lib/orders/token'
 import { formatINR } from '@/lib/pricing/format'
 import { STORE, whatsappLink } from '@/lib/store'
+import { Welcome } from '@/scenes/ceremony/Welcome'
 
 export const metadata: Metadata = { title: 'Your order', robots: { index: false } }
 export const dynamic = 'force-dynamic'
@@ -25,17 +26,24 @@ const STATUS: Record<string, { heading: string; body: string }> = {
   },
 }
 
-export default async function OrderPage({ params, searchParams }: { params: Promise<{ number: string }>; searchParams: Promise<{ t?: string }> }) {
+export default async function OrderPage({ params, searchParams }: { params: Promise<{ number: string }>; searchParams: Promise<{ t?: string; welcome?: string }> }) {
   const { number } = await params
-  const { t } = await searchParams
+  const { t, welcome } = await searchParams
   const order = await db.order.findUnique({ where: { number }, include: { items: { include: { product: { select: { slug: true } } } } } })
   if (!order || !checkOrderToken(order.id, t)) notFound()
 
   const status = STATUS[order.status]
   const addr = order.shippingAddress as { name: string; line1: string; line2?: string; city: string; state: string; pincode: string }
 
+  // Just paid: the thank-you card and the ride come first. The estimate is by distance from
+  // Mumbai (Shiprocket's own replaces it once the parcel is booked).
+  const fresh = welcome === '1' && order.status === 'CONFIRMED'
+  const days: [number, number] = addr.state === 'Maharashtra' ? [2, 4] : [4, 7]
+  const fmt = (d: number) => new Intl.DateTimeFormat('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }).format(new Date(Date.now() + d * 86_400_000))
+
   return (
     <div className="mx-auto max-w-[960px] px-[var(--gutter)] py-16">
+      {fresh && <Welcome firstName={(order.name ?? addr.name ?? '').split(' ')[0] || 'friend'} pieces={order.items.map((i) => i.name)} city={addr.city} eta={`${fmt(days[0])} – ${fmt(days[1])}`} orderNumber={order.number} />}
       <p className="num text-step--1 text-ink-muted">Order {order.number}</p>
       <h1 className="mt-3 text-step-5">{status.heading}</h1>
       <p className="measure mt-5 text-step-1 text-ink-muted">{status.body}</p>

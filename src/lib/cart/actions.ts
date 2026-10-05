@@ -50,7 +50,7 @@ export async function buyNow(form: FormData) {
     const product = typeof id === 'string' ? await db.product.findUnique({ where: { id }, select: { slug: true } }) : null
     redirect(product ? `/piece/${product.slug}?unavailable=1` : '/collection')
   }
-  redirect('/checkout')
+  redirect('/checkout/prepare')
 }
 
 export async function removeFromBag(form: FormData) {

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const order = await db.order.findUnique({ where: { number: b.orderNumber } })
   if (!order || !checkOrderToken(order.id, b.token)) return NextResponse.json({ message: 'Order not found.' }, { status: 404 })
 
-  const redirect = `/order/${order.number}?t=${b.token}`
+  const redirect = `/order/${order.number}?t=${b.token}&welcome=1`
   if (order.paymentStatus !== 'PENDING' && order.paymentStatus !== 'FAILED') return NextResponse.json({ redirect })
 
   if (order.razorpayOrderId !== b.razorpay_order_id || !verifyPaymentSignature(b.razorpay_order_id, b.razorpay_payment_id, b.razorpay_signature)) {
