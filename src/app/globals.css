@@ -93,7 +93,8 @@
   --ease-camera: var(--ease-camera);
 }
 
-/* ─── Base ─────────────────────────────────────────────────────────────────── */
+/* ─── Base (in the base layer, so Tailwind utilities always win) ─── */
+@layer base {
 html {
   background: var(--champagne);
   color: var(--espresso);
@@ -117,6 +118,8 @@ h1, h2, h3, .display {
 p { text-wrap: pretty; }
 ::selection { background: var(--gold-bright); color: var(--espresso); }
 :focus-visible { outline: 1.5px solid var(--focus); outline-offset: 3px; border-radius: 1px; }
+
+}
 
 .num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .measure { max-width: var(--measure); }
@@ -435,3 +438,58 @@ html[data-returning='1'] .entry-gate { display: none; }
   /* Phones: the caption docks above the button instead of following the piece. */
   .collection-label { left: var(--gutter) !important; right: var(--gutter); top: auto !important; bottom: calc(6svh + 4.2rem); transform: none; min-width: 0; animation: none; }
 }
+
+/* ─── Footer: the closing note, on espresso ────────────────────────────────── */
+.site-footer { background: var(--espresso); color: var(--cream); }
+.site-footer .text-ink-muted, .site-footer .text-muted { color: #c9b48e; }
+.site-footer .footer-word { font-size: clamp(3rem, 1rem + 8vw, 8.5rem); line-height: 0.9; letter-spacing: -0.02em; background: linear-gradient(100deg, #8a5f1c 0%, #c99a3e 30%, #f1d488 48%, #c99a3e 66%, #8a5f1c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.site-footer .footer-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #d8bd7e; }
+.site-footer .footer-label::before { content: ''; display: inline-block; width: 1.4rem; height: 1px; margin-right: 0.6rem; vertical-align: 0.3em; background: #c99a3e; }
+.site-footer a:hover { color: var(--gold-bright); }
+.site-footer .border-rule { border-color: rgb(246 236 214 / 0.14); }
+
+/* ─── The checkout ceremony ─────────────────────────────────────────────────── */
+.ceremony { position: fixed; inset: 4rem 0 0 0; z-index: 30; background: radial-gradient(120% 90% at 60% 40%, var(--cream) 0%, var(--champagne) 60%, var(--honey) 140%); overflow: hidden; }
+.ceremony-steps { position: absolute; top: 1.4rem; left: var(--gutter); z-index: 3; display: flex; gap: 1.6rem; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso-muted); }
+.ceremony-steps li { opacity: 0.55; transition: opacity var(--dur-ui) var(--ease-entry); }
+.ceremony-steps li[data-on='true'] { opacity: 1; color: var(--espresso); }
+.ceremony-steps li[data-done='true'] { opacity: 0.85; }
+.ceremony-steps .num { color: var(--gold-shadow); margin-right: 0.35rem; }
+.ceremony-act { position: absolute; inset: 0; animation: act-in 1100ms var(--ease-entry); }
+@keyframes act-in { from { opacity: 0; transform: translateY(18px); } }
+.ceremony-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ceremony-caption { position: absolute; left: var(--gutter); top: 18%; max-width: 30rem; z-index: 2; }
+.ceremony-caption--centre { left: 50%; transform: translateX(-50%); text-align: center; top: 12%; max-width: 34rem; }
+.ceremony-caption--centre .eyebrow::before { display: none; }
+.ceremony-title { margin-top: 0.8rem; font-size: clamp(2.4rem, 1.2rem + 3.6vw, 4.8rem); line-height: 0.98; }
+.ceremony-body { margin-top: 1rem; color: var(--espresso-muted); font-size: var(--step-1); }
+.ceremony-skip { position: absolute; right: var(--gutter); bottom: 2rem; z-index: 3; font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--espresso-muted); }
+.ceremony-skip:hover { color: var(--espresso); }
+.journey-svg { position: absolute; left: 4%; right: 4%; bottom: 8%; width: 92%; height: auto; }
+.journey-label { font-family: var(--font-gambetta), serif; font-size: 22px; fill: var(--espresso); }
+.journey-sub { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--espresso-muted); }
+.journey-stop { opacity: 0; animation: stop-in 700ms var(--ease-entry) forwards; }
+@keyframes stop-in { to { opacity: 1; } }
+@keyframes journey-draw { to { stroke-dashoffset: 0; } }
+@media (max-width: 767px) {
+  .ceremony-steps { gap: 0.9rem; font-size: 0.66rem; }
+  .ceremony-caption { top: 12%; right: var(--gutter); }
+  .journey-svg { width: 160%; left: -30%; bottom: 14%; }
+}
+/* The wax seal */
+.ceremony-seal-act { display: grid; place-items: center; }
+.wax-seal { position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 1.2rem; cursor: pointer; touch-action: none; user-select: none; }
+.wax-ring { position: absolute; top: -10px; width: 196px; height: 196px; border-radius: 50%; background: conic-gradient(var(--gold) var(--charge), rgb(43 29 14 / 0.1) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px)); }
+.wax-disc {
+  position: relative; display: grid; place-items: center; width: 176px; height: 176px; border-radius: 47% 53% 50% 48% / 52% 47% 53% 48%;
+  background: radial-gradient(circle at 38% 32%, #b8473a 0%, #8e1f22 42%, #5e1013 100%);
+  box-shadow: inset 0 6px 14px rgb(255 190 170 / 0.25), inset 0 -10px 22px rgb(40 0 0 / 0.55), 0 18px 34px -12px rgb(60 10 10 / 0.55);
+  transition: transform 220ms var(--ease-entry);
+  transform: scale(calc(1 - var(--charge) * 0.0006));
+}
+.wax-disc::before { content: ''; position: absolute; inset: 18px; border-radius: 50%; box-shadow: inset 0 3px 6px rgb(40 0 0 / 0.6), 0 1px 0 rgb(255 200 180 / 0.25); }
+.wax-p { position: relative; font-size: 84px; line-height: 1; color: #6e1418; text-shadow: 0 1px 0 rgb(255 190 170 / 0.35), 0 -1px 1px rgb(30 0 0 / 0.6); }
+.wax-seal:active .wax-disc { transform: scale(0.97); }
+.wax-seal[data-stamped='true'] .wax-disc { animation: stamp 700ms var(--ease-entry); }
+@keyframes stamp { 0% { transform: scale(1); } 30% { transform: scale(0.86); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
+.wax-label { margin-top: 1.2rem; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--espresso); }

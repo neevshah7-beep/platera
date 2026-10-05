@@ -25,12 +25,16 @@ export function AppointmentForm({
   taken,
   piece,
   defaultKind,
+  defaultDate,
+  sitting,
 }: {
   dates: { value: string; label: string }[]
   slots: string[]
   taken: string[]
   piece: { slug: string; name: string } | null
   defaultKind: 'STORE_VISIT' | 'VIDEO_CALL'
+  defaultDate?: string
+  sitting?: 'morning' | 'evening'
 }) {
   const [state, action] = useActionState<FormState, FormData>(async (prev, fd) => {
     const r = await requestAppointment(prev, fd)
@@ -38,7 +42,9 @@ export function AppointmentForm({
     return r
   }, null)
   const v = state?.values
-  const [date, setDate] = useState(v?.date ?? dates[0]?.value)
+  const [date, setDate] = useState(v?.date ?? defaultDate ?? dates[0]?.value)
+  // From the calendar: preselect the first free slot in the chosen sitting.
+  const preferred = sitting ? slots.find((s) => !taken.includes(`${date} ${s}`) && (sitting === 'morning' ? Number(s.slice(0, 2)) < 14 : Number(s.slice(0, 2)) >= 16)) : undefined
   const e = state?.errors ?? {}
 
   if (state?.ok) {
@@ -95,7 +101,7 @@ export function AppointmentForm({
             const busy = taken.includes(`${date} ${s}`)
             return (
               <label key={s} className={`num flex min-h-12 cursor-pointer items-center justify-center border border-rule text-step--1 has-[:checked]:border-argent has-[:checked]:bg-ground-raised ${busy ? 'cursor-not-allowed opacity-35 line-through' : ''}`}>
-                <input type="radio" name="slot" value={s} disabled={busy} defaultChecked={v?.slot === s} className="sr-only" />
+                <input type="radio" name="slot" value={s} disabled={busy} defaultChecked={(v?.slot ?? preferred) === s} className="sr-only" />
                 {hour12(s)}
               </label>
             )

@@ -1,7 +1,7 @@
 'use client'
 
 import Script from 'next/script'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 declare global {
   interface Window {
@@ -17,6 +17,8 @@ type Props = {
   orderNumber: string
   token: string
   prefill: { name: string; email: string; contact: string }
+  /** When set, nothing opens on its own; each increment opens the payment (the wax seal). */
+  openSignal?: number
 }
 
 export function PayLauncher(p: Props) {
@@ -61,6 +63,15 @@ export function PayLauncher(p: Props) {
     rzp.open()
   }, [p, verify])
 
+  // The seal: each new signal opens the window (or, in development, simulates the payment).
+  const lastSignal = useRef(0)
+  useEffect(() => {
+    if (!p.openSignal || p.openSignal === lastSignal.current) return
+    lastSignal.current = p.openSignal
+    if (p.mode === 'simulate') void verify({ simulate: 'success' }, '/api/checkout/simulate')
+    else if (p.mode === 'razorpay' && ready) open()
+  }, [p.openSignal, p.mode, ready, open, verify])
+
   if (p.mode === 'unavailable') {
     return <p className="mt-10 text-ruby-bright">Online payment isn’t switched on yet. Please call or WhatsApp us to complete this order.</p>
   }
@@ -79,7 +90,7 @@ export function PayLauncher(p: Props) {
 
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onReady={() => { setReady(true); open() }} />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onReady={() => { setReady(true); if (p.openSignal === undefined || p.openSignal > 0) open() }} />
       <button className="btn btn-primary mt-10" onClick={open} disabled={!ready || busy}>
         {ready ? 'Open the payment window' : 'Loading secure payment…'}
       </button>

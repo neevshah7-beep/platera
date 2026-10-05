@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 }
 export const dynamic = 'force-dynamic'
 
-export default async function AppointmentPage({ searchParams }: { searchParams: Promise<{ piece?: string; kind?: string }> }) {
+export default async function AppointmentPage({ searchParams }: { searchParams: Promise<{ piece?: string; kind?: string; date?: string; sitting?: string }> }) {
   const sp = await searchParams
   const closed = ((await getSetting('closedWeekdays')) as number[] | null) ?? []
   const dates = bookableDates(closed)
@@ -23,7 +23,8 @@ export default async function AppointmentPage({ searchParams }: { searchParams: 
   return (
     <div className="mx-auto grid max-w-[1440px] gap-16 px-[var(--gutter)] pt-12 lg:grid-cols-12">
       <div className="lg:col-span-4">
-        <h1 className="text-step-6">Book a viewing</h1>
+        <p className="eyebrow">The counter</p>
+        <h1 className="mt-4 text-step-6">Book <em className="accent">a viewing</em></h1>
         <p className="measure mt-6 text-step-1 text-ink-muted">
           Jewellery should be held before it’s bought. Choose a time to come to the store, or a video call where we bring each piece
           to the light for you.
@@ -50,6 +51,8 @@ export default async function AppointmentPage({ searchParams }: { searchParams: 
           taken={[...taken]}
           piece={piece}
           defaultKind={sp.kind === 'video' ? 'VIDEO_CALL' : 'STORE_VISIT'}
+          defaultDate={dates.some((d) => d.value === sp.date) ? sp.date : undefined}
+          sitting={sp.sitting === 'morning' || sp.sitting === 'evening' ? sp.sitting : undefined}
         />
       </div>
     </div>

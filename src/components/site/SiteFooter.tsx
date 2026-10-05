@@ -17,11 +17,11 @@ const POLICIES = [
 export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
   const a = STORE.address
   return (
-    <footer className="ground-solid">
+    <footer className="site-footer">
       <MetalRule />
       <div className="mx-auto grid max-w-[1440px] gap-12 px-[var(--gutter)] py-16 md:grid-cols-12">
         <div className="md:col-span-5">
-          <p className="font-display text-step-4">Platera</p>
+          <p className="footer-word font-display">PLATERA</p>
           <p className="mt-3 max-w-sm text-ink-muted">{STORE.collaboration}.</p>
           <RateNote rate={rate} className="mt-6" />
           <Link href="/silver-rate-today" className="link mt-2 inline-block text-step--1 text-ink-muted">
@@ -30,7 +30,7 @@ export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
         </div>
 
         <address className="not-italic md:col-span-3">
-          <h2 className="font-sans text-step--1 font-medium text-ink-muted">The store</h2>
+          <h2 className="footer-label font-sans">The store</h2>
           <p className="mt-3">
             {a.line1}
             <br />
@@ -49,11 +49,11 @@ export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
         </address>
 
         <nav aria-label="Policies" className="md:col-span-4">
-          <h2 className="font-sans text-step--1 font-medium text-ink-muted">Before you buy</h2>
+          <h2 className="footer-label font-sans">Before you buy</h2>
           <ul className="mt-3 grid gap-2">
             {POLICIES.map((p) => (
               <li key={p.href}>
-                <Link className="hover:text-argent" href={p.href}>{p.label}</Link>
+                <Link href={p.href}>{p.label}</Link>
               </li>
             ))}
           </ul>
