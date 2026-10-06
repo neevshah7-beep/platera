@@ -210,7 +210,8 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
 
     // The piece, resting on the velvet.
     // Decoded off the main thread and uploaded in idle moments (see env.ts).
-    const map = photoTexture(renderer, `${p.base}-1600.webp`)
+    // 960 wide: still twice the pixels the piece covers on screen, at a third of the upload.
+    const map = photoTexture(renderer, `${p.base}-960.webp`)
     map.anisotropy = 8
     const normal = photoTexture(renderer, `${p.base}-normal.webp`, false)
     const dr = photoTexture(renderer, `${p.base}-dr.webp`, false)
@@ -322,9 +323,11 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
       it.mesh.rotation.x = -Math.PI / 2 + it.lift * 0.6
     }
     // Focus on whichever piece sits nearest the look point.
-    let best = items[0]
-    for (const it of items) if (Math.abs(it.home.x - look.x) < Math.abs(best.home.x - look.x)) best = it
-    focusAt.copy((hovered ?? best).group.position)
+    // (While the cases are still being put together there may be none yet.)
+    let best: Item | undefined = items[0]
+    for (const it of items) if (best && Math.abs(it.home.x - look.x) < Math.abs(best.home.x - look.x)) best = it
+    const focus = hovered ?? best
+    if (focus) focusAt.copy(focus.group.position)
     if (warmed) renderer.render(scene, camera)
   }
 

@@ -35,14 +35,10 @@ for (const [start, dur, sy] of lt.filter((x) => x[1] > 70)) {
   for (const [t, sid] of samples) {
     if (t < a || t > b) continue
     // Attribute to the nearest of our own frames up the stack (src files), else the leaf.
-    let n = byId.get(sid), label = null
-    let p = sid
-    while (p) {
-      const f = byId.get(p).callFrame
-      if (/\/src\//.test(f.url) || /\.tsx?$/.test(f.url.split('?')[0])) { label = `${f.functionName || '(anon)'}:${f.url.split('/').pop()}:${f.lineNumber}`; break }
-      p = parent.get(p)
-    }
-    label ??= n.callFrame.functionName || '(native)'
+    // The leaf (native work such as texImage2D shows here) and its caller.
+    const n = byId.get(sid)
+    const up = byId.get(parent.get(sid) ?? sid)
+    const label = `${n.callFrame.functionName || '(anon)'} < ${up.callFrame.functionName || '(anon)'}`
     fns.set(label, (fns.get(label) ?? 0) + 0.25)
   }
   const top = [...fns].sort((x, y) => y[1] - x[1]).slice(0, 4).map(([k, v]) => `${k} ${v.toFixed(0)}ms`).join(' | ')
