@@ -1,0 +1,26 @@
+/* ─── The journey: engraved inside the ring ───────────────────────────────────── */
+.journey-light { position: absolute; inset: 0; background: radial-gradient(90% 80% at 62% 42%, #fffaf0 0%, #f4e8cf 48%, #e2cb9c 100%); }
+.journey-open, .journey-copy { position: absolute; left: 0; top: calc(6.6rem + 9svh); max-width: 31rem; pointer-events: none; opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease-exit), transform 700ms var(--ease-exit); isolation: isolate; }
+.journey-open[data-on='true'], .journey-copy[data-on='true'] { opacity: 1; transform: none; transition: opacity 1000ms var(--ease-entry) 150ms, transform 1200ms var(--ease-entry) 150ms; }
+@media (min-width: 768px) { .journey-open, .journey-copy, .journey-track { left: 2vw; } }
+/* Light floods in from the left: the gold gives way to champagne where the words are. */
+.journey-scrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(252 247 236 / 0.96) 0%, rgb(252 247 236 / 0.9) 26%, rgb(252 247 236 / 0.55) 40%, rgb(252 247 236 / 0) 56%); opacity: var(--scrim, 0); transition: opacity 900ms var(--ease-entry); }
+@media (max-width: 767px) { .journey-scrim { background: linear-gradient(0deg, rgb(252 247 236 / 0.96) 0%, rgb(252 247 236 / 0.88) 34%, rgb(252 247 236 / 0) 58%); } }
+.journey-title { margin-top: 0.9rem; font-size: clamp(2.4rem, 1.2rem + 3.4vw, 4.6rem); line-height: 0.98; }
+.journey-body { margin-top: 1.2rem; max-width: 27rem; font-size: var(--step-1); line-height: 1.55; color: var(--espresso-muted); }
+.journey-n { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.2em; color: var(--gold-shadow); }
+.journey-n span { color: var(--espresso-muted); font-weight: 500; }
+/* The track: five points on a gold line, the current one lit. */
+.journey-track { position: absolute; left: 0; bottom: 5svh; display: flex; gap: clamp(1.2rem, 0.4rem + 2vw, 2.8rem); padding: 0 var(--gutter); }
+.journey-track li { position: relative; display: grid; gap: 0.55rem; justify-items: start; }
+.journey-track li + li::before { content: ''; position: absolute; left: calc(-1 * clamp(1.2rem, 0.4rem + 2vw, 2.8rem)); top: 5px; width: clamp(1.2rem, 0.4rem + 2vw, 2.8rem); height: 1px; background: rgb(122 84 24 / 0.35); }
+.journey-dot { width: 11px; height: 11px; transform: rotate(45deg); border: 1px solid var(--gold-shadow); background: transparent; transition: background-color 600ms var(--ease-entry), box-shadow 600ms var(--ease-entry); }
+.journey-track li[data-past='true'] .journey-dot { background: rgb(201 154 62 / 0.45); }
+.journey-track li[data-on='true'] .journey-dot { background: linear-gradient(135deg, #b98a34, #f1d488); box-shadow: 0 0 12px rgb(241 212 136 / 0.9); }
+.journey-sub { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(43 29 14 / 0.55); white-space: nowrap; transition: color 600ms; }
+.journey-track li[data-on='true'] .journey-sub { color: var(--espresso); }
+@media (max-width: 767px) {
+  .journey-open, .journey-copy { top: auto; bottom: 13svh; }
+  .journey-sub { display: none; }
+  .journey-track li[data-on='true'] .journey-sub { display: block; }
+}

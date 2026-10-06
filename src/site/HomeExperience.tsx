@@ -7,6 +7,7 @@ import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import type { CollectionPiece } from '@/scenes/collection/collection'
 import { SittingScene } from '@/scenes/sitting/SittingScene'
 import { HouseScene } from '@/scenes/house/HouseScene'
+import { JourneyScene } from '@/scenes/journey/JourneyScene'
 import { GiftScene } from '@/scenes/gift/GiftScene'
 import { StampScene } from '@/scenes/stamp/StampScene'
 import { VisitScene } from '@/scenes/visit/VisitScene'
@@ -41,6 +42,7 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
           { id: 'chapter-sitting', label: 'The sitting' },
           { id: 'chapter-gift', label: 'The gift' },
           { id: 'chapter-house', label: 'The house' },
+          { id: 'chapter-journey', label: 'The journey' },
           { id: 'chapter-counter', label: 'The counter' },
         ]}
       />
@@ -53,6 +55,7 @@ export function HomeExperience({ line, collaboration, promises, pieces, total, v
       <SittingScene />
       <GiftScene />
       <HouseScene />
+      <JourneyScene />
       <VisitScene {...visit} />
     </div>
   )
