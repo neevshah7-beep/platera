@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
-import { leatherNormals } from '../textures'
+import { leatherNormals, silkNormals } from '../textures'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource, uploadWhenIdle, warmUp } from '../env'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
@@ -34,33 +34,6 @@ const PIECE = 17 // longest side of a piece in its case, cm (shown about twice l
 const WALL = 2.2 // case wall and margin around the piece, cm
 const DEPTH = 3.2 // case base height, cm
 
-/** A field of soft silk folds as a normal map, drawn once on a canvas. */
-function silkNormals(size = 1024): THREE.CanvasTexture {
-  const c = document.createElement('canvas')
-  c.width = c.height = size
-  const g = c.getContext('2d')!
-  const img = g.createImageData(size, size)
-  const h = (x: number, y: number) =>
-    Math.sin(x * 0.022 + y * 0.009 + Math.sin(y * 0.006) * 2.0) * 1.0 + Math.sin(x * 0.006 - y * 0.017 + 1.3) * 0.7 + Math.sin(x * 0.051 + y * 0.034) * 0.12
-  for (let y = 0; y < size; y++)
-    for (let x = 0; x < size; x++) {
-      const dx = (h(x + 1, y) - h(x - 1, y)) * 6
-      const dy = (h(x, y + 1) - h(x, y - 1)) * 6
-      const l = Math.hypot(dx, dy, 1)
-      const i = (y * size + x) * 4
-      img.data[i] = (-dx / l * 0.5 + 0.5) * 255
-      img.data[i + 1] = (dy / l * 0.5 + 0.5) * 255
-      img.data[i + 2] = (1 / l * 0.5 + 0.5) * 255
-      img.data[i + 3] = 255
-    }
-  g.putImageData(img, 0, 0)
-  const t = new THREE.CanvasTexture(c)
-  t.wrapS = t.wrapT = THREE.RepeatWrapping
-  t.repeat.set(6, 2)
-  t.anisotropy = 8
-  return t
-}
-
 export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPiece[]): CollectionApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
   const gate = visibleGate(canvas)
@@ -78,11 +51,11 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   const camera = new THREE.PerspectiveCamera(32, 1, 1, 600)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  let warmed = false
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
+    warmUp(renderer, scene, camera).then(() => (warmed = true))
     scene.environmentIntensity = 0.7
   })
 
@@ -237,11 +210,11 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     lid.add(lin)
 
     // The piece, resting on the velvet.
-    const map = loader.load(`${p.base}-1600.webp`)
+    const map = loader.load(`${p.base}-1600.webp`, (t) => uploadWhenIdle(renderer, t))
     map.colorSpace = THREE.SRGBColorSpace
     map.anisotropy = 8
-    const normal = loader.load(`${p.base}-normal.webp`)
-    const dr = loader.load(`${p.base}-dr.webp`)
+    const normal = loader.load(`${p.base}-normal.webp`, (t) => uploadWhenIdle(renderer, t))
+    const dr = loader.load(`${p.base}-dr.webp`, (t) => uploadWhenIdle(renderer, t))
     const mat = new THREE.MeshPhysicalMaterial({
       map,
       normalMap: normal,
@@ -330,7 +303,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     let best = items[0]
     for (const it of items) if (Math.abs(it.home.x - look.x) < Math.abs(best.home.x - look.x)) best = it
     focusAt.copy((hovered ?? best).group.position)
-    composer.render(dt)
+    if (warmed) composer.render(dt)
   }
 
   const resize = () => {

@@ -10,9 +10,9 @@
    ════════════════════════════════════════════════════════════════════════════ */
 :root {
   /* Grounds */
-  --cream: #fbf6ec;          /* lightest: pearl, for cards and reading surfaces */
-  --champagne: #f1e6cf;      /* the house ground: champagne silk, light falling across it */
-  --honey: #d9bd86;          /* the deep end of the gradient */
+  --cream: #fffdf8;          /* lightest: white pearl, for cards and reading surfaces */
+  --champagne: #f8f3ea;      /* the house ground: pearl ivory, light falling across it */
+  --honey: #e6d3ad;          /* the deep end of the gradient: pale gold */
   --amber: #a87a34;          /* shadowed gold in the ground gradient */
 
   /* Type */
@@ -111,7 +111,7 @@ body {
 /* The ground is lit: a fixed layer of soft light from above, falling to deeper champagne at
    the edges, so the page reads as silk under a lamp rather than a flat colour. */
 html::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(120% 75% at 50% -10%, #fffaf0 0%, #f6edd9 38%, #efe2c6 70%, #e3cfa4 100%); }
+  background: radial-gradient(130% 80% at 50% -10%, #ffffff 0%, #fbf8f2 40%, #f6efe2 75%, #efe3cb 100%); }
 h1, h2, h3, .display {
   font-family: var(--font-gambetta), Georgia, serif;
   font-weight: 400;
@@ -311,7 +311,13 @@ html[data-hero='1'] .site-header { background: transparent; }
 .link-underline:hover::after { transform: scaleX(1); transform-origin: 0 50%; }
 
 /* ─── Scene 2 · the strand ─────────────────────────────────────────────────── */
-.strand { background: radial-gradient(120% 80% at 60% 45%, var(--cream) 0%, var(--champagne) 48%, var(--honey) 125%); }
+/* The satin is painted on the pinned stage (not the section), so the chapter dissolve
+   carries it with the scene. */
+.strand > .sticky { background: radial-gradient(110% 90% at 66% 42%, #f7e5bd 0%, #ddbd80 48%, #b78c4c 120%); }
+/* On the gold satin the words stand without a glow: espresso on honey reads at 9:1. */
+.strand .strand-promise[data-on='true']::before { display: none; }
+.strand .strand-body { color: #2b1d0e; }
+.strand .strand-index, .strand .eyebrow { color: #4a3216; }
 .strand-promise { position: absolute; left: var(--gutter); bottom: 14svh; width: min(34rem, calc(100% - 2 * var(--gutter))); }
 @media (min-width: 768px) { .strand-promise { left: calc(var(--gutter) + 2vw); bottom: auto; top: 38svh; } }
 .strand-thread {
@@ -560,3 +566,7 @@ html[data-returning='1'] .entry-gate { display: none; }
 .pay-sub { font-size: 0.8rem; color: var(--espresso-muted); }
 .pay-secure { position: absolute; left: 50%; bottom: 4.5svh; transform: translateX(-50%); white-space: nowrap; font-size: 0.86rem; color: var(--espresso-muted); }
 @media (max-width: 767px) { .pay-ways { bottom: 12svh; gap: 0.5rem; } .pay-ways li { padding: 0.5rem 0.7rem; } .pay-sub { display: none; } }
+/* A veil of the same satin light over the left of the scene: wherever the strand swings,
+   it passes softly beneath the words, never through them. */
+.strand-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(224 196 140 / 0.97) 0%, rgb(224 196 140 / 0.92) 30%, rgb(224 196 140 / 0.55) 44%, rgb(224 196 140 / 0) 58%); }
+@media (max-width: 767px) { .strand-veil { background: linear-gradient(0deg, rgb(224 196 140 / 0.97) 0%, rgb(224 196 140 / 0.9) 34%, rgb(224 196 140 / 0) 56%); } }

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
 
 /**
@@ -207,12 +207,12 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   const silver = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.98, 0.975, 0.97), metalness: 1, roughness: 0.09, clearcoat: 0.8, clearcoatRoughness: 0.05, envMapIntensity: 2.1 })
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  let warmed = false
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     silver.envMap = envTex
     silver.needsUpdate = true
+    warmUp(renderer, scene, camera).then(() => (warmed = true))
   })
 
   // The tube, rebuilt in place each frame.
@@ -307,7 +307,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
     group.rotation.y = Math.sin(t * 0.35) * 0.12 + ptr.sx * 0.35 + lifted * 0.5
     group.rotation.x = Math.sin(t * 0.27) * 0.05 - ptr.sy * 0.2
     group.position.y = Math.sin(t * 0.6) * 0.15
-    renderer.render(scene, camera)
+    if (warmed) renderer.render(scene, camera)
   }
 
   const resize = () => {

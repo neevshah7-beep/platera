@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource, warmUp } from '../env'
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
@@ -46,12 +46,14 @@ function backdropMaterial() {
     fragmentShader: `uniform vec2 uRes;
       void main(){
         vec2 uv = gl_FragCoord.xy / uRes;
-        float d = length((uv - vec2(0.62, 0.55)) * vec2(uRes.x / uRes.y, 1.0));
-        vec3 cream = vec3(0.985, 0.965, 0.92);
-        vec3 champagne = vec3(0.945, 0.9, 0.81);
-        vec3 honey = vec3(0.85, 0.74, 0.53);
-        vec3 c = mix(cream, champagne, smoothstep(0.0, 0.7, d));
-        c = mix(c, honey, smoothstep(0.75, 1.6, d));
+        // Warm gold satin lit from behind the strand: a soft glow behind the beads, falling
+        // to rich honey and deep amber at the edges, so polished gold reads against it.
+        float d = length((uv - vec2(0.66, 0.58)) * vec2(uRes.x / uRes.y, 1.0));
+        vec3 glow = vec3(0.97, 0.9, 0.74);
+        vec3 honey = vec3(0.87, 0.74, 0.5);
+        vec3 amber = vec3(0.72, 0.55, 0.3);
+        vec3 c = mix(glow, honey, smoothstep(0.0, 0.62, d));
+        c = mix(c, amber, smoothstep(0.7, 1.5, d));
         gl_FragColor = vec4(c, 1.0);
       }`,
   })
@@ -72,11 +74,11 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 200)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  let warmed = false
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
+    warmUp(renderer, scene, camera).then(() => (warmed = true))
   })
 
   // Backdrop: champagne light far behind, and a shadow catcher nearer, so the strand's
@@ -85,7 +87,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const bg = new THREE.Mesh(new THREE.PlaneGeometry(400, 240), bgMat)
   bg.position.z = -40
   scene.add(bg)
-  const catcher = new THREE.Mesh(new THREE.PlaneGeometry(200, 120), new THREE.ShadowMaterial({ opacity: 0.13, color: 0x4a2e0c }))
+  const catcher = new THREE.Mesh(new THREE.PlaneGeometry(200, 120), new THREE.ShadowMaterial({ opacity: 0.2, color: 0x4a2e0c }))
   catcher.position.z = -9
   catcher.receiveShadow = true
   scene.add(catcher)
@@ -180,9 +182,9 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   // Post effects at 1× (they are soft by nature); the scene itself renders at full density.
   composer.setPixelRatio(1)
   composer.addPass(new RenderPass(scene, camera))
-  const bokeh = new BokehPass(scene, camera, { focus: 20, aperture: 0.0016, maxblur: 0.006 })
+  const bokeh = new BokehPass(scene, camera, { focus: 20, aperture: 0.0007, maxblur: 0.0032 })
   composer.addPass(bokeh)
-  const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.28, 0.5, 0.92)
+  const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.14, 0.4, 0.95)
   composer.addPass(bloom)
   composer.addPass(new OutputPass())
 
@@ -250,7 +252,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
     // Focus on the promise bead being read; the rest of the strand falls into bokeh.
     const u = bokeh.uniforms as Record<string, THREE.IUniform>
     u.focus.value = THREE.MathUtils.lerp(u.focus.value as number, camera.position.distanceTo(focusPoint.lengthSq() ? focusPoint : fb), 0.15)
-    composer.render(dt)
+    if (warmed) composer.render(dt)
   }
 
   const resize = () => {

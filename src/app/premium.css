@@ -63,7 +63,9 @@ html { scrollbar-width: thin; scrollbar-color: #b98a34 #efe1c3; }
   .home-chapters > section:has(+ #chapter-counter) > .sticky { animation: chapter-in linear both, chapter-out linear both; animation-timeline: view(), view(); animation-range: entry 0% entry 100%, exit 0% exit 100%; transform-origin: 50% 0; }
 }
 @keyframes chapter-in { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 -24svh; mask-position: 0 -24svh; } }
-@keyframes chapter-out { to { transform: scale(0.94); filter: brightness(0.88) saturate(0.9); } }
+/* The chapter being covered dims a little as the next dissolves in over it (no scaling:
+   that would bare its edges). */
+@keyframes chapter-out { to { filter: brightness(0.9) saturate(0.92); } }
 @media (prefers-reduced-motion: reduce) {
   .home-chapters > section > .sticky { animation: none !important; -webkit-mask-image: none !important; mask-image: none !important; }
 }
@@ -147,3 +149,22 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 2rem; 
 .entry-enter:hover::before { transform: scaleX(1); }
 .entry-gate[data-entered='true'] .entry-seal { transform: scale(1.18); filter: brightness(1.25); }
 @media (prefers-reduced-motion: reduce) { .entry-sheen { animation: none; } }
+
+
+/* ── Pearl and gold ─────────────────────────────────────────────────────────
+   The primary action is polished gold leaf: a five-stop gradient that catches the light as
+   the pointer crosses it, with espresso lettering. Glass and rails take the pearl. */
+.btn-primary { background: linear-gradient(100deg, #a7782b 0%, #d4ab5c 26%, #f3dc9d 50%, #d4ab5c 74%, #a7782b 100%); background-size: 220% 100%; background-position: 0% 0; color: #2b1d0e; box-shadow: inset 0 0 0 1px rgb(122 84 24 / 0.55), 0 10px 24px -14px rgb(122 84 24 / 0.8); transition: background-position 900ms var(--ease-entry), box-shadow 500ms var(--ease-entry), transform 500ms var(--ease-entry); }
+.btn-primary:hover { background: linear-gradient(100deg, #a7782b 0%, #d4ab5c 26%, #f3dc9d 50%, #d4ab5c 74%, #a7782b 100%); background-size: 220% 100%; background-position: 100% 0; color: #2b1d0e; box-shadow: inset 0 0 0 1px rgb(122 84 24 / 0.75), 0 16px 30px -14px rgb(122 84 24 / 0.9); transform: translateY(-1px); }
+.btn-primary::after { background: linear-gradient(105deg, transparent 30%, rgb(255 252 240 / 0.6) 50%, transparent 70%); }
+.btn-quiet { border-color: rgb(122 84 24 / 0.55); color: #2b1d0e; }
+.btn-quiet:hover { border-color: #a7782b; background: rgb(255 250 236 / 0.7); }
+.site-header { background: rgb(255 253 248 / 0.8); box-shadow: inset 0 -1px 0 rgb(201 154 62 / 0.45); }
+.chapter-rail { background: rgb(255 253 248 / 0.8); box-shadow: inset 0 -1px 0 rgb(201 154 62 / 0.35); }
+.visit-sitting[aria-checked='true'] { background: linear-gradient(100deg, #b98a34, #ecd08c 50%, #c99a3e); color: #2b1d0e; border-color: #a7782b; }
+.collection-view { background: linear-gradient(100deg, #a7782b, #e4c27a 50%, #b98a34); color: #2b1d0e; }
+.collection-view:hover { background: linear-gradient(100deg, #b98a34, #f3dc9d 50%, #c99a3e); }
+.back-house { background: linear-gradient(100deg, #a7782b, #e4c27a 50%, #b98a34); color: #2b1d0e; }
+.back-house-arrow { background: #fffdf8; }
+.site-footer { background: linear-gradient(180deg, #fffdf8 0%, #f5ecda 100%); }
+.site-footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, #b98a34 20%, #f1d488 50%, #b98a34 80%, transparent); }

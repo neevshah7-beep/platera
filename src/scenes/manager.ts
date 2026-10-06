@@ -34,11 +34,13 @@ function loop(now: number) {
   lastT = now
   for (const e of entries) e.dist = distance(e.el)
   const ranked = [...entries].sort((a, b) => a.dist - b.dist)
-  const wanted = new Set(ranked.filter((e) => e.dist < 1).slice(0, MAX_LIVE))
+  // Look further ahead than a screen, so a scene is built (and its shaders warmed) before
+  // it arrives even when the page is moving briskly.
+  const wanted = new Set(ranked.filter((e) => e.dist < 1.8).slice(0, MAX_LIVE))
 
   // Free what is far away, or beyond the live budget.
   for (const e of ranked) {
-    if (e.live && (e.dist > 2 || (!wanted.has(e) && ranked.filter((x) => x.live).length > MAX_LIVE))) {
+    if (e.live && (e.dist > 2.4 || (!wanted.has(e) && ranked.filter((x) => x.live).length > MAX_LIVE))) {
       e.live.dispose()
       e.live = null
     }
@@ -50,7 +52,10 @@ function loop(now: number) {
     if (next && (next.dist === 0 || velocity < 1.2)) {
       lastBuild = now
       try {
+        const t0 = performance.now()
         next.live = next.build()
+        const ms = performance.now() - t0
+        if (ms > 40 && process.env.NODE_ENV !== 'production') console.info(`[scene] built #${next.el.id} in ${Math.round(ms)} ms`)
       } catch (err) {
         console.warn('[scene] build failed', err)
         next.failedAt = now

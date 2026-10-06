@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource, warmUp } from '../env'
 
 /**
  * SCENE 6 · THE CALENDAR. A Platera desk calendar on an espresso leather stand, bound in
@@ -98,11 +98,11 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   const camera = new THREE.PerspectiveCamera(30, 1, 1, 500)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  let warmed = false
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
+    warmUp(renderer, scene, camera).then(() => (warmed = true))
     scene.environmentIntensity = 0.7
   })
 
@@ -241,7 +241,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
       else if (k === 3) shape(p, Math.PI, 0)
       else shape(p, 0, 2 - k)
     })
-    renderer.render(scene, camera)
+    if (warmed) renderer.render(scene, camera)
   }
 
   const resize = () => {

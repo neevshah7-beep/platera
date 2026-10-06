@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
 
 /**
@@ -65,11 +65,11 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 400)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  let warmed = false
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
+    warmUp(renderer, scene, camera).then(() => (warmed = true))
     scene.environmentIntensity = 1.0
   })
   scene.add(new THREE.HemisphereLight(0xfff6e4, 0xc9a05a, 0.6))
@@ -178,8 +178,9 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     const k = Math.min(1, Math.max(0, x))
     return k * k * (3 - 2 * k)
   }
-  const IN0 = 0.08, IN1 = 0.26 // the dive into the band
-  const camFar = new THREE.Vector3(0, 24, 30)
+  const IN0 = 0.02, IN1 = 0.2 // the dive into the band, beginning almost at once
+  // Close enough that the ring fills the right of the frame from the first moment.
+  const camFar = new THREE.Vector3(-4, 13.5, 17)
   const camIn = new THREE.Vector3(0, 0, 0)
   const look = new THREE.Vector3()
   let raf = 0
@@ -213,7 +214,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     const facing = -Math.PI - (camera.aspect < 0.9 ? 0 : 0.3)
     group.rotation.y = (1 - dive) * (t * 0.18) + dive * (facing + held * step) + ptr.sx * 0.05
     group.rotation.x = (1 - dive) * 0.18
-    renderer.render(scene, camera)
+    if (warmed) renderer.render(scene, camera)
   }
 
   const resize = () => {

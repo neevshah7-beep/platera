@@ -17,7 +17,7 @@ const CHAPTERS = [
   { mark: 'AU · NEXT', sub: 'Gold, next', title: <>Gold, <em className="accent">next.</em></>, body: 'The same promise, in gold: weighed, hallmarked and priced in the open. The next line in the ring is yours.' },
 ]
 const MARKS = CHAPTERS.map((c) => ({ line: c.mark, sub: c.sub }))
-const IN1 = 0.26
+const IN1 = 0.2
 
 export function JourneyScene() {
   const section = useRef<HTMLElement>(null)
@@ -48,7 +48,7 @@ export function JourneyScene() {
   }, [api])
 
   return (
-    <section id="chapter-journey" ref={section} aria-labelledby="journey-title" className="journey-sec relative" style={{ height: `${CHAPTERS.length * 80 + 160}svh` }}>
+    <section id="chapter-journey" ref={section} aria-labelledby="journey-title" className="journey-sec relative" style={{ height: `${CHAPTERS.length * 70 + 120}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div className="journey-light" aria-hidden />
         <div ref={host} className="absolute inset-0" />

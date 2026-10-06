@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource } from '../env'
 
 /**
  * THE LAMP (piece page). The piece lies on an espresso velvet pad in a gold-rimmed tray,
@@ -48,10 +48,8 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   const camera = new THREE.PerspectiveCamera(28, 1, 1, 400)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
   })
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { studioSource } from '../env'
 import { buildCarton, CARTON, FLAP_OPEN, TISSUE_OPEN_ANGLE } from './courier'
 
 /**
@@ -39,10 +39,8 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
   const camera = new THREE.PerspectiveCamera(30, 1, 1, 500)
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
-  new EXRLoader().load('/env/studio.exr', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping
+  studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
-    tex.dispose()
     scene.environment = envTex
     scene.environmentIntensity = 0.6
     envReady = true
