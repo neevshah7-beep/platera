@@ -570,3 +570,9 @@ html[data-returning='1'] .entry-gate { display: none; }
    it passes softly beneath the words, never through them. */
 .strand-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(224 196 140 / 0.97) 0%, rgb(224 196 140 / 0.92) 30%, rgb(224 196 140 / 0.55) 44%, rgb(224 196 140 / 0) 58%); }
 @media (max-width: 767px) { .strand-veil { background: linear-gradient(0deg, rgb(224 196 140 / 0.97) 0%, rgb(224 196 140 / 0.9) 34%, rgb(224 196 140 / 0) 56%); } }
+
+/* The hallmark: its first frame is there from the start; the live scene fades in over it. */
+.stamp-poster { position: absolute; inset: 0; background: url('/scenes/stamp/1000/0001.webp') center / cover no-repeat; }
+@media (max-aspect-ratio: 4/5) { .stamp-poster { background-image: url('/scenes/stamp_portrait/1000/0001.webp'); } }
+#chapter-hallmark canvas { opacity: 0; transition: opacity 600ms ease; }
+#chapter-hallmark canvas[data-shown='1'] { opacity: 1; }

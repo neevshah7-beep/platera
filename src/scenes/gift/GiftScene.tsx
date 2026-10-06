@@ -56,13 +56,14 @@ export function GiftScene() {
         visible = e.isIntersecting
         if (visible && !started) {
           started = true
-          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}).then((f) => {
+          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}, true).then((f) => {
             frames = f
             if (!f) setMissing(true)
           })
         }
       },
-      { rootMargin: '120% 0px' },
+      // Fetched three screens ahead and shown from its first frame, so it never arrives late.
+      { rootMargin: '300% 0px' },
     )
     io.observe(section.current!)
 

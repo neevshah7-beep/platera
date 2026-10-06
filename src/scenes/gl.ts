@@ -93,30 +93,39 @@ export class FrameStore {
   }
 
   /** Load the first available of several sequences (e.g. the portrait render, then the landscape one). */
-  static async loadFirst(bases: string[], count: number, onProgress: (p: number) => void): Promise<FrameStore | null> {
+  static async loadFirst(bases: string[], count: number, onProgress: (p: number) => void, progressive = false): Promise<FrameStore | null> {
     for (const b of bases) {
       const ok = await fetch(`${b}/0001.webp`, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)
-      if (ok) return FrameStore.load(b, count, onProgress)
+      if (ok) return FrameStore.load(b, count, onProgress, progressive)
     }
     return null
   }
 
-  static async load(base: string, count: number, onProgress: (p: number) => void): Promise<FrameStore> {
+  /**
+   * Fetches the sequence (six requests at a time, in order). Progressive: resolves as soon
+   * as the first frame is in, and the rest keep arriving behind it (get() shows the nearest
+   * frame that has arrived), so a scene appears at once instead of after its last frame.
+   */
+  static async load(base: string, count: number, onProgress: (p: number) => void, progressive = false): Promise<FrameStore> {
     const store = new FrameStore()
     let done = 0
     const blobs: Blob[] = new Array(count)
+    store.blobs = blobs
     let next = 0
-    await Promise.all(
+    let firstIn: () => void = () => {}
+    const first0 = new Promise<void>((r) => (firstIn = r))
+    const all = Promise.all(
       Array.from({ length: 6 }, async () => {
         while (next < count) {
           const i = next++
           const res = await fetch(`${base}/${String(i + 1).padStart(4, '0')}.webp`)
           blobs[i] = await res.blob()
+          if (i === 0) firstIn()
           onProgress(++done / count)
         }
       }),
     )
-    store.blobs = blobs
+    await (progressive ? first0 : all)
     const first = await createImageBitmap(blobs[0])
     store.width = first.width
     store.height = first.height
@@ -127,6 +136,12 @@ export class FrameStore {
   /** The decoded frame if ready (else the nearest decoded one), and decode around it. */
   get(i: number): ImageBitmap | null {
     i = Math.max(0, Math.min(this.blobs.length - 1, i))
+    // While a progressive load is still arriving, aim for the nearest frame that is here.
+    if (!this.blobs[i]) {
+      let j = i
+      while (j > 0 && !this.blobs[j]) j--
+      i = j
+    }
     for (let d = -2; d <= 4; d++) this.decode(i + d)
     if (this.cache.has(i)) return this.cache.get(i)!
     let best: ImageBitmap | null = null
@@ -136,7 +151,7 @@ export class FrameStore {
   }
 
   private decode(i: number) {
-    if (i < 0 || i >= this.blobs.length || this.cache.has(i) || this.pending.has(i)) return
+    if (i < 0 || i >= this.blobs.length || !this.blobs[i] || this.cache.has(i) || this.pending.has(i)) return
     this.pending.add(i)
     createImageBitmap(this.blobs[i]).then((bmp) => {
       this.pending.delete(i)

@@ -32,15 +32,17 @@ function fontFamily(varName: string, fallback: string) {
   return v ? `${v}, ${fallback}` : fallback
 }
 
-function pageTexture(d: CalendarDay | null): THREE.CanvasTexture {
-  const c = document.createElement('canvas')
-  c.width = 1024
-  c.height = 1228
-  const g = c.getContext('2d')!
-  // Cream card with a faint fibre.
+// The card's faint fibre: one small tile, made once and repeated across every page (making
+// it pixel by pixel for each full page cost a quarter of a second per build).
+let fibre: HTMLCanvasElement | null = null
+function fibreTile(): HTMLCanvasElement {
+  if (fibre) return fibre
+  const t = document.createElement('canvas')
+  t.width = t.height = 256
+  const g = t.getContext('2d')!
   g.fillStyle = '#f7efe0'
-  g.fillRect(0, 0, c.width, c.height)
-  const img = g.getImageData(0, 0, c.width, c.height)
+  g.fillRect(0, 0, 256, 256)
+  const img = g.getImageData(0, 0, 256, 256)
   for (let i = 0; i < img.data.length; i += 4) {
     const n = (Math.random() - 0.5) * 7
     img.data[i] += n
@@ -48,6 +50,17 @@ function pageTexture(d: CalendarDay | null): THREE.CanvasTexture {
     img.data[i + 2] += n
   }
   g.putImageData(img, 0, 0)
+  return (fibre = t)
+}
+
+function pageTexture(d: CalendarDay | null): THREE.CanvasTexture {
+  const c = document.createElement('canvas')
+  c.width = 1024
+  c.height = 1228
+  const g = c.getContext('2d')!
+  // Cream card with a faint fibre.
+  g.fillStyle = g.createPattern(fibreTile(), 'repeat')!
+  g.fillRect(0, 0, c.width, c.height)
   const serif = fontFamily('--font-gambetta', 'Georgia, serif')
   const sans = fontFamily('--font-satoshi', 'Helvetica, Arial, sans-serif')
   g.strokeStyle = '#c99a3e'

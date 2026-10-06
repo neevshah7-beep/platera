@@ -85,6 +85,9 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
     envTex = pmrem.fromEquirectangular(tex).texture
     scene.environment = envTex
     warmUp(renderer, scene, camera, composer.readBuffer).then(() => {
+      // One unseen pass through the effects (the canvas is still hidden), so their own
+      // shaders are compiled now, while the visitor is at the top, not on arrival.
+      composer.render(0)
       warmed = true
       canvas.style.opacity = '1'
     })

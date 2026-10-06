@@ -7,7 +7,7 @@ import frag from './stamp.frag.glsl'
 const FRAMES = 72
 const HOLD_END = 40 // punch fully drawn up
 const STRIKE = 46 // the frame of impact
-const FPS = 30
+const FPS = 36 // the strike plays a touch faster than life, so it lands with weight
 const CHARGE_S = 1.5 // seconds of holding to draw the punch all the way up
 // Where the die meets the bar in each framing (frame uv, y up), measured from the renders.
 const IMPACT = { landscape: [0.5, 0.31], portrait: [0.5, 0.4] } as const
@@ -15,16 +15,17 @@ const IMPACT = { landscape: [0.5, 0.31], portrait: [0.5, 0.4] } as const
 type Phase = 'idle' | 'holding' | 'easing' | 'committing' | 'striking' | 'struck'
 
 /**
- * SCENE 3 · THE STAMP. The only scene you operate with your hand: press and hold and the
- * punch is drawn up under tension; let go and it strikes. Released before it is fully up,
- * it sinks back. Visitors who never press see it strike once on its own as they pass.
+ * SCENE 3 · THE STAMP. Scrolling in draws the punch up under tension; at the centre of
+ * the chapter it strikes and lands, and the mark is cut. Your hand can take over at any
+ * point: press and hold to draw it up yourself, let go to strike, and hold again to strike
+ * once more. Scrolling back above the chapter re-arms it.
  */
 export function StampScene() {
   const section = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const [phase, setPhase] = useState<Phase>('idle')
   const [missing, setMissing] = useState(false)
-  const control = useRef({ hold: false, auto: false })
+  const control = useRef({ hold: false })
 
   useEffect(() => {
     const c = canvas.current!
@@ -73,13 +74,15 @@ export function StampScene() {
         visible = e.isIntersecting
         if (visible && !started) {
           started = true
-          FrameStore.loadFirst((portrait ? ['stamp_portrait', 'stamp'] : ['stamp']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}).then((f) => {
+          // Progressive: the first frame shows at once, the rest arrive behind it.
+          FrameStore.loadFirst((portrait ? ['stamp_portrait', 'stamp'] : ['stamp']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}, true).then((f) => {
             frames = f
             if (!f) setMissing(true)
           })
         }
       },
-      { rootMargin: '120% 0px' },
+      // Fetched three screens ahead, so it is all here before you are.
+      { rootMargin: '300% 0px' },
     )
     io.observe(section.current!)
 
@@ -99,14 +102,17 @@ export function StampScene() {
       const t = now / 1000
       const ctl = control.current
 
-      // Visitors who never press see it strike once, as they reach the middle of the scene.
-      if (!ctl.auto && state === 'idle') {
-        const r = section.current!.getBoundingClientRect()
-        if (r.top < -innerHeight * 0.45) {
-          ctl.auto = true
-          ctl.hold = true
-          setTimeout(() => (control.current.hold = false), CHARGE_S * 1000 + 450)
-        }
+      // Scroll position through the chapter: the punch rises over the first quarter and the
+      // strike lands at 30%, leaving most of the chapter to the struck mark. Scrolling back
+      // near the top re-arms it.
+      const r = section.current!.getBoundingClientRect()
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)))
+      const scrollHold = Math.min(1, p / 0.25)
+      if (state === 'struck' && !ctl.hold && p < 0.12) {
+        frame = 1
+        strikeAt = -1
+        hold = scrollHold
+        set('idle')
       }
 
       if (state === 'idle' || state === 'holding' || state === 'easing') {
@@ -117,8 +123,10 @@ export function StampScene() {
           // Released with most of the draw: the hand flicks the last of it and lets fly.
           set('committing')
         } else {
-          hold = Math.max(0, hold - dt / (CHARGE_S * 0.6))
-          set(hold > 0 ? 'easing' : 'idle')
+          // The punch follows the scroll, with a little weight.
+          hold += (scrollHold - hold) * (1 - Math.exp(-dt * 14))
+          set(hold > 0.01 ? 'easing' : 'idle')
+          if (p >= 0.3 && hold > 0.8) set('committing')
         }
         // Ease the drawn-up curve so the punch decelerates near the top, like a hand tiring.
         frame = 1 + (HOLD_END - 1) * (1 - (1 - hold) ** 1.6)
@@ -139,6 +147,7 @@ export function StampScene() {
       if (bmp && bmp !== shownBmp) {
         uploadImage(gl, tex, bmp)
         shownBmp = bmp
+        if (c.dataset.shown !== '1') c.dataset.shown = '1'
       }
       gl.uniform1i(uniform('uFrame'), 0)
       gl.uniform2f(uniform('uRes'), c.width, c.height)
@@ -173,8 +182,10 @@ export function StampScene() {
   const up = () => (control.current.hold = false)
 
   return (
-    <section id="chapter-hallmark" ref={section} aria-labelledby="stamp-title" className="relative h-[180svh]">
+    <section id="chapter-hallmark" ref={section} aria-labelledby="stamp-title" className="relative h-[300svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* The scene's first frame, there from the start: the live canvas fades in over it. */}
+        <div className="stamp-poster" aria-hidden />
         <canvas
           ref={canvas}
           aria-hidden
