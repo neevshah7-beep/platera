@@ -122,3 +122,28 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 2rem; 
 .bag-mat { position: relative; display: block; aspect-ratio: 4 / 5; background: radial-gradient(80% 70% at 50% 38%, #fdf8ec, #f1e2c0 70%, #e2c891 130%); box-shadow: inset 0 0 0 1px rgb(201 154 62 / 0.4); }
 .bag-img { position: absolute; inset: 9%; display: block; }
 .bag-img img { width: 100%; height: 100%; object-fit: contain; }
+
+/* ── The gate ────────────────────────────────────────────────────────────────
+   Champagne silk lit from above, a slow sheen of light crossing it, gold dust rising.
+   A gold seal draws itself round as the house loads; the monogram sits within; the name
+   in fine spaced capitals beneath. Ready, the seal glows and the way in rises. */
+.entry-gate { overflow: hidden; background: radial-gradient(120% 90% at 50% 36%, #fffaf0 0%, #f7eedb 40%, #ecdcb8 76%, #dcc393 100%); }
+.entry-sheen { position: absolute; inset: -30%; background: linear-gradient(115deg, transparent 38%, rgb(255 251 240 / 0.7) 48%, rgb(255 236 190 / 0.25) 52%, transparent 62%); animation: gate-sheen 9s var(--ease-camera) infinite; pointer-events: none; }
+@keyframes gate-sheen { 0% { transform: translateX(-35%); } 100% { transform: translateX(35%); } }
+.entry-dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.entry-inner { position: relative; z-index: 1; gap: 0; }
+.entry-seal { position: relative; display: grid; place-items: center; width: clamp(9.5rem, 7rem + 7vw, 14rem); aspect-ratio: 1; transition: transform 900ms var(--ease-entry), filter 900ms var(--ease-entry); }
+.entry-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.entry-gate[data-ready='true'] .entry-ring { filter: drop-shadow(0 0 10px rgb(241 212 136 / 0.65)); animation: seal-breathe 3.2s ease-in-out infinite; }
+@keyframes seal-breathe { 50% { filter: drop-shadow(0 0 18px rgb(241 212 136 / 0.9)); } }
+.entry-mono { position: relative; font-size: clamp(4.4rem, 3rem + 3.6vw, 7.4rem); line-height: 1; padding-top: 0.08em; background: linear-gradient(110deg, #5a3c10 0%, #8a5f1c 28%, #c99a3e 44%, #f6dc95 50%, #c99a3e 56%, #8a5f1c 72%, #5a3c10 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: entry-sheen 5s var(--ease-camera) infinite alternate; filter: drop-shadow(0 2px 6px rgb(122 84 24 / 0.25)); }
+.entry-word { margin-top: 1.6rem; padding-left: 0.46em; font-size: clamp(1.9rem, 1.2rem + 1.9vw, 3.1rem); line-height: 1; letter-spacing: 0.46em; background: linear-gradient(100deg, #5a3c10 0%, #8a5f1c 30%, #c99a3e 46%, #e8c47a 52%, #b4862f 60%, #8a5f1c 78%, #5a3c10 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.entry-line { margin-top: 1rem; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: rgb(43 29 14 / 0.72); }
+.entry-status { margin-top: 2.2rem; min-height: 1.2em; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: rgb(43 29 14 / 0.6); }
+.entry-enter { position: relative; margin-top: 1.1rem; overflow: hidden; border: 1px solid var(--gold-shadow); background: rgb(255 250 240 / 0.35); color: var(--espresso); transition: opacity 900ms var(--ease-entry), transform 900ms var(--ease-entry), color 500ms var(--ease-entry), border-color 500ms; }
+.entry-enter::before { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, #b98a34, #f1d488 50%, #c99a3e); transform: scaleX(0); transform-origin: 0 50%; transition: transform 700ms var(--ease-entry); }
+.entry-enter > span { position: relative; }
+.entry-enter:hover { background: rgb(255 250 240 / 0.35); color: #1c1207; border-color: #b98a34; }
+.entry-enter:hover::before { transform: scaleX(1); }
+.entry-gate[data-entered='true'] .entry-seal { transform: scale(1.18); filter: brightness(1.25); }
+@media (prefers-reduced-motion: reduce) { .entry-sheen { animation: none; } }

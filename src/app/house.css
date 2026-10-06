@@ -1,5 +1,5 @@
 /* ─── The house: Platera in one line of silver ────────────────────────────────── */
-.house-wall { position: absolute; inset: 0; background: radial-gradient(110% 90% at 65% 45%, #fbf0d8 0%, #f3e0b8 55%, #e2c48b 100%); }
+.house-wall { position: absolute; inset: 0; background: radial-gradient(110% 90% at 65% 40%, #fffaf0 0%, #f5ead3 55%, #e6d3ab 100%); }
 .house-copy { position: absolute; left: 0; top: calc(7.2rem + 8svh); max-width: 34rem; pointer-events: none; opacity: 0; transform: translateY(26px); transition: opacity 700ms var(--ease-exit), transform 700ms var(--ease-exit); }
 .house-copy[data-on='true'] { opacity: 1; transform: none; pointer-events: auto; transition: opacity 1000ms var(--ease-entry) 120ms, transform 1200ms var(--ease-entry) 120ms; }
 @media (min-width: 768px) { .house-copy, .house-index { left: 2vw; } }

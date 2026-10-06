@@ -10,9 +10,9 @@
    ════════════════════════════════════════════════════════════════════════════ */
 :root {
   /* Grounds */
-  --cream: #f6ecd6;          /* lightest: pages of reading, forms */
-  --champagne: #e8d3a6;      /* the house ground */
-  --honey: #c9a05a;          /* the deep end of the gradient */
+  --cream: #fbf6ec;          /* lightest: pearl, for cards and reading surfaces */
+  --champagne: #f1e6cf;      /* the house ground: champagne silk, light falling across it */
+  --honey: #d9bd86;          /* the deep end of the gradient */
   --amber: #a87a34;          /* shadowed gold in the ground gradient */
 
   /* Type */
@@ -105,9 +105,13 @@ body {
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--step-0);
   line-height: 1.6;
-  background: var(--champagne);
+  background: transparent;
   -webkit-font-smoothing: antialiased;
 }
+/* The ground is lit: a fixed layer of soft light from above, falling to deeper champagne at
+   the edges, so the page reads as silk under a lamp rather than a flat colour. */
+html::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(120% 75% at 50% -10%, #fffaf0 0%, #f6edd9 38%, #efe2c6 70%, #e3cfa4 100%); }
 h1, h2, h3, .display {
   font-family: var(--font-gambetta), Georgia, serif;
   font-weight: 400;
@@ -438,13 +442,13 @@ html[data-returning='1'] .entry-gate { display: none; }
 }
 
 /* ─── Footer: the closing note, on espresso ────────────────────────────────── */
-.site-footer { background: var(--espresso); color: var(--cream); }
-.site-footer .text-ink-muted, .site-footer .text-muted { color: #c9b48e; }
-.site-footer .footer-word { font-size: clamp(3rem, 1rem + 5vw, 6.6rem); line-height: 0.95; letter-spacing: 0.02em; padding: 0 0.08em 0.06em 0; white-space: nowrap; background: linear-gradient(100deg, #8a5f1c 0%, #c99a3e 30%, #f1d488 48%, #c99a3e 66%, #8a5f1c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.site-footer .footer-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #d8bd7e; }
+.site-footer { position: relative; background: linear-gradient(180deg, #fbf6ec 0%, #f3e7cd 100%); color: var(--espresso); box-shadow: inset 0 1px 0 rgb(201 154 62 / 0.55); }
+.site-footer .text-ink-muted, .site-footer .text-muted { color: var(--espresso-muted); }
+.site-footer .footer-word { font-size: clamp(3rem, 1rem + 5vw, 6.6rem); line-height: 0.95; letter-spacing: 0.08em; padding: 0 0.08em 0.06em 0; white-space: nowrap; background: linear-gradient(100deg, #5a3c10 0%, #8a5f1c 26%, #c99a3e 46%, #e8c47a 52%, #b4862f 60%, #8a5f1c 78%, #5a3c10 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.site-footer .footer-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-shadow); }
 .site-footer .footer-label::before { content: ''; display: inline-block; width: 1.4rem; height: 1px; margin-right: 0.6rem; vertical-align: 0.3em; background: #c99a3e; }
-.site-footer a:hover { color: var(--gold-bright); }
-.site-footer .border-rule { border-color: rgb(246 236 214 / 0.14); }
+.site-footer a:hover { color: var(--gold-shadow); }
+.site-footer .border-rule { border-color: rgb(201 154 62 / 0.4); }
 
 /* ─── The checkout ceremony ─────────────────────────────────────────────────── */
 .ceremony { position: fixed; inset: 4rem 0 0 0; z-index: 30; background: radial-gradient(120% 90% at 60% 40%, var(--cream) 0%, var(--champagne) 60%, var(--honey) 140%); overflow: hidden; }
@@ -515,7 +519,7 @@ html[data-returning='1'] .entry-gate { display: none; }
 .hero-copy h1 { font-size: clamp(2.2rem, 1.4rem + 2.8vw, 3.8rem) !important; }
 
 /* ─── The original photographs viewer ──────────────────────────────────────── */
-.originals { position: fixed; inset: 0; z-index: 70; display: grid; grid-template-rows: auto 1fr auto auto; background: #181008; color: var(--cream); animation: act-in 500ms var(--ease-entry); }
+.originals { position: fixed; inset: 0; z-index: 70; display: grid; grid-template-rows: auto 1fr auto auto; background: radial-gradient(90% 90% at 45% 45%, #8c6634 0%, #6a4c24 60%, #553b1a 100%); color: #fbf3e2; animation: act-in 500ms var(--ease-entry); }
 .originals .eyebrow { color: #d8bd7e; }
 .originals .eyebrow::before { background: #c99a3e; }
 .originals-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem var(--gutter); }

@@ -1,21 +1,19 @@
 /* ─── The piece page, below the lamp ─────────────────────────────────────────── */
 
-/* I · The originals: an espresso wall, the photographs large in cream mats. */
-.orig { margin-top: 14vh; padding: 14vh 0 16vh; color: var(--cream); background: radial-gradient(90% 70% at 70% 20%, #3b2914 0%, #24180b 55%, #1a1108 100%); }
+/* I · The originals: a deep honey-gold wall, lit from above; the photographs large in pearl mats. */
+.orig { margin-top: 14vh; padding: 14vh 0 16vh; color: var(--espresso); background: radial-gradient(90% 80% at 60% 0%, #ecd7a8 0%, #d7b77a 50%, #c39d5a 100%); box-shadow: inset 0 1px 0 rgb(201 154 62 / 0.6), inset 0 -1px 0 rgb(201 154 62 / 0.6); }
 .orig-inner { max-width: 1440px; margin: 0 auto; padding: 0 var(--gutter); display: grid; gap: 3.5rem; }
 @media (min-width: 1024px) { .orig-inner { grid-template-columns: minmax(18rem, 4fr) 8fr; gap: 5rem; } .orig-head { position: sticky; top: 8rem; align-self: start; } }
-.orig .eyebrow { color: #e0c385; }
-.orig .eyebrow::before { background: #c99a3e; }
-.orig-title { margin-top: 0.9rem; font-size: clamp(2.4rem, 1.2rem + 3.2vw, 4.4rem); line-height: 0.98; color: #fbf3e2; }
-.orig .accent { color: #f1d488; }
-.orig-note { margin-top: 1.3rem; max-width: 26rem; font-size: var(--step-1); line-height: 1.55; color: #e9d9b8; }
+.orig .eyebrow { color: #5a3c10; }
+.orig-title { margin-top: 0.9rem; font-size: clamp(2.4rem, 1.2rem + 3.2vw, 4.4rem); line-height: 0.98; color: var(--espresso); }
+.orig-note { margin-top: 1.3rem; max-width: 26rem; font-size: var(--step-1); line-height: 1.55; color: #3a2712; }
 .orig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.2rem, 0.6rem + 1.6vw, 2.6rem); align-items: start; }
 .orig-grid[data-count='1'] { grid-template-columns: 1fr; }
 .orig-tile:first-child { grid-column: 1 / -1; }
 /* One photograph and the piece on its own: the photograph full width, the piece set below it, to the right. */
 .orig-grid[data-count='2'] .orig-tile:last-child { grid-column: 2; }
 .orig-tile button { display: block; width: 100%; text-align: left; cursor: zoom-in; }
-.orig-mat { position: relative; display: block; padding: clamp(10px, 0.4rem + 0.6vw, 18px); background: #f6efe0; overflow: hidden; box-shadow: 0 0 0 1px rgb(201 154 62 / 0.6), 0 40px 80px -40px rgb(0 0 0 / 0.85); transition: transform 900ms var(--ease-entry), box-shadow 900ms var(--ease-entry); }
+.orig-mat { position: relative; display: block; padding: clamp(10px, 0.4rem + 0.6vw, 18px); background: #f6efe0; overflow: hidden; box-shadow: 0 0 0 1px rgb(201 154 62 / 0.7), 0 40px 80px -40px rgb(74 50 22 / 0.7); transition: transform 900ms var(--ease-entry), box-shadow 900ms var(--ease-entry); }
 .orig-mat img { display: block; width: 100%; height: auto; max-height: 82svh; object-fit: contain; transform: scale(1.06); opacity: 0.35; transition: transform 1600ms var(--ease-entry) var(--d), opacity 1200ms var(--ease-entry) var(--d); }
 .orig-tile[data-cutout='true'] .orig-mat { background: radial-gradient(80% 70% at 50% 40%, #fbf3e2, #e8d3a6 75%, #c9a05a 140%); }
 .orig-tile[data-cutout='true'] .orig-mat img { aspect-ratio: 4 / 5; padding: 9%; object-fit: contain; }
@@ -23,10 +21,10 @@
 .orig-wipe { position: absolute; inset: 0; background: linear-gradient(100deg, #f6efe0 0%, #f6efe0 40%, #fff6dc 50%, rgb(246 239 224 / 0) 62%); background-size: 260% 100%; background-position: 0 0; transition: background-position 1500ms var(--ease-camera) var(--d), opacity 600ms 1400ms; pointer-events: none; }
 .orig-tile[data-in='true'] .orig-wipe { background-position: 100% 0; opacity: 0; }
 .orig-tile[data-in='true'] .orig-mat img { transform: scale(1); opacity: 1; }
-.orig-tile button:hover .orig-mat { transform: translateY(-6px); box-shadow: 0 0 0 1px #f1d488, 0 60px 90px -40px rgb(0 0 0 / 0.9); }
+.orig-tile button:hover .orig-mat { transform: translateY(-6px); box-shadow: 0 0 0 1px #f1d488, 0 60px 90px -40px rgb(74 50 22 / 0.75); }
 .orig-tile button:hover .orig-mat img { transform: scale(1.035); transition-delay: 0ms; }
-.orig-caption { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-top: 1rem; font-size: 0.98rem; color: #e9d9b8; }
-.orig-look { flex: none; white-space: nowrap; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.82rem; color: #f1d488; opacity: 0.75; transition: opacity 400ms, transform 500ms var(--ease-entry); }
+.orig-caption { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-top: 1rem; font-size: 0.98rem; color: #3a2712; }
+.orig-look { flex: none; white-space: nowrap; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.82rem; color: #5a3c10; opacity: 0.85; transition: opacity 400ms, transform 500ms var(--ease-entry); }
 .orig-tile button:hover .orig-look { opacity: 1; transform: translateX(4px); }
 
 /* II · Weighed, then priced: one equation, in large figures. */

@@ -54,7 +54,8 @@ const ROOMS: Room[] = [
 ]
 const PRINTS: (Print & { room: number })[] = ROOMS.flatMap((r, k) => [r.hero, ...r.columns.flatMap((c) => c.prints)].map((p) => ({ ...p, room: k })))
 
-const WALK = 0.84 // share of the section spent walking the wall; the rest is the finale
+const WALK = 0.76 // share of the section spent walking the wall; the rest is the finale, which completes
+// early and holds, so it is whole before the next chapter starts to rise over it
 
 export function SittingScene() {
   const section = useRef<HTMLElement>(null)
@@ -130,7 +131,7 @@ export function SittingScene() {
         lastRoom = room
         sec.dataset.look = String(room)
       }
-      const f = Math.min(1, Math.max(0, ((p - WALK) / (1 - WALK)) * 1.25))
+      const f = Math.min(1, Math.max(0, ((p - WALK) / (1 - WALK)) * 1.9))
       sec.style.setProperty('--fin', f.toFixed(4))
       sec.style.setProperty('--intro', Math.max(0, 1 - walk / 0.05).toFixed(4))
       if (finale.current) finale.current.style.visibility = f > 0.001 ? 'visible' : 'hidden'
@@ -164,7 +165,7 @@ export function SittingScene() {
   }
 
   return (
-    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[460svh]" data-look="0">
+    <section id="chapter-sitting" ref={section} aria-labelledby="sitting-title" className="sitting relative h-[500svh]" data-look="0">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div className="sit-floor" aria-hidden />
         <div className="sit-stage">

@@ -56,7 +56,7 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   })
 
   // The tray: espresso velvet in leather, a fine gold rim.
-  const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.06, 0.03, 0.015), roughness: 0.95, sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.34, 0.21, 0.12), envMapIntensity: 0.25 })
+  const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.2, 0.11, 0.045), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.62, 0.42, 0.22), envMapIntensity: 0.3 })
   const leather = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.2, 0.11, 0.05), roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.3 })
   const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.766, 0.336), metalness: 1, roughness: 0.14 })
   const TW = 52, TD = 40

@@ -47,9 +47,9 @@ function backdropMaterial() {
       void main(){
         vec2 uv = gl_FragCoord.xy / uRes;
         float d = length((uv - vec2(0.62, 0.55)) * vec2(uRes.x / uRes.y, 1.0));
-        vec3 cream = vec3(0.965, 0.925, 0.84);
-        vec3 champagne = vec3(0.91, 0.83, 0.65);
-        vec3 honey = vec3(0.79, 0.63, 0.35);
+        vec3 cream = vec3(0.985, 0.965, 0.92);
+        vec3 champagne = vec3(0.945, 0.9, 0.81);
+        vec3 honey = vec3(0.85, 0.74, 0.53);
         vec3 c = mix(cream, champagne, smoothstep(0.0, 0.7, d));
         c = mix(c, honey, smoothstep(0.75, 1.6, d));
         gl_FragColor = vec4(c, 1.0);
