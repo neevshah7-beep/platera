@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
@@ -111,7 +112,8 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   desk.receiveShadow = true
   scene.add(desk)
 
-  const leather = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.16, 0.09, 0.045), roughness: 0.55, sheen: 0.6, sheenColor: new THREE.Color(0.6, 0.42, 0.25), clearcoat: 0.25, clearcoatRoughness: 0.35 })
+  // Espresso calf over the stand: a fine pebbled grain under a soft polish.
+  const leather = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.12, 0.065, 0.03), roughness: 0.48, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.45, 0.45), sheen: 0.7, sheenRoughness: 0.4, sheenColor: new THREE.Color(0.62, 0.42, 0.24), clearcoat: 0.55, clearcoatRoughness: 0.22 })
   const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.16 })
 
   // The stand: an easel back leaning behind, a base in front, both leather.
@@ -316,6 +318,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
         const m = o as THREE.Mesh
         if (m.geometry && !pages.some((p) => p.geo === m.geometry)) m.geometry.dispose()
       })
+      leather.normalMap?.dispose()
       leather.dispose()
       gold.dispose()
       envTex?.dispose()
