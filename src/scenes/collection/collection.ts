@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { photoTexture, studioSource, warmUp } from '../env'
+import { photoTexture, sliced, studioEnvironment, studioSource, uploadSteps, warmUp } from '../env'
 
 /**
  * SCENE 4 · THE COLLECTION. Real Platera pieces laid along a run of champagne silk. Each is
@@ -54,21 +54,15 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false
-  studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
-    scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => {
-      warmed = true
-      canvas.style.opacity = '1'
-    })
-    scene.environmentIntensity = 0.7
-  })
+  let alive = true
 
   const run = (pieces.length - 1) * SPACING
   const silkNormal = silkNormals()
+  let silk: THREE.Mesh | null = null
+  const addSilk = () => {
   // The silk has real folds: displaced geometry for the long soft swells (so light rakes
   // across them), plus the woven normal map for the fine sheen.
-  const silkGeo = new THREE.PlaneGeometry(run + 260, 160, 360, 90)
+    const silkGeo = new THREE.PlaneGeometry(run + 260, 160, 360, 90)
   const sp = silkGeo.attributes.position as THREE.BufferAttribute
   for (let i = 0; i < sp.count; i++) {
     const x = sp.getX(i), y = sp.getY(i)
@@ -81,7 +75,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     sp.setZ(i, z * (1 - 0.5 * calm) + Math.max(0, y - 20) * 0.08)
   }
   silkGeo.computeVertexNormals()
-  const silk = new THREE.Mesh(
+    silk = new THREE.Mesh(
     silkGeo,
     new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(0.6, 0.4, 0.19),
@@ -99,6 +93,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   silk.position.x = run / 2
   silk.receiveShadow = true
   scene.add(silk)
+  }
 
   const lamp = new THREE.SpotLight(0xfff1dc, 1900, 180, 0.6, 0.75, 1.6)
   lamp.castShadow = true
@@ -147,7 +142,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
 
   type Item = { group: THREE.Group; mesh: THREE.Mesh; lid: THREE.Group; open: number; openV: number; lift: number; home: THREE.Vector3; slug: string; mats: THREE.Material[] }
   const items: Item[] = []
-  pieces.forEach((p, i) => {
+  const addCase = (p: CollectionPiece, i: number) => {
     const aspect = p.width / p.height
     const w = aspect >= 1 ? PIECE : PIECE * aspect
     const h = aspect >= 1 ? PIECE / aspect : PIECE
@@ -241,7 +236,33 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     mesh.userData.slug = p.slug
     group.add(mesh)
     items.push({ group, mesh, lid, open: 0, openV: 0, lift: 0, home, slug: p.slug, mats: [mat, depth] })
-  })
+  }
+
+  // Put together a slice at a time across frames (the silk, then a case per slice), then the
+  // light, then the shaders warmed; only then is it shown.
+  sliced([addSilk, ...pieces.map((p, i) => () => addCase(p, i))], () => alive)
+    .then(() => studioSource())
+    .then((tex) =>
+      sliced(
+        [
+          () => {
+            envTex = studioEnvironment(renderer, tex)
+            scene.environment = envTex
+            scene.environmentIntensity = 0.7
+          },
+          ...uploadSteps(renderer, scene),
+          () => {
+            warmUp(renderer, scene, camera).then(() => {
+              if (!alive) return
+              warmed = true
+              canvas.style.opacity = '1'
+            })
+          },
+        ],
+        () => alive,
+        1,
+      ),
+    )
 
   // Rendered straight to the screen: no post-processing pass, so the scene costs one draw
   // and its first frame compiles only what it shows.
@@ -337,6 +358,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     },
     resize,
     dispose: () => {
+      alive = false
       cancelAnimationFrame(raf)
       gate.dispose()
       geos.forEach((g) => g.dispose())
@@ -354,8 +376,8 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
         })
       }
       silkNormal.dispose()
-      silk.geometry.dispose()
-      ;(silk.material as THREE.Material).dispose()
+      silk?.geometry.dispose()
+      ;(silk?.material as THREE.Material | undefined)?.dispose()
       envTex?.dispose()
       pmrem.dispose()
       renderer.dispose()

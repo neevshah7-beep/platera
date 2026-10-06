@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { studioSource, warmUp } from '../env'
+import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 
 /**
  * SCENE 6 · THE CALENDAR. A Platera desk calendar on an espresso leather stand, bound in
@@ -118,15 +118,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false
-  studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
-    scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => {
-      warmed = true
-      canvas.style.opacity = '1'
-    })
-    scene.environmentIntensity = 0.7
-  })
+  let alive = true
 
   // The desk: champagne silk-wrapped surface far behind; a leather pad under the stand.
   const desk = new THREE.Mesh(new THREE.PlaneGeometry(600, 400), new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.86, 0.68, 0.4), roughness: 0.5, sheen: 0.8, sheenColor: new THREE.Color(1, 0.9, 0.7) }))
@@ -169,9 +161,17 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   const back2 = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.95, 0.91, 0.84), roughness: 0.75, side: THREE.BackSide })
   const POOL = 4
   const pages: Page[] = []
+  // Pages start on a plain cream placeholder and are printed one per frame (see below).
+  const blankCanvas = document.createElement('canvas')
+  blankCanvas.width = blankCanvas.height = 4
+  const bg = blankCanvas.getContext('2d')!
+  bg.fillStyle = '#f7efe0'
+  bg.fillRect(0, 0, 4, 4)
+  const blank = new THREE.CanvasTexture(blankCanvas)
+  blank.colorSpace = THREE.SRGBColorSpace
   for (let i = 0; i < POOL; i++) {
     const geo = new THREE.PlaneGeometry(W, H, 1, SEG)
-    const mat = new THREE.MeshPhysicalMaterial({ map: pageTexture(null), roughness: 0.7, sheen: 0.3, sheenColor: new THREE.Color(1, 1, 1), side: THREE.FrontSide })
+    const mat = new THREE.MeshPhysicalMaterial({ map: blank, roughness: 0.7, sheen: 0.3, sheenColor: new THREE.Color(1, 1, 1), side: THREE.FrontSide })
     const front = new THREE.Mesh(geo, mat)
     front.castShadow = front.receiveShadow = true
     const reverse = new THREE.Mesh(geo, back2)
@@ -218,21 +218,44 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   let dragY0 = 0
   let target = 0
 
-  const assign = () => {
-    // Pool slots: [0] the turning page, [1] the page beneath, [2] the one under that, [3] spare.
-    const want = [index, index + 1, index + 2, index - 1]
-    pages.forEach((p, k) => {
-      const di = want[k]
-      if (p.dayIndex !== di) {
-        p.dayIndex = di
-        p.mat.map?.dispose()
-        p.mat.map = pageTexture(di >= 0 && di < days.length ? days[di] : null)
-        p.mat.needsUpdate = true
-      }
-      p.mesh.visible = di >= 0 && di < days.length
-    })
+  // Pool slots: [0] the turning page, [1] the page beneath, [2] the one under that, [3] spare.
+  // (A new texture on the same material needs no recompile, so no needsUpdate.)
+  const assignPage = (k: number) => {
+    const p = pages[k]
+    const di = [index, index + 1, index + 2, index - 1][k]
+    if (p.dayIndex !== di) {
+      p.dayIndex = di
+      if (p.mat.map !== blank) p.mat.map?.dispose()
+      p.mat.map = pageTexture(di >= 0 && di < days.length ? days[di] : null)
+    }
+    p.mesh.visible = di >= 0 && di < days.length
   }
-  assign()
+  const assign = () => pages.forEach((_, k) => assignPage(k))
+
+  // Printed a page per frame, then the light, then the shaders warmed; only then shown.
+  ;(document.fonts?.ready ?? Promise.resolve())
+    .then(() => sliced(pages.map((_, k) => () => assignPage(k)), () => alive, 1))
+    .then(() => studioSource())
+    .then((tex) =>
+      sliced(
+        [
+          () => {
+            envTex = studioEnvironment(renderer, tex)
+            scene.environment = envTex
+            scene.environmentIntensity = 0.7
+          },
+          () => {
+            warmUp(renderer, scene, camera).then(() => {
+              if (!alive) return
+              warmed = true
+              canvas.style.opacity = '1'
+            })
+          },
+        ],
+        () => alive,
+        1,
+      ),
+    )
 
   let raf = 0
   let last = performance.now()
@@ -328,6 +351,8 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
     flip: doFlip,
     resize,
     dispose: () => {
+      alive = false
+      blank.dispose()
       cancelAnimationFrame(raf)
       gate.dispose()
       pages.forEach((p) => {

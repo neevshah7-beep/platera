@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { studioSource, uploadWhenIdle, warmUp } from '../env'
+import { sliced, studioEnvironment, studioSource, uploadWhenIdle, warmUp } from '../env'
 import { visibleGate } from '../visible'
 
 /**
@@ -72,15 +72,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false
-  studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
-    scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => {
-      warmed = true
-      canvas.style.opacity = '1'
-    })
-    scene.environmentIntensity = 1.0
-  })
+  let alive = true
   scene.add(new THREE.HemisphereLight(0xfff6e4, 0xc9a05a, 0.6))
   const key = new THREE.DirectionalLight(0xfff0d8, 1.4)
   key.position.set(-8, 14, 10)
@@ -159,8 +151,6 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   tex.wrapS = THREE.RepeatWrapping
   tex.anisotropy = 8
   tex.colorSpace = THREE.NoColorSpace
-  draw()
-  document.fonts?.ready.then(draw)
 
   const gold = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(1.0, 0.78, 0.4),
@@ -175,11 +165,47 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     clearcoatRoughness: 0.08,
     envMapIntensity: 1.35,
   })
-  const geo = new THREE.LatheGeometry(pts, 360)
-  const ring = new THREE.Mesh(geo, gold)
+  let geo: THREE.LatheGeometry | null = null
   const group = new THREE.Group()
-  group.add(ring)
   scene.add(group)
+
+  // Put together a slice per frame: the engraving (once the house fonts are in), the band,
+  // the light, then the shaders warmed; only then is it shown.
+  ;(document.fonts?.ready ?? Promise.resolve())
+    .then(() =>
+      sliced(
+        [
+          draw,
+          () => {
+            geo = new THREE.LatheGeometry(pts, 360)
+            group.add(new THREE.Mesh(geo, gold))
+          },
+        ],
+        () => alive,
+        1,
+      ),
+    )
+    .then(() => studioSource())
+    .then((tex) =>
+      sliced(
+        [
+          () => {
+            envTex = studioEnvironment(renderer, tex)
+            scene.environment = envTex
+            scene.environmentIntensity = 1.0
+          },
+          () => {
+            warmUp(renderer, scene, camera).then(() => {
+              if (!alive) return
+              warmed = true
+              canvas.style.opacity = '1'
+            })
+          },
+        ],
+        () => alive,
+        1,
+      ),
+    )
 
   // ── Motion ──
   let progress = 0
@@ -245,9 +271,10 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     },
     resize,
     dispose: () => {
+      alive = false
       cancelAnimationFrame(raf)
       gate.dispose()
-      geo.dispose()
+      geo?.dispose()
       gold.dispose()
       tex.dispose()
       envTex?.dispose()

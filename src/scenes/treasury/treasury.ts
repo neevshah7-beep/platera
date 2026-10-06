@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { studioEnvironment } from '../env'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
@@ -200,7 +201,7 @@ export function createTreasury(canvas: HTMLCanvasElement): TreasuryApi {
   let envTex: THREE.Texture | null = null
   new EXRLoader().load('/env/studio.exr', (tex) => {
     tex.mapping = THREE.EquirectangularReflectionMapping
-    envTex = pmrem.fromEquirectangular(tex).texture
+    envTex = studioEnvironment(renderer, tex)
     tex.dispose()
     scene.environment = envTex
   })

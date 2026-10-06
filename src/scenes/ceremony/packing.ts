@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { studioSource } from '../env'
+import { studioEnvironment, studioSource } from '../env'
 import { buildCarton, CARTON, FLAP_OPEN, TISSUE_OPEN_ANGLE } from './courier'
 
 /**
@@ -43,7 +43,7 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
+    envTex = studioEnvironment(renderer, tex)
     scene.environment = envTex
     scene.environmentIntensity = 0.6
     envReady = true

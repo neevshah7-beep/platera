@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
-import { studioSource, warmUp } from '../env'
+import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
@@ -81,17 +81,31 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false
-  studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
-    scene.environment = envTex
-    warmUp(renderer, scene, camera, composer.readBuffer).then(() => {
-      // One unseen pass through the effects (the canvas is still hidden), so their own
-      // shaders are compiled now, while the visitor is at the top, not on arrival.
-      composer.render(0)
-      warmed = true
-      canvas.style.opacity = '1'
-    })
-  })
+  let alive = true
+  // The light is prefiltered in one frame and the shaders warmed in the next, never both
+  // in the frame that built the scene.
+  studioSource().then((tex) =>
+    sliced(
+      [
+        () => {
+            envTex = studioEnvironment(renderer, tex)
+            scene.environment = envTex
+        },
+        () => {
+            warmUp(renderer, scene, camera, composer.readBuffer).then(() => {
+              if (!alive) return
+              // One unseen pass through the effects (the canvas is still hidden), so their
+              // own shaders compile before arrival, not on it.
+              composer.render(0)
+              warmed = true
+              canvas.style.opacity = '1'
+            })
+        },
+      ],
+      () => alive,
+      1,
+    ),
+  )
 
   // Backdrop: champagne light far behind, and a shadow catcher nearer, so the strand's
   // shadow falls softly on the light.
@@ -305,6 +319,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
     },
     resize,
     dispose: () => {
+      alive = false
       cancelAnimationFrame(raf)
       gate.dispose()
       for (const g of [round, cut, rondelle]) g.dispose()

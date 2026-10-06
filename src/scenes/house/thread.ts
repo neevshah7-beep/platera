@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { studioSource, warmUp } from '../env'
+import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
 
 /**
@@ -214,15 +214,29 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false
-  studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
-    silver.envMap = envTex
-    silver.needsUpdate = true
-    warmUp(renderer, scene, camera).then(() => {
-      warmed = true
-      canvas.style.opacity = '1'
-    })
-  })
+  let alive = true
+  // The light is prefiltered in one frame and the shaders warmed in the next, never both
+  // in the frame that built the scene.
+  studioSource().then((tex) =>
+    sliced(
+      [
+        () => {
+            envTex = studioEnvironment(renderer, tex)
+            silver.envMap = envTex
+            silver.needsUpdate = true
+        },
+        () => {
+            warmUp(renderer, scene, camera).then(() => {
+              if (!alive) return
+              warmed = true
+              canvas.style.opacity = '1'
+            })
+        },
+      ],
+      () => alive,
+      1,
+    ),
+  )
 
   // The tube, rebuilt in place each frame.
   const shapes = [ring(), eye(), n925(), balance(), arch()].map(resample)
@@ -347,6 +361,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
     },
     resize,
     dispose: () => {
+      alive = false
       cancelAnimationFrame(raf)
       gate.dispose()
       geo.dispose()

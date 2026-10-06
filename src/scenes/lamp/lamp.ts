@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { studioSource } from '../env'
+import { studioEnvironment, studioSource } from '../env'
 
 /**
  * THE LAMP (piece page). The piece lies on an espresso velvet pad in a gold-rimmed tray,
@@ -52,7 +52,7 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   studioSource().then((tex) => {
-    envTex = pmrem.fromEquirectangular(tex).texture
+    envTex = studioEnvironment(renderer, tex)
     scene.environment = envTex
   })
 
