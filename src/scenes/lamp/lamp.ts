@@ -36,13 +36,16 @@ export type LampApi = {
 
 export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; width: number; height: number; maps: boolean }): LampApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', alpha: true })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.92
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(28, 1, 1, 400)

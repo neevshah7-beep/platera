@@ -83,13 +83,19 @@ function pageTexture(d: CalendarDay | null): THREE.CanvasTexture {
 
 export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], onChange: (index: number) => void): CalendarApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
+  // Hidden until every shader is ready, then faded in: never a freeze, never a flash.
+  canvas.style.opacity = '0'
+  canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.9
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
   scene.background = new THREE.Color(0.91, 0.83, 0.65)
@@ -102,7 +108,10 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
     scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => (warmed = true))
+    warmUp(renderer, scene, camera).then(() => {
+      warmed = true
+      canvas.style.opacity = '1'
+    })
     scene.environmentIntensity = 0.7
   })
 

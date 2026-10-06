@@ -23,6 +23,9 @@ export type PackingApi = { resize: () => void; skip: () => void; dispose: () => 
 
 export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], onDone: () => void, onPhase?: (p: PackPhase) => void): PackingApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
   renderer.localClippingEnabled = true
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))

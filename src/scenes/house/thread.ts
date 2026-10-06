@@ -174,6 +174,12 @@ export type ThreadApi = { setProgress: (p: number) => void; pointer: (x: number,
 
 export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
+  // Hidden until every shader is ready, then faded in: never a freeze, never a flash.
+  canvas.style.opacity = '0'
+  canvas.style.transition = 'opacity 700ms ease'
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
@@ -181,7 +187,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   renderer.toneMappingExposure = 1.12
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(30, 1, 1, 400)
@@ -212,7 +218,10 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
     envTex = pmrem.fromEquirectangular(tex).texture
     silver.envMap = envTex
     silver.needsUpdate = true
-    warmUp(renderer, scene, camera).then(() => (warmed = true))
+    warmUp(renderer, scene, camera).then(() => {
+      warmed = true
+      canvas.style.opacity = '1'
+    })
   })
 
   // The tube, rebuilt in place each frame.
@@ -272,6 +281,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   }
 
   let progress = 0
+  let lastShape = ''
   const ptr = { x: 0, y: 0, sx: 0, sy: 0 }
   const smooth = (x: number) => {
     const k = Math.min(1, Math.max(0, x))
@@ -292,7 +302,12 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
     const from = shapes[Math.max(0, seg - 1)], to = shapes[seg]
     const m = seg === 0 ? 1 : smooth(frac / 0.55)
     const lifted = Math.sin(Math.PI * m)
-    for (let i = 0; i < N; i++) {
+    // The tube is rebuilt only while the line is moving (drawing in, or changing shape);
+    // a settled drawing costs nothing but its turn and lean.
+    const shapeKey = `${seg}|${m.toFixed(4)}|${lifted > 0.001 ? Math.round(t * 30) : 0}`
+    const rebuild = shapeKey !== lastShape
+    lastShape = shapeKey
+    if (rebuild) for (let i = 0; i < N; i++) {
       const u = i / (N - 1)
       // Mid-change the line lifts off the wall in a slow wave and turns through the air.
       const wave = lifted * (2.6 + 1.8 * Math.sin(u * 9 + t * 0.8))
@@ -301,7 +316,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
       P[i * 3 + 2] = from.p[i * 3 + 2] + (to.p[i * 3 + 2] - from.p[i * 3 + 2]) * m + wave
       Rr[i] = from.r[i] + (to.r[i] - from.r[i]) * m
     }
-    build()
+    if (rebuild) build()
     geo.setDrawRange(0, Math.max(0, Math.floor((N - 1) * draw)) * RS * 6)
     // The drawing breathes: a slow turn, a lean toward the hand, a twist while it changes.
     group.rotation.y = Math.sin(t * 0.35) * 0.12 + ptr.sx * 0.35 + lifted * 0.5

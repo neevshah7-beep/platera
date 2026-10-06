@@ -61,6 +61,12 @@ function backdropMaterial() {
 
 export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
+  // Hidden until every shader is ready, then faded in: never a freeze, never a flash.
+  canvas.style.opacity = '0'
+  canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   // Khronos PBR Neutral: keeps the gold's hue and the page's champagne true (AgX greys both).
@@ -78,7 +84,10 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
     scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => (warmed = true))
+    warmUp(renderer, scene, camera, composer.readBuffer).then(() => {
+      warmed = true
+      canvas.style.opacity = '1'
+    })
   })
 
   // Backdrop: champagne light far behind, and a shadow catcher nearer, so the strand's

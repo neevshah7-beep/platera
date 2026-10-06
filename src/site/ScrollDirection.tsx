@@ -16,8 +16,13 @@ export function ScrollDirection() {
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
         const y = scrollY
-        if (Math.abs(y - last) > 4) d.scroll = y > last && y > 120 ? 'down' : 'up'
-        d.scrolled = y > 24 ? '1' : '0'
+        // Written only when the value changes (each write restyles the page).
+        if (Math.abs(y - last) > 4) {
+          const v = y > last && y > 120 ? 'down' : 'up'
+          if (d.scroll !== v) d.scroll = v
+        }
+        const sc = y > 24 ? '1' : '0'
+        if (d.scrolled !== sc) d.scrolled = sc
         last = y
       })
     }

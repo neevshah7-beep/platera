@@ -16,22 +16,38 @@ export function ChapterRail({ chapters }: { chapters: Chapter[] }) {
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
+    // Where each chapter starts is measured once (and again on resize), not every frame: the
+    // per-frame work is then a comparison against scrollY, with no layout reads.
+    let tops: number[] = []
+    let max = 1
+    const measure = () => {
+      tops = chapters.map((c) => {
+        const el = document.getElementById(c.id)
+        return el ? el.getBoundingClientRect().top + scrollY : Infinity
+      })
+      max = Math.max(1, document.documentElement.scrollHeight - innerHeight)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(document.body)
     let raf = 0
+    let lastY = -1
     const tick = () => {
       raf = requestAnimationFrame(tick)
+      setShown(document.documentElement.dataset.entered === '1')
+      if (scrollY === lastY) return
+      lastY = scrollY
       const mid = scrollY + innerHeight * 0.5
       let a = 0
-      chapters.forEach((c, i) => {
-        const el = document.getElementById(c.id)
-        if (el && el.getBoundingClientRect().top + scrollY <= mid) a = i
-      })
+      tops.forEach((t, i) => t <= mid && (a = i))
       setActive((v) => (v === a ? v : a))
-      const max = document.documentElement.scrollHeight - innerHeight
-      if (line.current) line.current.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`
-      setShown(document.documentElement.dataset.entered === '1')
+      if (line.current) line.current.style.transform = `scaleX(${scrollY / max})`
     }
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
   }, [chapters])
 
   const go = (id: string) => {

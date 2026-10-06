@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { studioSource, warmUp } from '../env'
+import { studioSource, uploadWhenIdle, warmUp } from '../env'
 import { visibleGate } from '../visible'
 
 /**
@@ -54,6 +54,12 @@ function profile(): { pts: THREE.Vector2[]; vInner: number } {
 
 export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): JourneyApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
+  // Hidden until every shader is ready, then faded in: never a freeze, never a flash.
+  canvas.style.opacity = '0'
+  canvas.style.transition = 'opacity 700ms ease'
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
@@ -69,7 +75,10 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
     scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => (warmed = true))
+    warmUp(renderer, scene, camera).then(() => {
+      warmed = true
+      canvas.style.opacity = '1'
+    })
     scene.environmentIntensity = 1.0
   })
   scene.add(new THREE.HemisphereLight(0xfff6e4, 0xc9a05a, 0.6))
@@ -83,7 +92,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
 
   // ── The engraving texture ──
   const { pts, vInner } = profile()
-  const W = 6144
+  const W = 4096 // texels round the band: sharp at this distance, a third of the upload
   const H = Math.round(((2 * Math.PI * RI) / (W / 1)) * 0 + W * ((HH * 2 + 4) / (2 * Math.PI * RI))) // keep texels square-ish
   const tc = document.createElement('canvas')
   tc.width = W
@@ -111,7 +120,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
       const x = u * tc.width
       for (const dx of [0, -tc.width, tc.width]) {
         // The cut: a soft blur gives the walls of the engraving a bevel for the bump.
-        ctx.filter = 'blur(2.2px)'
+        ctx.filter = 'blur(1.5px)'
         ctx.fillStyle = 'rgb(40, 170, 0)'
         ctx.save()
         ctx.translate(x + dx, 0)
@@ -143,6 +152,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     })
     ctx.filter = 'none'
     tex.needsUpdate = true
+    uploadWhenIdle(renderer, tex)
   }
   const tex = new THREE.CanvasTexture(tc)
   tex.flipY = false

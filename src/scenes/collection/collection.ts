@@ -2,11 +2,7 @@ import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
-import { studioSource, uploadWhenIdle, warmUp } from '../env'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { photoTexture, studioSource, warmUp } from '../env'
 
 /**
  * SCENE 4 · THE COLLECTION. Real Platera pieces laid along a run of champagne silk. Each is
@@ -36,6 +32,12 @@ const DEPTH = 3.2 // case base height, cm
 
 export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPiece[]): CollectionApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+  // Shader logs are not read back after each compile: reading them forces the compile to
+  // finish on the spot, which turns background compilation into a stall.
+  renderer.debug.checkShaderErrors = false
+  // Hidden until every shader is ready, then faded in: never a freeze, never a flash.
+  canvas.style.opacity = '0'
+  canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
@@ -43,7 +45,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
   // PCF soft shadows: VSM smears the thin outlines of cut-out jewellery into blocks.
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
   scene.background = new THREE.Color(0.8, 0.64, 0.4)
@@ -55,7 +57,10 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   studioSource().then((tex) => {
     envTex = pmrem.fromEquirectangular(tex).texture
     scene.environment = envTex
-    warmUp(renderer, scene, camera).then(() => (warmed = true))
+    warmUp(renderer, scene, camera).then(() => {
+      warmed = true
+      canvas.style.opacity = '1'
+    })
     scene.environmentIntensity = 0.7
   })
 
@@ -109,7 +114,6 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   rim.position.set(30, 18, -60)
   scene.add(rim, rim.target)
 
-  const loader = new THREE.TextureLoader()
 
   // ── The case materials, shared ──
   // Champagne leatherette outside, a fine gold trim, espresso velvet inside (silver and
@@ -210,11 +214,11 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     lid.add(lin)
 
     // The piece, resting on the velvet.
-    const map = loader.load(`${p.base}-1600.webp`, (t) => uploadWhenIdle(renderer, t))
-    map.colorSpace = THREE.SRGBColorSpace
+    // Decoded off the main thread and uploaded in idle moments (see env.ts).
+    const map = photoTexture(renderer, `${p.base}-1600.webp`)
     map.anisotropy = 8
-    const normal = loader.load(`${p.base}-normal.webp`, (t) => uploadWhenIdle(renderer, t))
-    const dr = loader.load(`${p.base}-dr.webp`, (t) => uploadWhenIdle(renderer, t))
+    const normal = photoTexture(renderer, `${p.base}-normal.webp`, false)
+    const dr = photoTexture(renderer, `${p.base}-dr.webp`, false)
     const mat = new THREE.MeshPhysicalMaterial({
       map,
       normalMap: normal,
@@ -239,11 +243,8 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     items.push({ group, mesh, lid, open: 0, openV: 0, lift: 0, home, slug: p.slug, mats: [mat, depth] })
   })
 
-  // Depth of field on the piece nearest the centre of the frame; a breath of bloom on glints.
-  const composer = new EffectComposer(renderer)
-  composer.addPass(new RenderPass(scene, camera))
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(512, 512), 0.12, 0.3, 1.1))
-  composer.addPass(new OutputPass())
+  // Rendered straight to the screen: no post-processing pass, so the scene costs one draw
+  // and its first frame compiles only what it shows.
   const focusAt = new THREE.Vector3()
 
   let progress = 0
@@ -303,13 +304,12 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     let best = items[0]
     for (const it of items) if (Math.abs(it.home.x - look.x) < Math.abs(best.home.x - look.x)) best = it
     focusAt.copy((hovered ?? best).group.position)
-    if (warmed) composer.render(dt)
+    if (warmed) renderer.render(scene, camera)
   }
 
   const resize = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight
     renderer.setSize(w, h, false)
-    composer.setSize(w, h)
     camera.aspect = w / h
     camera.fov = w / h < 0.8 ? 46 : 32
     camera.updateProjectionMatrix()
@@ -358,7 +358,6 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
       ;(silk.material as THREE.Material).dispose()
       envTex?.dispose()
       pmrem.dispose()
-      composer.dispose()
       renderer.dispose()
     },
   }
