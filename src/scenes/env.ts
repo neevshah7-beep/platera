@@ -105,7 +105,8 @@ function pump() {
       return
     }
     job()
-    idle(step)
+    // At most one upload per frame: wait for the next frame, then for an idle moment in it.
+    requestAnimationFrame(() => idle(step))
   }
   idle(step)
 }

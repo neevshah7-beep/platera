@@ -73,6 +73,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   let envTex: THREE.Texture | null = null
   let warmed = false
   let alive = true
+  let engraved = false // the engraving image is in place (never draw the band before it)
   scene.add(new THREE.HemisphereLight(0xfff6e4, 0xc9a05a, 0.6))
   const key = new THREE.DirectionalLight(0xfff0d8, 1.4)
   key.position.set(-8, 14, 10)
@@ -143,8 +144,14 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
       }
     })
     ctx.filter = 'none'
-    tex.needsUpdate = true
-    uploadWhenIdle(renderer, tex)
+    // Handed to the GPU as an ImageBitmap (made off the main thread), in an idle moment.
+    createImageBitmap(tc).then((bmp) => {
+      if (!alive) return bmp.close()
+      tex.image = bmp as unknown as HTMLCanvasElement
+      tex.needsUpdate = true
+      engraved = true
+      uploadWhenIdle(renderer, tex)
+    })
   }
   const tex = new THREE.CanvasTexture(tc)
   tex.flipY = false
@@ -250,7 +257,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     const facing = -Math.PI - (camera.aspect < 0.9 ? 0 : 0.3)
     group.rotation.y = (1 - dive) * (t * 0.18) + dive * (facing + held * step) + ptr.sx * 0.05
     group.rotation.x = (1 - dive) * 0.18
-    if (warmed) renderer.render(scene, camera)
+    if (warmed && engraved) renderer.render(scene, camera)
   }
 
   const resize = () => {
