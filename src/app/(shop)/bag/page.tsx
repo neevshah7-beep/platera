@@ -53,8 +53,8 @@ export default async function BagPage({ searchParams }: { searchParams: Promise<
         <ul className="mt-10">
           {bag.lines.map((line) => (
             <li key={line.id} className="grid grid-cols-[6.5rem_1fr] gap-5 border-t border-rule py-6 sm:grid-cols-[9rem_1fr]">
-              <Link href={`/piece/${line.product.slug}`} aria-hidden tabIndex={-1}>
-                {line.product.images[0] && <PieceImage image={line.product.images[0]} sizes="9rem" />}
+              <Link href={`/piece/${line.product.slug}`} aria-hidden tabIndex={-1} className="bag-mat">
+                {line.product.images[0] && <PieceImage image={line.product.images[0]} sizes="9rem" fit="contain" className="bag-img" />}
               </Link>
               <div className="flex flex-col">
                 <div className="flex items-baseline justify-between gap-4">
