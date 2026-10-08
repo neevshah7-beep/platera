@@ -23,7 +23,10 @@ const csp = [
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  ...(dev ? [] : ['upgrade-insecure-requests']),
+  // Upgrades every request to https: right for the live site, but it breaks a preview served
+  // over plain http on the local network (a phone on the same Wi-Fi), so a build made with
+  // LOCAL_PREVIEW=1 leaves it out. Never set LOCAL_PREVIEW for a deployment.
+  ...(dev || process.env.LOCAL_PREVIEW === '1' ? [] : ['upgrade-insecure-requests']),
 ].join('; ')
 
 const nextConfig: NextConfig = {
