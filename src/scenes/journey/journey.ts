@@ -144,7 +144,14 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
       }
     })
     ctx.filter = 'none'
-    // Handed to the GPU as an ImageBitmap (made off the main thread), in an idle moment.
+    // Handed to the GPU as an ImageBitmap (made off the main thread) where the browser can;
+    // otherwise the canvas itself. Either way, in an idle moment.
+    if (typeof createImageBitmap !== 'function') {
+      tex.needsUpdate = true
+      engraved = true
+      uploadWhenIdle(renderer, tex)
+      return
+    }
     createImageBitmap(tc).then((bmp) => {
       if (!alive) return bmp.close()
       tex.image = bmp as unknown as HTMLCanvasElement

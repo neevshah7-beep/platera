@@ -124,8 +124,22 @@ export function uploadWhenIdle(renderer: THREE.WebGLRenderer, tex: THREE.Texture
  * idle moment. The texture is returned at once and fills in when ready, so building a scene
  * never waits on, or stalls for, its images.
  */
-const bitmaps = new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none' })
+// Off-thread decoding needs createImageBitmap with its orientation option; Safari (iPhone,
+// iPad, Mac) has not always honoured that option, so there the photographs load the
+// ordinary way rather than risk showing upside-down. Made on first use (never on the server).
+let bitmaps: THREE.ImageBitmapLoader | null = null
+const offThread = () =>
+  typeof createImageBitmap === 'function' && !/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)
 export function photoTexture(renderer: THREE.WebGLRenderer, url: string, color = true, onLoad?: () => void): THREE.Texture {
+  if (!offThread()) {
+    const t = new THREE.TextureLoader().load(url, (lt) => {
+      uploadWhenIdle(renderer, lt)
+      onLoad?.()
+    })
+    if (color) t.colorSpace = THREE.SRGBColorSpace
+    return t
+  }
+  bitmaps ??= new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none' })
   const tex = new THREE.Texture()
   tex.flipY = false
   if (color) tex.colorSpace = THREE.SRGBColorSpace
