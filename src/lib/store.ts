@@ -13,7 +13,7 @@ export const STORE = {
   gstin: '27AOIPR9516G1ZI',
   phoneDisplay: '+91 83695 94107',
   phoneE164: '+918369594107',
-  whatsapp: '918369594107',
+  whatsapp: '918424894019', // the counter's WhatsApp: every sale and enquiry lands here
   address: {
     line1: 'Shop No. 13, Chand Ganga Building, Plot No. 2',
     line2: 'Gorai 1, Borivali West',

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { PieceImage } from '@/components/media/PieceImage'
 import { isSold, metalLine, type Pricing, type ProductWithMedia } from '@/lib/catalogue'
-import { formatINRWhole } from '@/lib/pricing/format'
 
 /**
  * Pieces laid out as a jeweller lays a tray: every piece on the same cream display mat,
@@ -10,7 +9,7 @@ import { formatINRWhole } from '@/lib/pricing/format'
 export function PieceGrid({ items, label, priorityFirst = false }: { items: { product: ProductWithMedia; pricing: Pricing }[]; label: string; priorityFirst?: boolean }) {
   return (
     <ul className="tray-grid" aria-label={label}>
-      {items.map(({ product, pricing }, i) => {
+      {items.map(({ product }, i) => {
         const img = product.images[0]
         const sold = isSold(product)
         return (
@@ -23,7 +22,7 @@ export function PieceGrid({ items, label, priorityFirst = false }: { items: { pr
               <span className="tray-name font-display">{product.name}</span>
               <span className="tray-meta">
                 <span>{metalLine(product)}</span>
-                <span className="num">{sold ? 'Sold' : pricing.state === 'PRICED' ? formatINRWhole(pricing.breakdown.totalPaise) : 'Priced once weighed'}</span>
+                <span className="tray-ask">{sold ? 'Sold' : 'View'}</span>
               </span>
             </Link>
           </li>

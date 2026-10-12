@@ -79,7 +79,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
       <ul className="sr-only">
         {pieces.map((p) => (
           <li key={p.slug}>
-            <Link href={p.href}>{p.name}, {p.price}</Link>
+            <Link href={p.href}>{p.name}</Link>
           </li>
         ))}
       </ul>

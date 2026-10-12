@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { notFound } from 'next/navigation'
 import { CollectionView } from '@/components/tray/CollectionView'
 import { mediaBase } from '@/components/media/PieceImage'
@@ -6,7 +7,7 @@ import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { isSold, getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor } from '@/lib/originals'
-import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
+import { JsonLd, breadcrumbJsonLd, itemListJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
 
@@ -38,12 +39,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const c = await findCategory((await params).category)
   if (!c) return {}
   const filtered = Object.values(await searchParams).some(Boolean)
-  return {
+  return social({
     title: { absolute: c.seoTitle },
     description: c.seoDescription,
     alternates: { canonical: `/${c.slug}` },
     robots: filtered ? { index: false, follow: true } : undefined,
-  }
+  })
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
@@ -55,6 +56,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: c.name, path: `/${c.slug}` }])} />
+      <JsonLd data={itemListJsonLd(c.name, `/${c.slug}`, products)} />
       <h1 className="sr-only">{c.name}</h1>
       <CollectionScene pieces={casePieces(products, rates)} total={products.length} eyebrow={c.name} title={<>{c.name}, <em className="accent">case by case.</em></>} allHref="#list" chapterId={`room-${c.slug}`} />
       <div id="list" className="relative bg-cream">

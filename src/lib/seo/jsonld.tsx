@@ -1,5 +1,5 @@
 import { STORE, mediaUrl, siteUrl } from '@/lib/store'
-import type { Pricing, ProductWithMedia } from '@/lib/catalogue'
+import type { ProductWithMedia } from '@/lib/catalogue'
 
 export function JsonLd({ data }: { data: object }) {
   return (
@@ -22,9 +22,8 @@ export function storeJsonLd() {
     url: siteUrl('/'),
     telephone: STORE.phoneE164,
     image: siteUrl('/media/products/PLT-NKS-005-01-1600.webp'),
-    priceRange: '₹₹',
     currenciesAccepted: 'INR',
-    paymentAccepted: 'UPI, Credit Card, Debit Card, Net Banking',
+    paymentAccepted: 'UPI, Bank Transfer, Cash',
     address: {
       '@type': 'PostalAddress',
       streetAddress: `${a.line1}, ${a.line2}`,
@@ -41,10 +40,43 @@ export function storeJsonLd() {
       closes: h.closes,
     })),
     parentOrganization: { '@type': 'Organization', name: STORE.legalName },
+    areaServed: { '@type': 'Country', name: 'India' },
+    hasMap: STORE.mapsUrl,
+    logo: siteUrl('/icon-512.png'),
+    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: `+${STORE.whatsapp}`, url: `https://wa.me/${STORE.whatsapp}`, availableLanguage: ['en', 'hi', 'gu', 'mr'], areaServed: 'IN' },
   }
 }
 
-export function productJsonLd(p: ProductWithMedia, pricing: Pricing, sold: boolean) {
+export function websiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': siteUrl('/#website'),
+    url: siteUrl('/'),
+    name: STORE.brand,
+    alternateName: 'Platera',
+    inLanguage: 'en-IN',
+    publisher: { '@id': siteUrl('/#store') },
+  }
+}
+
+/** A collection page as a list of its pieces, so each one is discovered from the page. */
+export function itemListJsonLd(name: string, path: string, pieces: { name: string; slug: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    url: siteUrl(path),
+    isPartOf: { '@id': siteUrl('/#website') },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: pieces.length,
+      itemListElement: pieces.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: siteUrl(`/piece/${p.slug}`) })),
+    },
+  }
+}
+
+export function productJsonLd(p: ProductWithMedia, sold: boolean) {
   const url = siteUrl(`/piece/${p.slug}`)
   return {
     '@context': 'https://schema.org',
@@ -58,25 +90,8 @@ export function productJsonLd(p: ProductWithMedia, pricing: Pricing, sold: boole
     brand: { '@type': 'Brand', name: STORE.brand },
     category: p.category.name,
     material: p.finish ? `925 sterling silver, ${p.finish.toLowerCase()}` : '925 sterling silver',
-    ...(pricing.state === 'PRICED' && {
-      offers: {
-        '@type': 'Offer',
-        url,
-        priceCurrency: 'INR',
-        price: (pricing.breakdown.totalPaise / 100).toFixed(2),
-        availability: sold ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
-        itemCondition: 'https://schema.org/NewCondition',
-        seller: { '@id': siteUrl('/#store') },
-        hasMerchantReturnPolicy: {
-          '@type': 'MerchantReturnPolicy',
-          applicableCountry: 'IN',
-          returnPolicyCategory: p.returnable
-            ? 'https://schema.org/MerchantReturnFiniteReturnWindow'
-            : 'https://schema.org/MerchantReturnNotPermitted',
-          ...(p.returnable && { merchantReturnDays: STORE.returnWindowDays, returnMethod: 'https://schema.org/ReturnByMail' }),
-        },
-      },
-    }),
+    // No price is published (prices are given on WhatsApp), so there is no Offer.
+    ...(sold && { additionalProperty: { '@type': 'PropertyValue', name: 'Availability', value: 'Sold' } }),
   }
 }
 

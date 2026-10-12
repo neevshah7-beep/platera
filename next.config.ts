@@ -46,6 +46,11 @@ const nextConfig: NextConfig = {
     // Admin photo uploads go through a server action; photos can be 10–20 MB each.
     serverActions: { bodySizeLimit: '60mb' },
   },
+  // Selling moved to WhatsApp: the bag, checkout and rate pages are retired and send
+  // visitors (and any old links) to the collection.
+  async redirects() {
+    return ['/bag', '/checkout', '/checkout/:path*', '/silver-rate-today'].map((source) => ({ source, destination: '/collection', permanent: false }))
+  },
   async headers() {
     return [
       {

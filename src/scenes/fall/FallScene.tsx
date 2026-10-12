@@ -39,6 +39,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     const onRestored = () => {
       tex = makeTexture(gl)
       shownBmp = null
+      delete c.dataset.live
     }
     c.addEventListener('webglcontextlost', onLost)
     c.addEventListener('webglcontextrestored', onRestored)
@@ -48,6 +49,12 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     let shownBmp: ImageBitmap | null = null
     let introStart = -1
     let landedFired = false
+    // A returning visitor finds the ring already at rest: the still (the poster beneath the
+    // canvas) and the words are there at once, while the frames arrive behind them.
+    if (document.documentElement.dataset.returning === '1') {
+      landedFired = true
+      onLanded?.()
+    }
     let visible = true
     let raf = 0
     const ptr = { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, lamp: 0, lampT: 0, lastMove: -1e9, press: 0, pressT: 0 }
@@ -113,7 +120,9 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       if (bmp && bmp !== shownBmp) {
         uploadImage(gl, tex, bmp)
         shownBmp = bmp
+        c.dataset.live = '1'
       }
+      if (!shownBmp) return
 
       // The lamp: follows the pointer on a soft spring; when the pointer rests (or on touch)
       // it drifts on its own slow path so the scene is never still.
@@ -156,7 +165,8 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
   return (
     <section id="chapter-fall" ref={section} aria-label="The fall" className="relative h-[180svh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full" />
+        <div aria-hidden className="fall-poster" />
+        <canvas ref={canvas} aria-hidden className="fall-canvas absolute inset-0 h-full w-full" />
         {children}
       </div>
     </section>

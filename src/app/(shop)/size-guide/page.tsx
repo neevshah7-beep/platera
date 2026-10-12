@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { Prose, Section } from '@/components/site/Prose'
 
-export const metadata: Metadata = {
-  title: 'Size Guide: Necklace, Chain and Payal Lengths in Inches',
+export const metadata: Metadata = social({
+  title: 'Size Guide: Necklace, Chain and Payal Lengths',
   description: 'Where each necklace length sits, how to measure a payal at home, and how to read the lengths on Platera pieces. All measurements in inches.',
   alternates: { canonical: '/size-guide' },
-}
+})
 
 const LENGTHS = [
   { in: 14, name: 'Choker', where: 'Close around the base of the neck' },

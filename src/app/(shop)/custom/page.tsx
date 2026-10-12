@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { Prose, Section } from '@/components/site/Prose'
 import { STORE, whatsappLink } from '@/lib/store'
 import { EnquiryForm } from './EnquiryForm'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = social({
   title: 'Made to Order Silver Jewellery',
   description: `Send Platera a design or a reference and we’ll make it in 925 sterling silver. Price confirmed before work begins; ready in ${STORE.madeToOrderDays}.`,
   alternates: { canonical: '/custom' },
-}
+})
 
 const STEPS = [
   'Send us the design: a photograph, a sketch, or a piece from this site you’d like changed.',

@@ -14,7 +14,7 @@ const CHAPTERS = [
   { eyebrow: 'The house', title: <>Platera, <em className="accent">in one line.</em></>, body: 'A small house with one idea: choose fewer pieces, choose them properly, and show you everything.' },
   { eyebrow: 'The eye', title: <>We choose; <em className="accent">we don’t make.</em></>, body: 'Every piece is turned over and chosen for its metal, its making and its design. The back of a piece tells you more than the front.' },
   { eyebrow: 'The mark', title: <>925, <em className="accent">and proven.</em></>, body: 'Everything in the house is sterling silver, BIS hallmarked with its own HUID. You never have to take our word for it.' },
-  { eyebrow: 'The balance', title: <>Every rupee, <em className="accent">shown.</em></>, body: 'Weight × today’s rate, the making charge and the GST, each on its own line. A breakdown earns trust; a single number only asks for it.' },
+  { eyebrow: 'The balance', title: <>Every rupee, <em className="accent">shown.</em></>, body: 'Weight × today’s rate, the making charge and the GST, each on its own line, sent to you on WhatsApp. A breakdown earns trust; a single number only asks for it.' },
   { eyebrow: 'The door', title: <>It ends <em className="accent">with a person.</em></>, body: 'Presented with Bhairav Jewellers at Gorai 1, Borivali West. Come in and hold it, or message us; someone will answer.' },
 ]
 
@@ -34,7 +34,7 @@ export function HouseScene({ id = 'chapter-house' }: { id?: string }) {
       api.current?.setProgress(p)
       // Each chapter's words arrive once its drawing has settled.
       const seg = Math.min(DRAWINGS - 1, Math.floor(p))
-      const k = p - seg < 0.45 && seg > 0 ? -1 : seg
+      const k = p - seg < 0.34 && seg > 0 ? -1 : seg
       setActive((v) => (v === k ? v : k))
     }
     raf = requestAnimationFrame(tick)

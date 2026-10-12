@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import Link from 'next/link'
 import { Prose, Section } from '@/components/site/Prose'
 import { MapEmbed } from '@/components/site/MapEmbed'
 import { JsonLd, storeJsonLd } from '@/lib/seo/jsonld'
 import { STORE, whatsappLink } from '@/lib/store'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = social({
   title: 'Jewellery Shop in Borivali West, Gorai 1',
   description:
-    'Visit Platera Jewellers with Bhairav Jewellers in Gorai 1, Borivali West, Mumbai. Open 10 am to 2 pm and 4 pm to 9 pm. Hallmarked 925 silver, priced openly by weight.',
+    'Visit Platera Jewellers with Bhairav Jewellers in Gorai 1, Borivali West, Mumbai. Open 10 am to 2 pm and 4 pm to 9 pm. Hallmarked 925 silver jewellery.',
   alternates: { canonical: '/visit' },
-}
+})
 
 export default function VisitPage() {
   const a = STORE.address

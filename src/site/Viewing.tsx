@@ -1,9 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState, useCallback, useEffect, useRef, useState } from 'react'
-import { addToBag, type BagActionState } from '@/lib/cart/actions'
-import { flyToBag } from './flyToBag'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { whatsappLink } from '@/lib/store'
 import { scroller } from './SmoothScroll'
 
 export type ViewingPiece = { slug: string; name: string; price: string; href: string; cutout: string; photos: string[]; productId?: string; start?: number }
@@ -19,7 +18,7 @@ const ZOOM = 2.6
  *    on a phone, press and hold the photograph to raise the loupe under your finger;
  *  · the room takes its colour from the photograph being looked at;
  *  · photographs change with a sweep of light; the prints below lift when chosen;
- *  · Add to bag (the piece flies to the bag) and Open the piece, right beside it.
+ *  · Buy on WhatsApp, Check the price, and Open the piece, right beside it.
  */
 export function Viewing({ piece, onClose }: { piece: ViewingPiece | null; onClose: () => void }) {
   if (!piece) return null
@@ -35,12 +34,6 @@ function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => 
   const loupe = useRef<HTMLDivElement>(null)
   const touchX = useRef<number | null>(null)
   const holdTimer = useRef(0)
-  const [state, action, pending] = useActionState<BagActionState, FormData>(async (prev, fd) => {
-    const r = await addToBag(prev, fd)
-    if (r?.ok && img.current) flyToBag(img.current)
-    return r
-  }, null)
-
   const close = useCallback(() => {
     setClosing(true)
     setTimeout(onClose, 420)
@@ -92,7 +85,7 @@ function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => 
   }
 
   return (
-    <div className="viewing" data-closing={closing} role="dialog" aria-modal="true" aria-label={`Viewing ${piece.name}`}>
+    <div className="viewing" data-lenis-prevent data-closing={closing} role="dialog" aria-modal="true" aria-label={`Viewing ${piece.name}`}>
       {/* The room takes the colour of the photograph. */}
       <div key={`bleed-${i}`} className="viewing-bleed" style={{ backgroundImage: `url(${photos[i].thumb})` }} aria-hidden />
 
@@ -148,25 +141,21 @@ function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => 
         <p className="num viewing-price">{piece.price}</p>
         <p className="viewing-note">Every photograph here is as taken at our counter in Gorai 1. Move over a photograph to look through the loupe.</p>
         <div className="viewing-actions">
-          {piece.productId && (
-            <form action={action}>
-              <input type="hidden" name="productId" value={piece.productId} />
-              <button type="submit" className="btn btn-primary w-full" disabled={pending}>
-                {pending ? 'Setting it aside…' : 'Add to bag'}
-              </button>
-            </form>
-          )}
-          <Link href={piece.href} className="btn btn-quiet w-full">Open the piece</Link>
-        </div>
-        <p role="status" aria-live="polite" className="viewing-status">
-          {state?.message}
-          {state?.ok && (
+          {piece.price !== 'Sold' && (
             <>
-              {' '}
-              <Link href="/bag" className="link">View bag</Link>
+              <Link href={`/buy/${piece.slug}`} className="btn btn-primary w-full">Buy on WhatsApp</Link>
+              <a
+                href={whatsappLink(`Hello Platera, could you tell me the price of this piece?\n\n${piece.name}\n${typeof location === 'undefined' ? '' : location.origin}${piece.href}`)}
+                target="_blank"
+                rel="noopener"
+                className="btn btn-quiet w-full"
+              >
+                Check the price
+              </a>
             </>
           )}
-        </p>
+          <Link href={piece.href} className="link viewing-open">Open the piece</Link>
+        </div>
       </aside>
 
       <button type="button" className="viewing-close" onClick={close} aria-label="Close the viewing">Close</button>

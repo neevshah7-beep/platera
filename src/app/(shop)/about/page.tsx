@@ -1,15 +1,16 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { HouseScene } from '@/scenes/house/HouseScene'
 import Link from 'next/link'
 import { Prose, Section } from '@/components/site/Prose'
 import { STORE } from '@/lib/store'
 
-export const metadata: Metadata = {
-  title: 'How Platera Works: Curated 925 Silver, Priced in the Open',
+export const metadata: Metadata = social({
+  title: 'About Platera: Curated 925 Silver Jewellery',
   description:
     'Platera is a curated house. Every piece is chosen for its metal, its making and its design, and presented in collaboration with Bhairav Jewellers, Gorai 1.',
   alternates: { canonical: '/about' },
-}
+})
 
 export default function AboutPage() {
   return (
@@ -34,14 +35,14 @@ export default function AboutPage() {
       </Section>
       <Section title="Why we show you the working">
         <p>
-          The jewellers people trust are the ones who open the book: the weight, the day’s rate, the making charge, the tax, each on its own line. Every piece on this site does that.
+          The jewellers people trust are the ones who open the book: the weight, the day’s rate, the making charge, the tax, each on its own line. Every price we send does that.
           A single number with nothing behind it asks for trust; a breakdown earns it.
         </p>
-        <p><Link href="/silver-rate-today" className="link text-ink">See today’s silver rate</Link> and how it becomes a price.</p>
+        <p><Link href="/collection" className="link text-ink">See the collection</Link> and ask the price of any piece on WhatsApp.</p>
       </Section>
       <Section title="Why it ends with a person">
         <p>
-          You can buy any in-stock piece here in a few minutes. But if you’d rather see it first, book a time at the store or a video
+          Choose a piece here and send it to us on WhatsApp; that is the whole of buying. If you’d rather see it first, book a time at the store or a video
           call, or message us on WhatsApp. Someone at <span className="num">{STORE.phoneDisplay}</span> will answer.
         </p>
       </Section>

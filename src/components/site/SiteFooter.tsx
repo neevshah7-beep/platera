@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { MetalRule } from '@/components/metal/LightSource'
 import { STORE, whatsappLink } from '@/lib/store'
-import type { RateSnapshot } from '@/lib/pricing/types'
-import { RateNote } from './RateNote'
 
 const POLICIES = [
   { href: '/policies/shipping', label: 'Shipping and insurance' },
@@ -14,7 +12,7 @@ const POLICIES = [
   { href: '/policies/terms', label: 'Terms of sale' },
 ]
 
-export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
+export function SiteFooter() {
   const a = STORE.address
   return (
     <footer className="site-footer">
@@ -23,10 +21,7 @@ export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
         <div className="md:col-span-5">
           <p className="footer-word font-display">PLATERA</p>
           <p className="mt-3 max-w-sm text-ink-muted">{STORE.collaboration}.</p>
-          <RateNote rate={rate} className="mt-6" />
-          <Link href="/silver-rate-today" className="link mt-2 inline-block text-step--1 text-ink-muted">
-            Today’s silver rate in Mumbai
-          </Link>
+          <a href={whatsappLink('Hello Platera, I have a question.')} className="link mt-6 inline-block">Ask us anything on WhatsApp</a>
         </div>
 
         <address className="not-italic md:col-span-3">
@@ -63,7 +58,7 @@ export function SiteFooter({ rate }: { rate?: RateSnapshot }) {
         <p>
           Sold and invoiced by {STORE.legalName} · <span className="num">GSTIN {STORE.gstin}</span>
         </p>
-        <p>Prepaid orders only: UPI, cards and net banking.</p>
+        <p>Buy on WhatsApp · insured delivery across India</p>
       </div>
     </footer>
   )

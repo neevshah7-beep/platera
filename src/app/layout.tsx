@@ -28,13 +28,22 @@ const satoshi = localFont({
   fallback: ['system-ui', 'sans-serif'],
 })
 
+/** Only the live site on its real domain is offered to search engines; previews never are. */
+const indexable = process.env.VERCEL_ENV === 'production' || process.env.SITE_INDEXABLE === '1'
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: 'Platera Jewellers · 925 Silver Jewellery, Borivali West', template: '%s · Platera Jewellers' },
+  title: { default: 'Platera Jewellers · 925 Silver Jewellery, Borivali West, Mumbai', template: '%s · Platera Jewellers' },
   description:
-    'Hallmarked 925 silver jewellery chosen piece by piece and priced in the open. Presented in collaboration with Bhairav Jewellers, Gorai 1, Borivali West, Mumbai.',
-  alternates: { canonical: '/', languages: { 'en-IN': '/' } },
+    'Hallmarked 925 silver jewellery, chosen piece by piece: necklace sets, payals, earrings and mangalsutras. Buy on WhatsApp. Gorai 1, Borivali West, Mumbai.',
+  applicationName: 'Platera Jewellers',
+  category: 'Jewellery',
   openGraph: { type: 'website', locale: 'en_IN', siteName: 'Platera Jewellers' },
+  twitter: { card: 'summary_large_image' },
+  robots: indexable
+    ? { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } }
+    : { index: false, follow: false },
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION, other: process.env.BING_SITE_VERIFICATION ? { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } : undefined },
   formatDetection: { telephone: false },
 }
 

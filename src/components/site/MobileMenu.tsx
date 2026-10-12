@@ -13,7 +13,6 @@ const LINKS = [
   { href: '/collection', label: 'The whole collection' },
   { href: '/appointment', label: 'Book a viewing' },
   { href: '/visit', label: 'Visit the store' },
-  { href: '/silver-rate-today', label: 'Today’s silver rate' },
 ]
 
 export function MobileMenu() {

@@ -20,14 +20,14 @@ export const POLICIES: Policy[] = [
     sections: [
       {
         title: 'Where we deliver',
-        body: <p>We deliver to serviceable PIN codes across India by courier. Checkout tells you if your PIN code is covered before you pay.</p>,
+        body: <p>We deliver to serviceable PIN codes across India by courier. We confirm on WhatsApp that your PIN code is covered before you pay.</p>,
       },
       {
         title: 'When it leaves, and when it arrives',
         body: (
           <>
             <p>Pieces in stock are packed and handed to the courier after your payment is confirmed. You’ll receive the tracking number by email and WhatsApp as soon as it leaves the store.</p>
-            <p>Delivery time depends on the courier and your destination. The estimate shown at checkout comes from the courier for your PIN code.</p>
+            <p>Delivery time depends on the courier and your destination. We send you the courier’s estimate for your PIN code on WhatsApp.</p>
             <p>Made-to-order pieces are dispatched once they are ready, usually {S.madeToOrderDays} after the price is confirmed and paid.</p>
           </>
         ),
@@ -41,7 +41,7 @@ export const POLICIES: Policy[] = [
           </>
         ),
       },
-      { title: 'Delivery charges', body: <p>Any delivery charge is shown at checkout before you pay. There are no charges on delivery.</p> },
+      { title: 'Delivery charges', body: <p>Any delivery charge is told to you on WhatsApp before you pay. There are no charges on delivery.</p> },
       { title: 'Payment', body: <p>All orders are prepaid. Cash on delivery is not offered.</p> },
     ],
   },
@@ -62,7 +62,7 @@ export const POLICIES: Policy[] = [
             <p>Most of our pieces are priced by the day’s metal rate, so a return is valued the same way.</p>
             <p><strong>Live-rate pieces</strong> are refunded at the metal rate on the day the return is accepted. If the rate has risen since you bought, the metal is refunded at the value you paid; it is never refunded above it.</p>
             <p><strong>Fixed-price pieces</strong> are refunded at the price paid, less GST.</p>
-            <p><strong>Making charges, GST and other applicable charges are not refunded</strong> on any return. Each piece’s page shows these lines separately, so you can see what a return would give back before you buy.</p>
+            <p><strong>Making charges, GST and other applicable charges are not refunded</strong> on any return. We send these lines separately with every price, so you can see what a return would give back before you buy.</p>
           </>
         ),
       },
@@ -78,7 +78,7 @@ export const POLICIES: Policy[] = [
       },
       {
         title: 'Earrings',
-        body: <p>For hygiene reasons, earrings, including the earrings in a set, can be returned only if they are unworn, with their backs and seal intact. Each such piece says so on its page and again at checkout.</p>,
+        body: <p>For hygiene reasons, earrings, including the earrings in a set, can be returned only if they are unworn, with their backs and seal intact. Each such piece says so on its page, and we say so again before you pay.</p>,
       },
       {
         title: 'Pieces that can’t be returned',
@@ -133,14 +133,14 @@ export const POLICIES: Policy[] = [
   {
     slug: 'payments',
     title: 'Payments',
-    description: 'How payment works on Platera: UPI, cards and net banking through Razorpay. Prepaid only.',
+    description: 'How payment works on Platera: the price and payment details are sent on WhatsApp. Prepaid only.',
     updated: UPDATED,
     sections: [
-      { title: 'How you pay', body: <p>Payments are taken by Razorpay, a payment gateway regulated in India, by UPI, debit and credit card, net banking and wallets. We never see or store your card or bank details.</p> },
+      { title: 'How you pay', body: <p>You buy on WhatsApp. Once you confirm a piece, we send the price with its working and our payment details, and you pay by UPI or bank transfer. This website never asks for your card or bank details.</p> },
       { title: 'Prepaid only', body: <p>Cash on delivery is not offered.</p> },
-      { title: 'The amount', body: <p>The amount you pay is calculated by our server from the day’s rate and shown to you before payment. If the rate changes while a piece is in your bag, we show you the new price before you can pay.</p> },
+      { title: 'The amount', body: <p>The amount is worked out from the piece’s weight and the day’s rate and sent to you, line by line, before you pay. A price we send holds for that day.</p> },
       { title: 'Invoices', body: <p>Every order is invoiced by {S.legalName}, GSTIN <span className="num">{S.gstin}</span>, with GST shown separately.</p> },
-      { title: 'Failed payments', body: <p>If money leaves your account but the order isn’t confirmed, the payment is returned automatically by Razorpay, usually within 5–7 working days. Call us and we’ll check it for you.</p> },
+      { title: 'Failed payments', body: <p>If money leaves your account but the order isn’t confirmed, send us the payment reference on WhatsApp or call us, and we’ll check it with you the same day.</p> },
     ],
   },
   {

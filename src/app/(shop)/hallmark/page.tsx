@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { HallmarkPlate } from '@/components/pdp/HallmarkPlate'
 import { Prose, Section } from '@/components/site/Prose'
 import { JsonLd } from '@/lib/seo/jsonld'
 
-export const metadata: Metadata = {
-  title: 'How to Read a Silver Hallmark and Check a HUID',
+export const metadata: Metadata = social({
+  title: 'How to Read a Silver Hallmark and HUID',
   description:
     'What the BIS hallmark on 925 silver means, what a HUID is, and how to check it yourself in the BIS CARE app before you buy any jewellery.',
   alternates: { canonical: '/hallmark' },
-}
+})
 
 const FAQ = [
   ['What does 925 mean?', '925 silver is 92.5% pure silver. The rest is usually copper, which makes the metal strong enough to hold its shape and its stones.'],

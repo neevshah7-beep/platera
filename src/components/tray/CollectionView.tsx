@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PieceGrid } from '@/components/tray/PieceGrid'
-import { RateNote } from '@/components/site/RateNote'
 import { getCurrentRates, listProducts, priceProduct, sortPriced, type CatalogueFilters, type SortKey } from '@/lib/catalogue'
 
 type Search = { finish?: string; stone?: string; sort?: string }
@@ -18,8 +17,6 @@ const STONE = [
 ] as const
 const SORT = [
   ['', 'As laid out'],
-  ['price-asc', 'Price, lowest first'],
-  ['price-desc', 'Price, highest first'],
   ['weight-asc', 'Weight, lightest first'],
   ['weight-desc', 'Weight, heaviest first'],
 ] as const
@@ -91,7 +88,6 @@ export async function CollectionView({ basePath, category, search }: { basePath:
           <p className="num text-step--1 text-ink-muted" aria-live="polite">
             {items.length} {items.length === 1 ? 'piece' : 'pieces'}
           </p>
-          <RateNote rate={rates.SILVER_925} />
         </div>
       </div>
 

@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import { db } from '@/lib/db'
 import { getSetting } from '@/lib/catalogue'
 import { bookableDates, slotsForDay, takenSlots } from '@/lib/appointments'
 import { STORE } from '@/lib/store'
 import { AppointmentForm } from './AppointmentForm'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = social({
   title: 'Book a Viewing in Borivali West or on Video',
   description:
     'See any piece in your hand before you decide. Book a time at our store in Gorai 1, Borivali West, or a video call where we show each piece under good light.',
   alternates: { canonical: '/appointment' },
-}
+})
 export const dynamic = 'force-dynamic'
 
 export default async function AppointmentPage({ searchParams }: { searchParams: Promise<{ piece?: string; kind?: string; date?: string; sitting?: string }> }) {

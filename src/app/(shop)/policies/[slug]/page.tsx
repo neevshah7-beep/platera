@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Prose, Section } from '@/components/site/Prose'
@@ -13,7 +14,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const p = POLICIES.find((x) => x.slug === slug)
-  return p ? { title: p.title, description: p.description, alternates: { canonical: `/policies/${p.slug}` } } : {}
+  return p ? social({ title: p.title, description: p.description, alternates: { canonical: `/policies/${p.slug}` } }) : {}
 }
 
 export default async function PolicyPage({ params }: Props) {

@@ -1,12 +1,12 @@
 import 'server-only'
 import { isSold, type Pricing, type ProductWithMedia } from '@/lib/catalogue'
-import { formatINRWhole } from '@/lib/pricing/format'
+import { PRICE_ON_REQUEST } from '@/lib/whatsapp'
 
 /** A piece as the storefront presents it: its cut-out photo, size and label. */
 export type PieceRef = { slug: string; name: string; src: string; width: number; height: number; price: string; gold: boolean }
 
 /** What the 3D world needs to lay a piece on a tray: its cut-out photo, size and label. */
-export function toPieceRef(product: ProductWithMedia, pricing: Pricing): PieceRef | null {
+export function toPieceRef(product: ProductWithMedia, _pricing?: Pricing): PieceRef | null {
   const image = product.images.find((i) => i.kind === 'PHOTO')
   if (!image) return null
   return {
@@ -15,7 +15,7 @@ export function toPieceRef(product: ProductWithMedia, pricing: Pricing): PieceRe
     src: image.src,
     width: image.width,
     height: image.height,
-    price: isSold(product) ? 'Sold' : pricing.state === 'PRICED' ? formatINRWhole(pricing.breakdown.totalPaise) : 'Priced once weighed',
+    price: isSold(product) ? 'Sold' : PRICE_ON_REQUEST,
     gold: Boolean(product.finish?.toLowerCase().includes('gold')),
   }
 }

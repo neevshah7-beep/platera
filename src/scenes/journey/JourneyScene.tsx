@@ -12,7 +12,7 @@ import { createJourney } from './journey'
 const CHAPTERS = [
   { mark: 'GORAI · I', sub: 'Where it began', title: <>Where it <em className="accent">began.</em></>, body: 'A counter in Gorai 1, Borivali West: Bhairav Jewellers, where every piece is weighed, tested and set aside by hand.' },
   { mark: 'MMXXVI', sub: 'Platera · 2026', title: <>Platera, <em className="accent">2026.</em></>, body: 'A house with one idea: choose fewer pieces, choose them properly, and show you everything.' },
-  { mark: '925', sub: 'The first collection', title: <>The first <em className="accent">collection.</em></>, body: 'Hallmarked sterling silver, priced by weight at the day’s rate, with every line of the price shown.' },
+  { mark: '925', sub: 'The first collection', title: <>The first <em className="accent">collection.</em></>, body: 'Hallmarked sterling silver, priced by weight at the day’s rate, with every line of the price sent to you.' },
   { mark: 'THE SITTING', sub: 'Autumn 2026', title: <>The first <em className="accent">sitting.</em></>, body: 'Merreeda and Aarya wear the collection for our first campaign: three looks, Rouge, Saffron and Noir.' },
   { mark: 'AU · NEXT', sub: 'Gold, next', title: <>Gold, <em className="accent">next.</em></>, body: 'The same promise, in gold: weighed, hallmarked and priced in the open. The next line in the ring is yours.' },
 ]

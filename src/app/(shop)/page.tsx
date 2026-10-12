@@ -3,11 +3,20 @@ import { isSold, getCurrentRates, getSetting, listProducts, priceProduct } from 
 import { mediaBase } from '@/components/media/PieceImage'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor } from '@/lib/originals'
-import { formatINR } from '@/lib/pricing/format'
 import { STORE, whatsappLink } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
+import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
+import { JsonLd, storeJsonLd, websiteJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
+
+export const metadata: Metadata = social({
+  title: { absolute: 'Platera Jewellers · 925 Silver Jewellery, Borivali West, Mumbai' },
+  description:
+    'Hallmarked 925 silver jewellery, chosen piece by piece: necklace sets, payals, earrings and mangalsutras. Buy on WhatsApp. Gorai 1, Borivali West, Mumbai.',
+  alternates: { canonical: '/', languages: { 'en-IN': '/' } },
+})
 
 export default async function HomePage() {
   const [rates, products, closed] = await Promise.all([getCurrentRates(), listProducts(), getSetting('closedWeekdays') as Promise<number[] | null>])
@@ -24,9 +33,10 @@ export default async function HomePage() {
       return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
     .slice(0, 8)
-  const silver = rates.SILVER_925
-  const rate = silver ? `${formatINR(silver.paisePerGram)} a gram` : 'set each morning'
   return (
+    <>
+    <JsonLd data={websiteJsonLd()} />
+    <JsonLd data={storeJsonLd()} />
     <HomeExperience
       pieces={featured}
       visit={{
@@ -43,11 +53,12 @@ export default async function HomePage() {
       promises={[
         { mark: '925', title: 'Hallmarked, every piece.', body: 'Sterling silver, 925 parts in a thousand, stamped by BIS with its own HUID you can check yourself.' },
         { mark: 'mg', title: 'Weighed in the open.', body: 'Every price starts from the piece’s own weight, to the milligram. Nothing is rounded in our favour.' },
-        { mark: '₹', title: 'At today’s rate.', body: `Silver is priced at today’s rate, ${rate}, with the making charge and GST shown line by line.` },
+        { mark: '₹', title: 'At today’s rate.', body: 'Silver is priced at the day’s rate. Ask us on WhatsApp and we send the price with its working, line by line.' },
         { mark: '15', title: 'Made for you.', body: `Send us a design on WhatsApp and it is made to order in ${STORE.madeToOrderDays}.` },
         { mark: '7', title: 'Seven days to decide.', body: 'Return within seven days; the silver is refunded at that day’s rate. Making charges and GST are not refunded.' },
         { mark: '◇', title: 'Insured to your door.', body: 'Sent by insured courier anywhere in India, boxed and sealed.' },
       ]}
     />
+    </>
   )
 }

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
+import { JsonLd, breadcrumbJsonLd, itemListJsonLd } from '@/lib/seo/jsonld'
 import { CollectionView } from '@/components/tray/CollectionView'
 import { mediaBase } from '@/components/media/PieceImage'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
@@ -23,14 +25,14 @@ type Props = { searchParams: Promise<{ finish?: string; stone?: string; sort?: s
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const filtered = Object.values(await searchParams).some(Boolean)
-  return {
+  return social({
     title: 'The Collection: 925 Silver Jewellery',
     description:
-      'Every piece in the house: hallmarked 925 silver necklaces, payals, earrings and mangalsutras, each priced openly by weight. Gorai 1, Borivali West, Mumbai.',
+      'Every piece in the house: hallmarked 925 silver necklaces, payals, earrings and mangalsutras, each one bought on WhatsApp. Gorai 1, Borivali West, Mumbai.',
     alternates: { canonical: '/collection' },
     // Filter and sort combinations stay out of the index; the canonical is the full collection.
     robots: filtered ? { index: false, follow: true } : undefined,
-  }
+  })
 }
 
 export default async function CollectionPage({ searchParams }: Props) {
@@ -38,6 +40,8 @@ export default async function CollectionPage({ searchParams }: Props) {
   const [rates, products] = await Promise.all([getCurrentRates(), listProducts()])
   return (
     <>
+      <JsonLd data={itemListJsonLd('The Collection', '/collection', products)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Collection', path: '/collection' }])} />
       <h1 className="sr-only">The collection</h1>
       <CollectionScene
         pieces={casePieces(products, rates)}

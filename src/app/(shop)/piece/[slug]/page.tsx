@@ -1,74 +1,66 @@
 import type { Metadata } from 'next'
+import { social } from '@/lib/seo/meta'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PieceImage } from '@/components/media/PieceImage'
-import { BagButtons } from '@/components/pdp/BagButtons'
+import { BuyButtons } from '@/components/pdp/BuyButtons'
 import { Certificate } from '@/components/pdp/Certificate'
 import { Originals } from '@/components/pdp/Originals'
-import { PriceEquation } from '@/components/pdp/PriceEquation'
 import { StickyActions } from '@/components/pdp/StickyActions'
-import { RateNote } from '@/components/site/RateNote'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
 import { originalsFor } from '@/lib/originals'
 import { ViewButton } from '@/site/ViewButton'
 import maps from '@/data/maps-manifest.json'
 import { toPieceRef } from '@/lib/world-data'
-import { STONE_LABEL, getCurrentRates, getProduct, isSold, listProducts, metalLine, priceProduct } from '@/lib/catalogue'
-import { formatGrams, formatINR, formatINRWhole } from '@/lib/pricing/format'
+import { STONE_LABEL, getProduct, isSold, listProducts, metalLine } from '@/lib/catalogue'
+import { formatGrams } from '@/lib/pricing/format'
+import { PRICE_ON_REQUEST, priceOnWhatsApp } from '@/lib/whatsapp'
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld'
-import { STORE, mediaUrl, siteUrl, whatsappLink } from '@/lib/store'
+import { STORE, siteUrl, whatsappLink } from '@/lib/store'
 
 export const revalidate = 300
 
-const rateWhen = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' })
 
-type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ unavailable?: string }> }
+type Props = { params: Promise<{ slug: string }> }
+
+/** Every piece is built ahead of time and refreshed every five minutes, so it opens at once. */
+export async function generateStaticParams() {
+  return (await listProducts()).map((p) => ({ slug: p.slug }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const p = await getProduct(slug)
   if (!p) return {}
-  const rates = await getCurrentRates()
-  const pricing = priceProduct(p, rates)
-  const price = pricing.state === 'PRICED' ? ` · ${formatINRWhole(pricing.breakdown.totalPaise)}` : ''
-  const title = p.seoTitle ?? `${p.name} in 925 Silver${price}`
+  const title = p.seoTitle ?? `${p.name} in 925 Silver`
   const description =
     p.seoDescription ??
-    `${p.summary} Hallmarked 925 sterling silver${p.netWeightMg && p.weightVerified ? `, ${formatGrams(p.netWeightMg)}` : ''}, priced openly by weight. From Gorai 1, Borivali West.`
+    `${p.summary} Hallmarked 925 sterling silver${p.netWeightMg && p.weightVerified ? `, ${formatGrams(p.netWeightMg)}` : ''}. Buy or ask the price on WhatsApp. From Gorai 1, Borivali West.`
   const image = p.images[0]
-  return {
+  return social({
     title,
-    description: description.slice(0, 155),
+    description: description.length > 158 ? `${description.slice(0, 157).replace(/\s+\S*$/, '')}…` : description,
     alternates: { canonical: `/piece/${p.slug}` },
-    openGraph: {
-      title,
-      description,
-      url: `/piece/${p.slug}`,
-      images: image ? [{ url: mediaUrl(image.src), width: 1600, alt: image.alt }] : undefined,
-    },
-  }
+    openGraph: image ? { images: [{ url: `/og/${p.slug}`, width: 1200, height: 630, alt: image.alt, type: 'image/jpeg' }] } : undefined,
+  })
 }
 
-export default async function PiecePage({ params, searchParams }: Props) {
+export default async function PiecePage({ params }: Props) {
   const { slug } = await params
-  const { unavailable } = await searchParams
   const product = await getProduct(slug)
   if (!product) notFound()
 
-  const rates = await getCurrentRates()
-  const pricing = priceProduct(product, rates)
   const sold = isSold(product)
-  const metal = product.finish?.toLowerCase().includes('gold') ? 'gold' : 'argent'
-  const priced = pricing.state === 'PRICED'
   const oneOfOne = product.stock === 1 && product.availability === 'IN_STOCK'
-  const pieceRef = toPieceRef(product, pricing)
+  const pieceRef = toPieceRef(product)
 
   const related = (await listProducts({ category: product.category.slug }))
     .filter((p) => p.id !== product.id)
     .slice(0, 4)
-    .map((p) => ({ product: p, pricing: priceProduct(p, rates) }))
+    .map((p) => ({ product: p }))
 
+  const ask = priceOnWhatsApp(product)
   const enquiry = whatsappLink(
     `Hello Platera, I'd like to ask about the ${product.name} (${product.sku}).\n${siteUrl(`/piece/${product.slug}`)}`,
   )
@@ -91,7 +83,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
 
   return (
     <>
-      <JsonLd data={productJsonLd(product, pricing, sold)} />
+      <JsonLd data={productJsonLd(product, sold)} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },
@@ -102,9 +94,9 @@ export default async function PiecePage({ params, searchParams }: Props) {
 
       <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-6">
         <nav aria-label="Breadcrumb" className="pdp-crumbs">
-          <ol className="flex gap-2">
-            <li><Link href="/" className="hover:text-ink">Home</Link> /</li>
-            <li><Link href={`/${product.category.slug}`} className="hover:text-ink">{product.category.name}</Link> /</li>
+          <ol className="flex flex-wrap gap-x-2 gap-y-1">
+            <li className="whitespace-nowrap"><Link href="/" className="hover:text-ink">Home</Link> /</li>
+            <li className="whitespace-nowrap"><Link href={`/${product.category.slug}`} className="hover:text-ink">{product.category.name}</Link> /</li>
             <li aria-current="page" className="text-ink">{product.name}</li>
           </ol>
         </nav>
@@ -124,7 +116,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
             />
           ) : null}
           <p className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
-            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />}
+            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku) }} />}
             <a href="#originals" className="link">All photographs</a>
           </p>
         </section>
@@ -138,18 +130,11 @@ export default async function PiecePage({ params, searchParams }: Props) {
             <div className="pdp-price">
               {sold ? (
                 <p className="font-display text-step-3">Sold</p>
-              ) : priced ? (
-                <>
-                  <p className="num font-display text-step-4">{formatINRWhole(pricing.breakdown.totalPaise)}</p>
-                  <p className="mt-1 text-step--1 text-ink-muted">GST included. <a href="#ledger" className="link">See how it’s priced</a></p>
-                  <RateNote rate={pricing.breakdown.rate} className="mt-1" />
-                </>
               ) : (
                 <>
-                  <p className="font-display text-step-3">Priced once weighed</p>
+                  <p className="font-display text-step-3">Price on WhatsApp</p>
                   <p className="measure mt-2 text-ink-muted">
-                    We’re weighing this piece before it goes on sale, so the price will be exact. Ask us on WhatsApp and we’ll
-                    send you the weight and today’s price.
+                    Silver is priced by weight at the day’s rate. Ask and we send today’s price for this piece, with its working, in a minute or two.
                   </p>
                 </>
               )}
@@ -161,12 +146,9 @@ export default async function PiecePage({ params, searchParams }: Props) {
             {oneOfOne && !sold && <p className="mt-4 text-step--1 text-ink-muted">One of one. There is only this piece.</p>}
 
             <div className="mt-8" id="actions">
-              {unavailable && (
-                <p role="alert" className="mb-4 text-step--1 text-ruby-bright">That piece couldn’t be added. It may have just sold, or it is still being weighed.</p>
-              )}
-              {!sold && priced && <BagButtons productId={product.id} />}
-              <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                <a href={enquiry} className="btn btn-quiet">Enquire on WhatsApp</a>
+              {!sold && <BuyButtons slug={product.slug} ask={ask} />}
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <a href={enquiry} target="_blank" rel="noopener" className="btn btn-quiet">Ask a question</a>
                 <Link href={`/appointment?piece=${product.slug}`} className="btn btn-quiet">Book a viewing</Link>
               </div>
               {sold && (
@@ -177,7 +159,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
             </div>
 
             <p className="mt-8 text-step--1 text-ink-muted">
-              Delivery across India by courier, prepaid. Returns within {STORE.returnWindowDays} days under our{' '}
+              Insured delivery across India, arranged on WhatsApp. Returns within {STORE.returnWindowDays} days under our{' '}
               <Link href="/policies/returns" className="link">returns policy</Link>; making charges and GST are not refundable.
               {product.returnNote ? ` ${product.returnNote}` : ''}
             </p>
@@ -186,7 +168,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
       </div>
 
 
-      <StickyActions productId={product.id} name={product.name} price={priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : null} enquiry={enquiry} />
+      <StickyActions slug={product.slug} name={product.name} sold={sold} ask={sold ? enquiry : ask} />
 
       {/* I · The originals: the store photographs, large, on an espresso wall. */}
       {pieceRef && (
@@ -197,37 +179,27 @@ export default async function PiecePage({ params, searchParams }: Props) {
               <h2 id="originals-heading" className="orig-title">As photographed <em className="accent">at the counter.</em></h2>
               <p className="orig-note">Exactly as taken in Gorai 1: no retouching, no background removed. Open any photograph to look through the loupe.</p>
             </div>
-            <Originals piece={{ slug: product.slug, name: product.name, price: priced && !sold ? formatINRWhole(pricing.breakdown.totalPaise) : sold ? 'Sold' : 'Priced once weighed', href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), productId: !sold && priced ? product.id : undefined }} />
+            <Originals piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku) }} />
           </div>
         </section>
       )}
 
-      {/* II · Weighed, then priced: the price as one equation. */}
-      <section id="ledger" aria-labelledby="price-heading" className="price-sec">
+      {/* II · How to make it yours. */}
+      <section id="ledger" aria-labelledby="how-heading" className="how-sec">
         <div className="price-head">
-          <p className="eyebrow">The working</p>
-          <h2 id="price-heading" className="price-title">Weighed, <em className="accent">then priced.</em></h2>
-          <p className="price-lede">
-            {product.netWeightMg && product.weightVerified
-              ? `This piece weighs ${formatGrams(product.netWeightMg)} of silver. That weight, at today’s rate, is where its price begins; every other line is shown beside it.`
-              : 'Every piece is weighed before it is priced, and every line of the price is shown.'}
-          </p>
+          <p className="eyebrow">On WhatsApp</p>
+          <h2 id="how-heading" className="price-title">Three steps, <em className="accent">and it is yours.</em></h2>
         </div>
-        {priced && pricing.state === 'PRICED' ? (
-          <PriceEquation
-            lines={pricing.breakdown.lines.map((l) => ({ key: l.key, label: l.label, detail: l.detail, paise: l.paise }))}
-            totalPaise={pricing.breakdown.totalPaise}
-            rateNote={pricing.breakdown.rate ? `925 silver ${formatINR(pricing.breakdown.rate.paisePerGram)} per g · rate as on ${rateWhen.format(pricing.breakdown.rate.effectiveAt)}` : undefined}
-          />
-        ) : (
-          <p className="price-pending font-display">
-            Net weight × today’s 925 silver rate, plus a making charge of {product.makingPct ?? 15}% of the metal value, plus 3% GST.
-          </p>
+        <ol className="how-steps">
+          <li><span className="how-n font-display">1</span><h3>Send us the piece</h3><p>Tap Buy on WhatsApp. The piece arrives at our counter with its photograph and reference.</p></li>
+          <li><span className="how-n font-display">2</span><h3>We confirm the price</h3><p>Weighed at the counter and priced at the day’s silver rate, with the making charge and GST shown.</p></li>
+          <li><span className="how-n font-display">3</span><h3>Packed and sent</h3><p>Pay by UPI or bank transfer, or collect it at Gorai 1. We send it insured, anywhere in India.</p></li>
+        </ol>
+        {!sold && (
+          <div className="how-cta">
+            <BuyButtons slug={product.slug} ask={ask} />
+          </div>
         )}
-        <p className="price-links">
-          <Link href="/silver-rate-today" className="link">Today’s silver rate</Link>
-          <Link href="/policies/returns" className="link">Returns and buyback</Link>
-        </p>
       </section>
 
       {/* III · In the hand, and the certificate. */}
@@ -276,7 +248,7 @@ export default async function PiecePage({ params, searchParams }: Props) {
                     <span className="tray-name font-display">{r.product.name}</span>
                     <span className="tray-meta">
                       <span>{metalLine(r.product)}</span>
-                      <span className="num">{rsold ? 'Sold' : r.pricing.state === 'PRICED' ? formatINRWhole(r.pricing.breakdown.totalPaise) : 'Priced once weighed'}</span>
+                      <span className="tray-ask">{rsold ? 'Sold' : 'View'}</span>
                     </span>
                   </Link>
                 </li>

@@ -168,3 +168,45 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 2rem; 
 .back-house-arrow { background: #fffdf8; }
 .site-footer { background: linear-gradient(180deg, #fffdf8 0%, #f5ecda 100%); }
 .site-footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, #b98a34 20%, #f1d488 50%, #b98a34 80%, transparent); }
+
+/* The fall's still: the ring at rest, under the canvas, so the opening is never an empty
+   screen while the frames arrive (a returning visitor has no gate in front of it). */
+.fall-poster { position: absolute; inset: 0; background: #e6d3ad url('/scenes/fall/1000/0119.webp') center / cover no-repeat; }
+@media (max-aspect-ratio: 4/5) { .fall-poster { background-image: url('/scenes/fall_portrait/1000/0119.webp'); } }
+.fall-canvas { opacity: 0; transition: opacity 500ms ease; }
+.fall-canvas[data-live='1'] { opacity: 1; }
+
+/* Phone: comfortable taps, and words that always sit clear of the drawing behind them. */
+@media (max-width: 767px) {
+  .site-header button, .site-header .bag-link { min-width: 2.75rem; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .site-header .bag-link { justify-content: flex-end; }
+  .site-brand { padding-block: 0.7rem; }
+  .site-footer nav a, .site-footer address a, .site-footer .link { display: inline-block; padding-block: 0.45rem; }
+  .site-footer nav ul { gap: 0; }
+  nav[aria-label='Other policies'] a { padding-block: 0.5rem; }
+  .house-copy::before { inset: -5rem 0 -12svh; background: linear-gradient(180deg, rgb(251 242 220 / 0) 0, rgb(251 242 220 / 0.93) 4.5rem); }
+}
+
+/* The house chapters: the words keep their soft ground even when the drawing passes behind. */
+.house-copy { isolation: isolate; }
+@media (max-width: 900px) {
+  /* The viewing on a phone: photograph, prints, then the name and the two ways to buy, never stacked on each other. */
+  .viewing { grid-template-rows: auto auto; align-content: start; overflow-y: auto; overscroll-behavior: contain; }
+  .viewing-stage { padding-top: 4.2rem; }
+  .viewing-photo { max-height: 42svh; padding: 10px; }
+  .viewing-photo img { max-height: calc(42svh - 20px); }
+  .viewing-caption { display: none; }
+  .viewing-prints { gap: 0.6rem; margin-top: 0.7rem; }
+  .viewing-prints button { width: 3.3rem; height: 3.9rem; flex: none; }
+  .viewing-side { padding-top: 0.2rem; }
+  .viewing-side .eyebrow { display: none; }
+  .viewing-name { margin-top: 0.3rem; font-size: 1.7rem; }
+  .viewing-price { margin-top: 0.3rem; font-size: 1.3rem; }
+  .viewing-actions .btn { padding-inline: 0.6rem; }
+}
+@media (max-width: 767px) {
+  /* Packed and ready: the box steps back so the words and the WhatsApp button read clean. */
+  .prepare .ceremony-canvas { transition: opacity 700ms ease; }
+  .prepare[data-stage='ready'] .ceremony-canvas { opacity: 0.3; }
+}
+@media (max-width: 520px) { .viewing-actions { grid-template-columns: 1fr; gap: 0.55rem; } .viewing-actions .btn { text-align: center; justify-content: center; } }

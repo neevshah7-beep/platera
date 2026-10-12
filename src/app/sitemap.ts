@@ -17,16 +17,15 @@ export default async function sitemap({ id }: { id: Promise<string> | string }):
   const which = await id
   if (which === 'pages') {
     return [
-      { url: siteUrl('/'), changeFrequency: 'daily', priority: 1 },
-      { url: siteUrl('/collection'), changeFrequency: 'daily', priority: 0.9 },
-      { url: siteUrl('/silver-rate-today'), changeFrequency: 'daily', priority: 0.8 },
+      { url: siteUrl('/'), lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
+      { url: siteUrl('/collection'), lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
       ...['/appointment', '/visit', '/about', '/custom', '/hallmark', '/size-guide'].map((p) => ({ url: siteUrl(p), changeFrequency: 'monthly' as const, priority: 0.6 })),
       ...POLICIES.map((p) => ({ url: siteUrl(`/policies/${p.slug}`), changeFrequency: 'yearly' as const, priority: 0.3 })),
     ]
   }
   if (which === 'categories') {
-    const cats = await db.category.findMany({ select: { slug: true } })
-    return cats.map((c) => ({ url: siteUrl(`/${c.slug}`), changeFrequency: 'weekly', priority: 0.8 }))
+    const cats = await db.category.findMany({ select: { slug: true, products: { select: { updatedAt: true }, orderBy: { updatedAt: 'desc' }, take: 1 } } })
+    return cats.map((c) => ({ url: siteUrl(`/${c.slug}`), lastModified: c.products[0]?.updatedAt, changeFrequency: 'weekly', priority: 0.8 }))
   }
   const pieces = await db.product.findMany({
     where: { status: { in: ['PUBLISHED', 'ARCHIVED'] } },

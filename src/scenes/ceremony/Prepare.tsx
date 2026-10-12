@@ -8,10 +8,10 @@ import { createPacking, type PackPiece, type PackingApi } from './packing'
  * BEFORE CHECKOUT · PREPARED AND PACKED. One continuous scene on the counter (packing.ts):
  * the pieces in the bag, their own photographs, are laid into the Platera case and the case
  * is sealed with gold; then the case goes into the Platera courier box, tissue, seal, flaps,
- * tape and label. Then the way on to checkout, over the packed box.
+ * tape and label. Then the way on: the piece sent to the counter on WhatsApp.
  */
 type Stage = 'case' | 'courier' | 'ready'
-export function Prepare({ pieces, names, total }: { pieces: PackPiece[]; names: string[]; total: string }) {
+export function Prepare({ pieces, names, send, back }: { pieces: PackPiece[]; names: string[]; send: string; back: string }) {
   const [stage, setStage] = useState<Stage>('case')
   const canvas = useRef<HTMLCanvasElement>(null)
   const api = useRef<PackingApi | null>(null)
@@ -43,7 +43,7 @@ export function Prepare({ pieces, names, total }: { pieces: PackPiece[]; names: 
   return (
     <div className="ceremony prepare" data-stage={stage}>
       <ol className="ceremony-steps" aria-label="Your order">
-        {['Prepared for you', 'Packed to travel', 'Checkout'].map((s, i) => (
+        {['Prepared for you', 'Packed to travel', 'Yours on WhatsApp'].map((s, i) => (
           <li key={s} data-on={at === i} data-done={at > i}>
             <span className="num">{String(i + 1).padStart(2, '0')}</span> {s}
           </li>
@@ -70,13 +70,11 @@ export function Prepare({ pieces, names, total }: { pieces: PackPiece[]; names: 
             <p className="eyebrow">Ready when you are</p>
             <h2 className="ceremony-title">Packed, <em className="accent">and waiting for you.</em></h2>
             <p className="ceremony-body">
-              <span className="num font-display text-step-3 text-espresso">{total}</span>
-              <br />
-              Insured delivery anywhere in India. Pay by UPI, card, net banking or wallet.
+              Send it to our counter on WhatsApp. We reply with the price, confirm it is yours, and arrange insured delivery anywhere in India.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/checkout" className="btn btn-primary">Continue to checkout</Link>
-              <Link href="/bag" className="btn btn-quiet">Back to the bag</Link>
+              <a href={send} target="_blank" rel="noopener" className="btn btn-primary">Send on WhatsApp</a>
+              <Link href={back} className="btn btn-quiet">Back to the piece</Link>
             </div>
           </div>
         )}
