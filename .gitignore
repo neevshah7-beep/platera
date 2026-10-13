@@ -14,3 +14,4 @@ assets/models/
 assets/render/
 .next-prod/
 .env.neon
+.env.vercel
