@@ -21,6 +21,9 @@ export function SiteFooter() {
         <div className="md:col-span-5">
           <p className="footer-word font-display">PLATERA</p>
           <p className="mt-3 max-w-sm text-ink-muted">{STORE.collaboration}.</p>
+          <p className="mt-3 max-w-sm text-step--1 leading-relaxed text-ink-muted">
+            Hallmarked 925 silver jewellery in Borivali West, Mumbai: necklace sets, payals, earrings and mangalsutras, chosen piece by piece and sent insured across India.
+          </p>
           <a href={whatsappLink('Hello Platera, I have a question.')} className="link mt-6 inline-block">Ask us anything on WhatsApp</a>
         </div>
 
