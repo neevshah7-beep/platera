@@ -6,7 +6,7 @@ const ctx = await browser.newContext({ viewport: { width: 1536, height: 864 }, d
 await ctx.addInitScript(() => sessionStorage.setItem('platera:entered', '1'))
 const page = await ctx.newPage()
 const logs = []
-page.on('console', (m) => m.text().startsWith('[scene]') && logs.push(m.text()))
+page.on('console', (m) => (m.text().startsWith('[scene]') || /WebGL|context/i.test(m.text())) && logs.push(m.type() + ' ' + m.text().slice(0, 200)))
 await page.goto((process.env.BASE ?? 'http://localhost:3000') + '/', { waitUntil: 'load', timeout: 180000 })
 await page.waitForTimeout(4000)
 await page.evaluate(() => {
