@@ -26,9 +26,9 @@ type Props = { searchParams: Promise<{ finish?: string; stone?: string; sort?: s
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const filtered = Object.values(await searchParams).some(Boolean)
   return social({
-    title: 'The Collection: 925 Silver Jewellery',
+    title: 'Silver Jewellery Online: The 925 Hallmarked Collection',
     description:
-      'Every piece in the house: hallmarked 925 silver necklaces, payals, earrings and mangalsutras, each one bought on WhatsApp. Gorai 1, Borivali West, Mumbai.',
+      'Silver jewellery online: hallmarked 925 silver necklace sets, payals, earrings and mangalsutras, each one bought on WhatsApp. Borivali West, Mumbai.',
     alternates: { canonical: '/collection' },
     // Filter and sort combinations stay out of the index; the canonical is the full collection.
     robots: filtered ? { index: false, follow: true } : undefined,
@@ -42,7 +42,7 @@ export default async function CollectionPage({ searchParams }: Props) {
     <>
       <JsonLd data={itemListJsonLd('The Collection', '/collection', products)} />
       <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Collection', path: '/collection' }])} />
-      <h1 className="sr-only">The collection</h1>
+      <h1 className="sr-only">Silver jewellery: the 925 hallmarked collection</h1>
       <CollectionScene
         pieces={casePieces(products, rates)}
         total={products.length}

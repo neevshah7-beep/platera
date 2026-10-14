@@ -57,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: c.name, path: `/${c.slug}` }])} />
       <JsonLd data={itemListJsonLd(c.name, `/${c.slug}`, products)} />
-      <h1 className="sr-only">{c.name}</h1>
+      <h1 className="sr-only">{c.seoTitle.split('|')[0].trim()}</h1>
       <CollectionScene pieces={casePieces(products, rates)} total={products.length} eyebrow={c.name} title={<>{c.name}, <em className="accent">case by case.</em></>} allHref="#list" chapterId={`room-${c.slug}`} />
       <div id="list" className="relative bg-cream">
       <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-16">

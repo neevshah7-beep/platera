@@ -12,7 +12,7 @@ import { JsonLd, storeJsonLd, websiteJsonLd } from '@/lib/seo/jsonld'
 export const revalidate = 300
 
 export const metadata: Metadata = social({
-  title: { absolute: 'Platera Jewellers · 925 Silver Jewellery, Borivali West, Mumbai' },
+  title: { absolute: 'Platera Jewellers | Silver Jewellery Shop in Borivali West, Mumbai' },
   description:
     'Hallmarked 925 silver jewellery, chosen piece by piece: necklace sets, payals, earrings and mangalsutras. Buy on WhatsApp. Gorai 1, Borivali West, Mumbai.',
   alternates: { canonical: '/', languages: { 'en-IN': '/' } },

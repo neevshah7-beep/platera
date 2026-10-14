@@ -33,7 +33,7 @@ const indexable = process.env.VERCEL_ENV === 'production' || process.env.SITE_IN
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: 'Platera Jewellers · 925 Silver Jewellery, Borivali West, Mumbai', template: '%s · Platera Jewellers' },
+  title: { default: 'Platera Jewellers | Silver Jewellery Shop in Borivali West, Mumbai', template: '%s · Platera Jewellers' },
   description:
     'Hallmarked 925 silver jewellery, chosen piece by piece: necklace sets, payals, earrings and mangalsutras. Buy on WhatsApp. Gorai 1, Borivali West, Mumbai.',
   applicationName: 'Platera Jewellers',
