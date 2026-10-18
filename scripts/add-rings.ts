@@ -21,9 +21,16 @@ import { RINGS, RINGS_CATEGORY } from '../prisma/seed-data/rings'
 
 const hosted = process.argv.includes('--hosted')
 const dryRun = process.argv.includes('--dry-run')
-const url = hosted
-  ? readFileSync('.env.neon', 'utf8').trim().replace(/^DATABASE_URL=/, '').replace(/^['"]|['"]$/g, '').replace('-pooler', '')
-  : process.env.DATABASE_URL ?? ''
+// --pooled keeps Neon's pooler (the address the live site uses), in case the direct
+// address can't be reached from this network; pgbouncer=true makes Prisma pooler-safe.
+const pooled = process.argv.includes('--pooled')
+const withParams = (u: string, extra: string) => u + (u.includes('?') ? '&' : '?') + extra
+const hostedUrl = () => {
+  const raw = readFileSync('.env.neon', 'utf8').trim().replace(/^DATABASE_URL=/, '').replace(/^['"]|['"]$/g, '')
+  // A sleeping Neon database takes a few seconds to wake; wait up to 30 s, not Prisma's 5.
+  return pooled ? withParams(raw, 'pgbouncer=true&connect_timeout=30') : withParams(raw.replace('-pooler', ''), 'connect_timeout=30')
+}
+const url = hosted ? hostedUrl() : process.env.DATABASE_URL ?? ''
 if (!hosted && !/@(localhost|127\.0\.0\.1)[:/]/.test(url)) {
   console.error('DATABASE_URL is not a local database. Pass --hosted to add to the hosted one on purpose.')
   process.exit(1)
