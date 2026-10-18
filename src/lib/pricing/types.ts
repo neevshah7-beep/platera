@@ -6,7 +6,7 @@
 
 export type MetalKey = 'SILVER_925' | 'GOLD_22K' | 'GOLD_18K' | 'GOLD_14K' | 'PLATINUM_950'
 
-export const MAKING_PERCENTAGES = [10, 15, 20] as const
+export const MAKING_PERCENTAGES = [0, 10, 15, 20] as const
 export type MakingPct = (typeof MAKING_PERCENTAGES)[number]
 
 export const GST_PERCENT = 3

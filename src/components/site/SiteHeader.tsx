@@ -5,6 +5,7 @@ export const NAV = [
   { href: '/necklaces', label: 'Necklaces' },
   { href: '/payals', label: 'Payals' },
   { href: '/earrings', label: 'Earrings' },
+  { href: '/rings', label: 'Rings' },
   { href: '/mangalsutras', label: 'Mangalsutras' },
   { href: '/visit', label: 'Visit the store' },
 ] as const

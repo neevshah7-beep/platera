@@ -108,5 +108,84 @@
  ],
  "PLT-PYL-010": [
   "PLT-PYL-010-01"
+ ],
+ "PLT-RNG-001": [
+  "PLT-RNG-001-01",
+  "PLT-RNG-001-02",
+  "PLT-RNG-001-03"
+ ],
+ "PLT-RNG-002": [
+  "PLT-RNG-002-01"
+ ],
+ "PLT-RNG-003": [
+  "PLT-RNG-003-01",
+  "PLT-RNG-003-02"
+ ],
+ "PLT-RNG-004": [
+  "PLT-RNG-004-01",
+  "PLT-RNG-004-02",
+  "PLT-RNG-004-03"
+ ],
+ "PLT-RNG-005": [
+  "PLT-RNG-005-01"
+ ],
+ "PLT-RNG-006": [
+  "PLT-RNG-006-01"
+ ],
+ "PLT-RNG-007": [
+  "PLT-RNG-007-01",
+  "PLT-RNG-007-02",
+  "PLT-RNG-007-03"
+ ],
+ "PLT-RNG-008": [
+  "PLT-RNG-008-01"
+ ],
+ "PLT-RNG-009": [
+  "PLT-RNG-009-01",
+  "PLT-RNG-009-02",
+  "PLT-RNG-009-03"
+ ],
+ "PLT-RNG-010": [
+  "PLT-RNG-010-01",
+  "PLT-RNG-010-02"
+ ],
+ "PLT-RNG-011": [
+  "PLT-RNG-011-01",
+  "PLT-RNG-011-02"
+ ],
+ "PLT-RNG-012": [
+  "PLT-RNG-012-01"
+ ],
+ "PLT-RNG-013": [
+  "PLT-RNG-013-01",
+  "PLT-RNG-013-02"
+ ],
+ "PLT-RNG-014": [
+  "PLT-RNG-014-01"
+ ],
+ "PLT-RNG-015": [
+  "PLT-RNG-015-01"
+ ],
+ "PLT-RNG-016": [
+  "PLT-RNG-016-01",
+  "PLT-RNG-016-02",
+  "PLT-RNG-016-03"
+ ],
+ "PLT-RNG-017": [
+  "PLT-RNG-017-01",
+  "PLT-RNG-017-02"
+ ],
+ "PLT-RNG-018": [
+  "PLT-RNG-018-01"
+ ],
+ "PLT-RNG-019": [
+  "PLT-RNG-019-01",
+  "PLT-RNG-019-02"
+ ],
+ "PLT-RNG-020": [
+  "PLT-RNG-020-01"
+ ],
+ "PLT-RNG-021": [
+  "PLT-RNG-021-01"
  ]
 }

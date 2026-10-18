@@ -86,7 +86,7 @@ export function ProductForm({ categories, defaults }: { categories: Category[]; 
         <Select name="metal" label="Metal" options={[['SILVER_925', '925 sterling silver'], ['GOLD_22K', '22 karat gold'], ['GOLD_18K', '18 karat gold'], ['GOLD_14K', '14 karat gold'], ['PLATINUM_950', '950 platinum']]} {...props} />
         <F name="finish" label="Finish (optional)" hint="For example: Gold plated" {...props} />
         <Select name="pricingMode" label="How is it priced?" options={[['LIVE', 'By weight at today’s rate'], ['FIXED', 'A fixed price']]} {...props} />
-        <Select name="makingPct" label="Making charge" options={[['10', '10% of metal value'], ['15', '15% of metal value'], ['20', '20% of metal value']]} {...props} />
+        <Select name="makingPct" label="Making charge" options={[['0', 'No making charge'], ['10', '10% of metal value'], ['15', '15% of metal value'], ['20', '20% of metal value']]} {...props} />
         <F name="netWeight" label="Net weight (grams)" inputMode="decimal" hint="Metal only, from the shop scale. Up to three decimals." {...props} />
         <F name="grossWeight" label="Gross weight (grams)" inputMode="decimal" hint="Everything, including stones and beads." {...props} />
         <div className="sm:col-span-2"><Check name="weightVerified" label="I’ve weighed this piece and the net weight above is exact. (There’s no weight tolerance, so this is what the customer pays for.)" {...props} /></div>

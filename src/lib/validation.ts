@@ -111,7 +111,7 @@ export const productSchema = z
     netWeight: optionalGrams,
     grossWeight: optionalGrams,
     weightVerified: z.boolean(),
-    makingPct: z.coerce.number().pipe(z.union([z.literal(10), z.literal(15), z.literal(20)], { message: 'Making is 10, 15 or 20 percent.' })),
+    makingPct: z.coerce.number().pipe(z.union([z.literal(0), z.literal(10), z.literal(15), z.literal(20)], { message: 'Making is 0, 10, 15 or 20 percent.' })),
     stoneValue: optionalMoney,
     hallmarkCharge: optionalMoney,
     fixedPrice: optionalMoney,

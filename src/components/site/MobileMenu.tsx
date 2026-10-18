@@ -9,6 +9,7 @@ const LINKS = [
   { href: '/necklaces', label: 'Necklaces' },
   { href: '/payals', label: 'Payals' },
   { href: '/earrings', label: 'Earrings' },
+  { href: '/rings', label: 'Rings' },
   { href: '/mangalsutras', label: 'Mangalsutras' },
   { href: '/collection', label: 'The whole collection' },
   { href: '/appointment', label: 'Book a viewing' },

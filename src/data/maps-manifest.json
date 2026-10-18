@@ -232,5 +232,131 @@
     "sourceHeight": 3120,
     "reshoot": false,
     "maps": true
+  },
+  "PLT-RNG-001-01": {
+    "sourceWidth": 1575,
+    "sourceHeight": 2100,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-002-01": {
+    "sourceWidth": 1935,
+    "sourceHeight": 2580,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-003-01": {
+    "sourceWidth": 1500,
+    "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-004-01": {
+    "sourceWidth": 1799,
+    "sourceHeight": 2398,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-005-01": {
+    "sourceWidth": 1660,
+    "sourceHeight": 2213,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-006-01": {
+    "sourceWidth": 1521,
+    "sourceHeight": 2029,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-007-01": {
+    "sourceWidth": 1691,
+    "sourceHeight": 2255,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-008-01": {
+    "sourceWidth": 1989,
+    "sourceHeight": 2651,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-009-01": {
+    "sourceWidth": 2009,
+    "sourceHeight": 2677,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-010-01": {
+    "sourceWidth": 1509,
+    "sourceHeight": 2012,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-011-01": {
+    "sourceWidth": 1929,
+    "sourceHeight": 2571,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-012-01": {
+    "sourceWidth": 1510,
+    "sourceHeight": 2013,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-013-01": {
+    "sourceWidth": 1759,
+    "sourceHeight": 2344,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-014-01": {
+    "sourceWidth": 1989,
+    "sourceHeight": 2651,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-015-01": {
+    "sourceWidth": 1915,
+    "sourceHeight": 2553,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-016-01": {
+    "sourceWidth": 2239,
+    "sourceHeight": 2985,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-017-01": {
+    "sourceWidth": 2593,
+    "sourceHeight": 3457,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-018-01": {
+    "sourceWidth": 1500,
+    "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-019-01": {
+    "sourceWidth": 1805,
+    "sourceHeight": 2406,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-020-01": {
+    "sourceWidth": 1629,
+    "sourceHeight": 2172,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-021-01": {
+    "sourceWidth": 1500,
+    "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
   }
 }

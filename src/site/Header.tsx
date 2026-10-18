@@ -10,6 +10,7 @@ const LEFT = [
   { href: '/earrings', label: 'Earrings' },
 ]
 const RIGHT = [
+  { href: '/rings', label: 'Rings' },
   { href: '/payals', label: 'Payals' },
   { href: '/mangalsutras', label: 'Bridal' },
   { href: '/visit', label: 'Visit' },
