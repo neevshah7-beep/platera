@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 import { social } from '@/lib/seo/meta'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -22,6 +23,8 @@ export default async function PolicyPage({ params }: Props) {
   const policy = POLICIES.find((x) => x.slug === slug)
   if (!policy) notFound()
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: policy.title, path: `/policies/${policy.slug}` }])} />
     <Prose title={policy.title} intro={policy.description}>
       {policy.sections.map((s) => (
         <Section key={s.title} title={s.title}>{s.body}</Section>
@@ -33,5 +36,6 @@ export default async function PolicyPage({ params }: Props) {
         ))}
       </nav>
     </Prose>
+    </>
   )
 }

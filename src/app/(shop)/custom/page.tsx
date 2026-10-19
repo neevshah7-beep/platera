@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 import { social } from '@/lib/seo/meta'
 import { Prose, Section } from '@/components/site/Prose'
 import { STORE, whatsappLink } from '@/lib/store'
@@ -20,6 +21,8 @@ const STEPS = [
 
 export default function CustomPage() {
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Made to order', path: '/custom' }])} />
     <Prose title="Made to order" intro="If the piece you want isn’t on the tray, we can have it made in 925 sterling silver.">
       <Section title="How it works">
         <ol className="space-y-3">
@@ -42,5 +45,6 @@ export default function CustomPage() {
         <EnquiryForm kind="CUSTOM_ORDER" />
       </Section>
     </Prose>
+    </>
   )
 }

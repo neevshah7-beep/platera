@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 import { social } from '@/lib/seo/meta'
 import { Prose, Section } from '@/components/site/Prose'
 
@@ -40,6 +41,8 @@ function LengthDiagram() {
 
 export default function SizeGuidePage() {
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Size guide', path: '/size-guide' }])} />
     <Prose title="Size guide" intro="Every length on Platera is given in inches, measured end to end with the clasp closed.">
       <Section title="Necklaces and chains">
         <div className="grid gap-10 sm:grid-cols-2">
@@ -69,5 +72,6 @@ export default function SizeGuidePage() {
         <p>Each pair’s page gives its drop length and its weight per pair. Pairs above about eight grams are better for an evening than a full day.</p>
       </Section>
     </Prose>
+    </>
   )
 }

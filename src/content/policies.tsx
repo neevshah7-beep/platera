@@ -93,7 +93,7 @@ export const POLICIES: Policy[] = [
   {
     slug: 'buyback',
     title: 'Buyback and exchange',
-    description: 'How Platera values silver jewellery for buyback and exchange.',
+    description: 'How Platera values silver jewellery for buyback and exchange: weighed at the day’s rate, less a stated deduction.',
     updated: UPDATED,
     sections: [
       {
@@ -159,7 +159,7 @@ export const POLICIES: Policy[] = [
   {
     slug: 'terms',
     title: 'Terms of sale',
-    description: 'The terms on which Platera Jewellers sells jewellery online.',
+    description: 'The terms on which Platera Jewellers sells hallmarked silver jewellery online and on WhatsApp, across India.',
     updated: UPDATED,
     sections: [
       { title: 'Who you are buying from', body: <p>Platera Jewellers is presented in collaboration with Bhairav Jewellers, Gorai 1. Orders are accepted, fulfilled and invoiced by {S.legalName}, {S.address.line1}, {S.address.line2}, {S.address.city} {S.address.postalCode}, GSTIN <span className="num">{S.gstin}</span>.</p> },

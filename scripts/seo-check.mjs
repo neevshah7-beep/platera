@@ -7,7 +7,8 @@ const urls = []
 for (const id of ['pages', 'categories', 'pieces']) for (const m of (await get(`${B}/sitemap/${id}.xml`)).text.matchAll(/<loc>([^<]+)<\/loc>/g)) urls.push(m[1])
 const titles = {}, descs = {}, problems = []
 const one = (re, s) => s.match(re)?.[1]
-await Promise.all(urls.map(async (u) => {
+// A few pages at a time, so the host's attack protection doesn't take the check for one.
+const checkPage = async (u) => {
   const r = await get(u)
   const p = []
   if (r.status !== 200) { problems.push([u, [`HTTP ${r.status} ${r.loc ?? ''}`]]); return }
@@ -32,7 +33,11 @@ await Promise.all(urls.map(async (u) => {
   if (!lds.length) p.push('no structured data'); if (badLd) p.push(`${badLd} broken JSON-LD`)
   if (!og) p.push('no og:image')
   if (p.length) problems.push([u, p])
-}))
+}
+for (let i = 0; i < urls.length; i += 3) {
+  await Promise.all(urls.slice(i, i + 3).map(checkPage))
+  await new Promise((r) => setTimeout(r, 400))
+}
 for (const [t, us] of Object.entries(titles)) if (us.length > 1) problems.push([`duplicate title "${t.slice(0, 50)}"`, us.map((x) => x.replace(B, ''))])
 for (const [t, us] of Object.entries(descs)) if (us.length > 1) problems.push([`duplicate description "${t.slice(0, 50)}"`, us.map((x) => x.replace(B, ''))])
 const site = [

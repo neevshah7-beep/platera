@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 import { social } from '@/lib/seo/meta'
 import { db } from '@/lib/db'
 import { getSetting } from '@/lib/catalogue'
@@ -22,6 +23,8 @@ export default async function AppointmentPage({ searchParams }: { searchParams: 
   const piece = sp.piece ? await db.product.findUnique({ where: { slug: sp.piece }, select: { slug: true, name: true } }) : null
 
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Book a viewing', path: '/appointment' }])} />
     <div className="mx-auto grid max-w-[1440px] gap-16 px-[var(--gutter)] pt-12 lg:grid-cols-12">
       <div className="lg:col-span-4">
         <p className="eyebrow">The counter</p>
@@ -57,5 +60,6 @@ export default async function AppointmentPage({ searchParams }: { searchParams: 
         />
       </div>
     </div>
+    </>
   )
 }

@@ -26,7 +26,7 @@ type Props = { searchParams: Promise<{ finish?: string; stone?: string; sort?: s
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const filtered = Object.values(await searchParams).some(Boolean)
   return social({
-    title: 'Silver Jewellery Online | 925 Hallmarked Collection',
+    title: { absolute: 'Silver Jewellery Online | 925 Hallmarked | Platera' },
     description:
       'Silver jewellery online: hallmarked 925 silver necklace sets, payals, earrings and mangalsutras, each one bought on WhatsApp. Borivali West, Mumbai.',
     alternates: { canonical: '/collection' },

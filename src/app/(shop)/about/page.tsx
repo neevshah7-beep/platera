@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld'
 import { social } from '@/lib/seo/meta'
 import { HouseScene } from '@/scenes/house/HouseScene'
 import Link from 'next/link'
@@ -15,6 +16,7 @@ export const metadata: Metadata = social({
 export default function AboutPage() {
   return (
     <>
+    <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }])} />
     <HouseScene id="about-house" />
     <Prose title="How Platera works" intro="A small house with one idea: choose fewer pieces, choose them properly, and show the customer everything.">
       <Section title="We choose; we don’t make">
