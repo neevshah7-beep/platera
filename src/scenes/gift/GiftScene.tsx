@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createGL, FrameStore, makeTexture, uploadImage } from '../gl'
+import { createGL, FrameStore, frameTier, makeTexture, pixelRatio, uploadImage } from '../gl'
 import frag from './gift.frag.glsl'
 
 const FRAMES = 200
@@ -43,7 +43,7 @@ export function GiftScene() {
     let pullV = 0
     let wasTied = false
     const resize = () => {
-      const dpr = Math.min(devicePixelRatio, 2)
+      const dpr = pixelRatio()
       c.width = Math.round(c.clientWidth * dpr)
       c.height = Math.round(c.clientHeight * dpr)
       gl.viewport(0, 0, c.width, c.height)
@@ -56,7 +56,7 @@ export function GiftScene() {
         visible = e.isIntersecting
         if (visible && !started) {
           started = true
-          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}, true).then((f) => {
+          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${frameTier()}`), FRAMES, () => {}, true).then((f) => {
             frames = f
             if (!f) setMissing(true)
           })

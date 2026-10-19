@@ -5,9 +5,11 @@ const base = process.env.BASE ?? 'http://localhost:3001'
 const desk = process.argv[2] === 'desk'
 const STEPS = Number(process.env.STEPS ?? 28)
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] })
-const ctx = await browser.newContext(desk ? { viewport: { width: 1440, height: 900 } } : { ...devices['iPhone 13'], defaultBrowserType: undefined })
+const ctx = await browser.newContext(desk ? { viewport: { width: 1440, height: 900 } } : { ...devices[process.env.DEVICE ?? 'iPhone 13'], defaultBrowserType: undefined })
 await ctx.addInitScript(() => { try { sessionStorage.setItem('platera:entered', '1') } catch {} })
 const page = await ctx.newPage()
+// THROTTLE=4 slows the processor fourfold, roughly a mid-range Android phone.
+if (process.env.THROTTLE) await (await ctx.newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.THROTTLE) })
 page.on('console', (m) => m.type() === 'error' && !/X4122|X3595|GL Driver/.test(m.text()) && console.log('console:', m.text().slice(0, 160)))
 page.on('pageerror', (e) => console.log('pageerror:', e.message.slice(0, 160)))
 await page.goto(base + '/', { waitUntil: 'load' }); await page.waitForTimeout(2500)

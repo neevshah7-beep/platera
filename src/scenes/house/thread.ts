@@ -1,3 +1,4 @@
+import { isPhone, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
@@ -182,7 +183,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   canvas.style.transition = 'opacity 700ms ease'
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.12
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -203,7 +204,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   const key = new THREE.DirectionalLight(0xfff0d8, 2.4)
   key.position.set(-9, 12, 18)
   key.castShadow = true
-  key.shadow.mapSize.set(2048, 2048)
+  key.shadow.mapSize.setScalar(isPhone() ? 1024 : 2048)
   key.shadow.radius = 6
   key.shadow.bias = -0.0004
   Object.assign(key.shadow.camera, { left: -24, right: 24, top: 18, bottom: -18, near: 1, far: 60 })

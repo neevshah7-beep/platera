@@ -36,19 +36,28 @@ vec2 coverUv(vec2 uv) {
 vec3 glints(vec2 uv, vec2 px, float strength) {
   vec3 acc = vec3(0.0);
   vec2 dirs[4] = vec2[4](vec2(1.0, 0.0), vec2(0.0, 1.0), vec2(0.7071, 0.7071), vec2(-0.7071, 0.7071));
-  for (int d = 0; d < 4; d++) {
+#ifdef LITE
+  // Phones: the cross alone, sampled more coarsely (16 reads a pixel instead of 112).
+  const int DIRS = 2; const int STEPS = 4; const float STRIDE = 7.7;
+#else
+  const int DIRS = 4; const int STEPS = 14; const float STRIDE = 2.2;
+#endif
+  for (int d = 0; d < DIRS; d++) {
     float len = d < 2 ? 1.0 : 0.55; // the cross is longer than the diagonals, as on a real filter
-    for (int k = 1; k <= 14; k++) {
+    for (int k = 1; k <= STEPS; k++) {
       float t = float(k);
-      vec2 o = dirs[d] * px * t * 2.2 * len;
+      vec2 o = dirs[d] * px * t * STRIDE * len;
       vec3 a = texture(uFrame, uv + o).rgb;
       vec3 b = texture(uFrame, uv - o).rgb;
       float wa = smoothstep(0.86, 1.0, luma(a));
       float wb = smoothstep(0.86, 1.0, luma(b));
-      float fall = exp(-t * 0.28);
+      float fall = exp(-t * 0.28 * STRIDE / 2.2);
       acc += (a * wa + b * wb) * fall;
     }
   }
+#ifdef LITE
+  acc *= 5.0; // fewer, sparser samples: weighted up to keep the same sparkle
+#endif
   return acc * strength * 0.06;
 }
 

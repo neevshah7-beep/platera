@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createGL, FrameStore, makeTexture, uploadImage } from '../gl'
+import { createGL, FrameStore, frameTier, makeTexture, pixelRatio, uploadImage } from '../gl'
 import frag from './stamp.frag.glsl'
 
 const FRAMES = 72
@@ -61,7 +61,7 @@ export function StampScene() {
     }
 
     const resize = () => {
-      const dpr = Math.min(devicePixelRatio, 2)
+      const dpr = pixelRatio()
       c.width = Math.round(c.clientWidth * dpr)
       c.height = Math.round(c.clientHeight * dpr)
       gl.viewport(0, 0, c.width, c.height)
@@ -75,7 +75,7 @@ export function StampScene() {
         if (visible && !started) {
           started = true
           // Progressive: the first frame shows at once, the rest arrive behind it.
-          FrameStore.loadFirst((portrait ? ['stamp_portrait', 'stamp'] : ['stamp']).map((d) => `/scenes/${d}/${Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000}`), FRAMES, () => {}, true).then((f) => {
+          FrameStore.loadFirst((portrait ? ['stamp_portrait', 'stamp'] : ['stamp']).map((d) => `/scenes/${d}/${frameTier()}`), FRAMES, () => {}, true).then((f) => {
             frames = f
             if (!f) setMissing(true)
           })

@@ -1,3 +1,4 @@
+import { isPhone, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
@@ -68,7 +69,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   // Khronos PBR Neutral: keeps the gold's hue and the page's champagne true (AgX greys both).
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.95
@@ -121,7 +122,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   const key = new THREE.DirectionalLight(0xfff0d6, 1.1)
   key.position.set(-10, 18, 22)
   key.castShadow = true
-  key.shadow.mapSize.set(1024, 1024)
+  key.shadow.mapSize.setScalar(isPhone() ? 512 : 1024)
   key.shadow.radius = 6
   Object.assign(key.shadow.camera, { left: -30, right: 30, top: 18, bottom: -18 })
   scene.add(key)

@@ -1,3 +1,4 @@
+import { pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
@@ -103,7 +104,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.9
   renderer.outputColorSpace = THREE.SRGBColorSpace

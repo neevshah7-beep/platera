@@ -67,7 +67,12 @@ void main() {
     // Sparks: thrown from the rim of the die, low and fast along the bar's surface, each a
     // thin motion-streak that cools from white-gold to ember and dies within half a second.
     vec3 sparks = vec3(0.0);
-    for (int i = 0; i < 48; i++) {
+#ifdef LITE
+    const int SPARKS = 22;
+#else
+    const int SPARKS = 48;
+#endif
+    for (int i = 0; i < SPARKS; i++) {
       float fi = float(i);
       float life = 0.18 + hash(fi + 1.0) * 0.32;
       if (t > life) continue;

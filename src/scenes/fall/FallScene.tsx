@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { createGL, FrameStore, makeTexture, uploadImage } from '../gl'
+import { createGL, FrameStore, frameTier, makeTexture, pixelRatio, uploadImage } from '../gl'
 import { entry, useEntry } from '@/site/entry'
 import frag from './fall.frag.glsl'
 
@@ -44,7 +44,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     c.addEventListener('webglcontextlost', onLost)
     c.addEventListener('webglcontextrestored', onRestored)
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
-    const width = Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? 1600 : 1000
+    const width = frameTier()
     let frames: FrameStore | null = null
     let shownBmp: ImageBitmap | null = null
     let introStart = -1
@@ -60,7 +60,7 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     const ptr = { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, lamp: 0, lampT: 0, lastMove: -1e9, press: 0, pressT: 0 }
 
     const resize = () => {
-      const dpr = Math.min(devicePixelRatio, 2)
+      const dpr = pixelRatio()
       c.width = Math.round(c.clientWidth * dpr)
       c.height = Math.round(c.clientHeight * dpr)
       gl.viewport(0, 0, c.width, c.height)

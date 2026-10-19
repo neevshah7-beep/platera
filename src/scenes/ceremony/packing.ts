@@ -1,3 +1,4 @@
+import { pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -28,7 +29,7 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
   renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
   renderer.localClippingEnabled = true
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.85
   renderer.outputColorSpace = THREE.SRGBColorSpace

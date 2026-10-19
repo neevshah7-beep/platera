@@ -210,3 +210,24 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 2rem; 
   .prepare[data-stage='ready'] .ceremony-canvas { opacity: 0.3; }
 }
 @media (max-width: 520px) { .viewing-actions { grid-template-columns: 1fr; gap: 0.55rem; } .viewing-actions .btn { text-align: center; justify-content: center; } }
+
+/* Landscape phones (short screens): the words keep to the lower edge and one side, so
+   the scene in the middle stays clear. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .hero-copy { padding-top: 11svh; padding-bottom: 4svh; }
+  .hero-letter { font-size: clamp(2.6rem, 14svh, 5.5rem); }
+  .hero-copy > div:last-child { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+  .hero-copy > div:last-child > div:first-child { max-width: 46%; }
+  .hero-copy h1 { font-size: clamp(1.3rem, 6.5svh, 2rem) !important; margin-top: 0.4rem; }
+  .hero-copy .eyebrow { font-size: 0.62rem; }
+  .hero-copy .btn { min-height: 2.4rem; padding: 0.55rem 0.9rem; font-size: 0.7rem; }
+  .collection-head { top: 9svh; max-width: 44%; }
+  .collection-title { font-size: clamp(1.5rem, 8svh, 2.4rem); }
+  .collection-label { left: auto !important; right: var(--gutter); top: auto !important; bottom: 5svh; width: min(17rem, 40%); transform: none; animation: none; padding: 0.6rem 0.8rem; }
+  .collection-label .btn, .collection-view { margin-top: 0.4rem; padding: 0.45rem 0.8rem; font-size: 0.68rem; }
+}
+
+/* "See all pieces" sits in the case room's lower corner; the button base above makes every
+   .btn position: relative, so the placement is restated with the stronger selector. */
+.collection-all.btn { position: absolute; right: var(--gutter); bottom: 6svh; }
+@media (max-width: 767px) { .collection-all.btn { left: var(--gutter); right: var(--gutter); bottom: 4svh; } }

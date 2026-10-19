@@ -1,3 +1,4 @@
+import { isPhone, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
@@ -39,7 +40,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.78
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -97,7 +98,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
 
   const lamp = new THREE.SpotLight(0xfff1dc, 1900, 180, 0.6, 0.75, 1.6)
   lamp.castShadow = true
-  lamp.shadow.mapSize.set(2048, 2048)
+  lamp.shadow.mapSize.setScalar(isPhone() ? 1024 : 2048)
   lamp.shadow.bias = -0.00025
   lamp.shadow.normalBias = 0.02
   lamp.shadow.camera.near = 10
@@ -211,7 +212,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     // The piece, resting on the velvet.
     // Decoded off the main thread and uploaded in idle moments (see env.ts).
     // 960 wide: still twice the pixels the piece covers on screen, at a third of the upload.
-    const map = photoTexture(renderer, `${p.base}-960.webp`)
+    const map = photoTexture(renderer, `${p.base}-${isPhone() ? 480 : 960}.webp`)
     map.anisotropy = 8
     const normal = photoTexture(renderer, `${p.base}-normal.webp`, false)
     const dr = photoTexture(renderer, `${p.base}-dr.webp`, false)

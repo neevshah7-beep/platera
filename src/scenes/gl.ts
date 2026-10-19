@@ -4,6 +4,22 @@
  */
 import packs from './packs.json'
 
+/** A phone or small touch tablet: draws less and loads the phone-sized frames. */
+export function isPhone() {
+  return typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 820
+}
+
+/** The drawing resolution: sharp on a desktop, capped low on phones where the GPU is the limit. */
+export function pixelRatio(max = 2) {
+  return Math.min(devicePixelRatio, isPhone() ? 1.25 : max)
+}
+
+/** Which rendered size of a frame sequence to load: 'm' (960 px) on phones. */
+export function frameTier() {
+  if (isPhone()) return 'm'
+  return Math.max(innerWidth, innerHeight) * devicePixelRatio > 1300 ? '1600' : '1000'
+}
+
 const VERT = `#version 300 es
 in vec2 aPos;
 out vec2 vUv;
@@ -29,7 +45,9 @@ export function createGL(canvas: HTMLCanvasElement, frag: string): GL | null {
   }
   const program = gl.createProgram()!
   gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT))
-  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, frag))
+  // Phones compile the LITE variant of a scene shader: the same look with fewer samples.
+  const src = isPhone() ? frag.replace(/^(#version[^\n]*\n)/, '$1#define LITE\n') : frag
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, src))
   gl.linkProgram(program)
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) ?? 'link')
   gl.useProgram(program)

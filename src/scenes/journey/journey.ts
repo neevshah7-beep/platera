@@ -1,3 +1,4 @@
+import { pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { sliced, studioEnvironment, studioSource, uploadWhenIdle, warmUp } from '../env'
 import { visibleGate } from '../visible'
@@ -62,7 +63,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   canvas.style.transition = 'opacity 700ms ease'
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.05
   renderer.outputColorSpace = THREE.SRGBColorSpace

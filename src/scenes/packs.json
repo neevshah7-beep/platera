@@ -1,14 +1,20 @@
 {
   "fall/1000": "/scenes/fall/1000.7e1852930c.pack",
   "fall/1600": "/scenes/fall/1600.e8d6ce769f.pack",
+  "fall/m": "/scenes/fall/m.70c5fa5812.pack",
   "fall_portrait/1000": "/scenes/fall_portrait/1000.4a2320ab8b.pack",
   "fall_portrait/1600": "/scenes/fall_portrait/1600.403d029de4.pack",
+  "fall_portrait/m": "/scenes/fall_portrait/m.3827e80298.pack",
   "gift/1000": "/scenes/gift/1000.69ff7b6589.pack",
   "gift/1600": "/scenes/gift/1600.e597eb00dd.pack",
+  "gift/m": "/scenes/gift/m.6f6ca19bcd.pack",
   "gift_portrait/1000": "/scenes/gift_portrait/1000.4b9ffd99be.pack",
   "gift_portrait/1600": "/scenes/gift_portrait/1600.53715d090f.pack",
+  "gift_portrait/m": "/scenes/gift_portrait/m.8e745b974e.pack",
   "stamp/1000": "/scenes/stamp/1000.d4a5789588.pack",
   "stamp/1600": "/scenes/stamp/1600.2849d9f78c.pack",
+  "stamp/m": "/scenes/stamp/m.80e268dae5.pack",
   "stamp_portrait/1000": "/scenes/stamp_portrait/1000.886bc63071.pack",
-  "stamp_portrait/1600": "/scenes/stamp_portrait/1600.be8517f5cf.pack"
+  "stamp_portrait/1600": "/scenes/stamp_portrait/1600.be8517f5cf.pack",
+  "stamp_portrait/m": "/scenes/stamp_portrait/m.6efca64f4e.pack"
 }

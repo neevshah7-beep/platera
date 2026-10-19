@@ -1,3 +1,4 @@
+import { pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -40,7 +41,7 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   // finish on the spot, which turns background compilation into a stall.
   renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5))
+  renderer.setPixelRatio(pixelRatio(1.5))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.92
   renderer.outputColorSpace = THREE.SRGBColorSpace
