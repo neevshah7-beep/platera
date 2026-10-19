@@ -231,3 +231,25 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 2rem; 
    .btn position: relative, so the placement is restated with the stronger selector. */
 .collection-all.btn { position: absolute; right: var(--gutter); bottom: 6svh; }
 @media (max-width: 767px) { .collection-all.btn { left: var(--gutter); right: var(--gutter); bottom: 4svh; } }
+
+/* Phones: the chapter dissolve (a moving mask) and the dim on the way out (a filter) each
+   cost the GPU an extra full-screen pass over the live scene on every frame. Touch screens
+   go without them; the chapters still meet edge to edge. */
+@media (pointer: coarse) and (max-width: 1024px) {
+  .home-chapters > section > .sticky { animation: none !important; -webkit-mask-image: none !important; mask-image: none !important; filter: none !important; }
+}
+/* Phones: the header and chapter rail are solid ivory instead of frosted glass, because a
+   backdrop blur re-blurs the moving scene underneath on every frame. */
+@media (pointer: coarse) and (max-width: 1024px) {
+  .site-header, .chapter-rail { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: rgb(250 244 230 / 0.97); }
+  html[data-hero='1'] .site-header { background: transparent; }
+}
+/* The narrowest phones (folded, 280–340 px): the hold button may wrap, and keeps inside the screen. */
+@media (max-width: 340px) {
+  .stamp-hold { white-space: normal; max-width: calc(100vw - 2 * var(--gutter)); letter-spacing: 0.1em; text-align: left; padding-right: 1rem; }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .collection-all.btn { left: var(--gutter); right: auto; bottom: 5svh; min-height: 2.4rem; padding: 0.5rem 0.9rem; font-size: 0.68rem; }
+  .house-index { display: none; }
+  .house-copy { bottom: 6svh; }
+}

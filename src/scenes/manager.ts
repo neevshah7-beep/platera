@@ -8,10 +8,13 @@
  *   · a scene is freed once it is two screens away (hysteresis, so nothing thrashes);
  *   · if the GPU drops a scene's context, the scene is disposed and rebuilt cleanly.
  */
+import { isPhone } from './gl'
+
 export type Live = { dispose: () => void }
 type Entry = { el: HTMLElement; build: () => Live | null; live: Live | null; dist: number; failedAt: number }
 
 const MAX_LIVE = 2
+const phone = isPhone()
 const entries = new Set<Entry>()
 let raf = 0
 let lastY = 0
@@ -49,7 +52,10 @@ function loop(now: number) {
   // at once; a scene still ahead waits for the scroll to slow down.
   if (now - lastBuild > 250) {
     const next = ranked.find((e) => wanted.has(e) && !e.live && now - e.failedAt > 3000)
-    if (next && (next.dist === 0 || velocity < 1.2)) {
+    // Phones build a scene ahead only in a pause (reading, or holding the hammer), or once it
+    // is nearly here, so the work never lands in the middle of a moving scroll.
+    const calm = phone ? velocity < 0.12 || next?.dist !== undefined && next.dist < 0.5 : velocity < 1.2
+    if (next && (next.dist === 0 || calm)) {
       lastBuild = now
       try {
         const t0 = performance.now()
