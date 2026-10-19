@@ -29,14 +29,14 @@ export function Header() {
         <nav aria-label="Collections" className="site-nav hidden items-center gap-[clamp(1.2rem,0.4rem+1.4vw,2.4rem)] md:flex">
           <HomeLink className="link-underline" />
           {LEFT.map((n) => (
-            <Link key={n.href} href={n.href} className="link-underline">{n.label}</Link>
+            <Link prefetch={false} key={n.href} href={n.href} className="link-underline">{n.label}</Link>
           ))}
         </nav>
         <span className="md:hidden"><MobileMenu /></span>
-        <Link href="/" className="site-brand font-display" aria-label="Platera, home">PLATERA</Link>
+        <Link prefetch={false} href="/" className="site-brand font-display" aria-label="Platera, home">PLATERA</Link>
         <div className="site-nav flex items-center justify-end gap-[clamp(1.2rem,0.4rem+1.4vw,2.4rem)]">
           {RIGHT.map((n) => (
-            <Link key={n.href} href={n.href} className="link-underline hidden md:inline">{n.label}</Link>
+            <Link prefetch={false} key={n.href} href={n.href} className="link-underline hidden md:inline">{n.label}</Link>
           ))}
           <a href={whatsappLink('Hello Platera, I have a question.')} target="_blank" rel="noopener" className="bag-link" aria-label="Chat with Platera on WhatsApp">
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden className="bag-icon">

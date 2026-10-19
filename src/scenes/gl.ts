@@ -96,10 +96,19 @@ export class FrameStore {
 
   /** Load the first available of several sequences (e.g. the portrait render, then the landscape one). */
   static async loadFirst(bases: string[], count: number, onProgress: (p: number) => void, progressive = false): Promise<FrameStore | null> {
-    // A packed sequence is one download (scripts/pack-frames.mjs); single frames are the fallback.
+    // A packed sequence is one download (scripts/pack-frames.mjs). If the host refuses it
+    // (a busy shared connection), wait and ask again rather than falling back to ~150
+    // single frames, which would only deepen the refusal.
     for (const b of bases) {
       const pack = (packs as Record<string, string>)[b.replace(/^\/scenes\//, '')]
-      if (pack) return FrameStore.loadPack(pack, onProgress, progressive).catch(() => FrameStore.load(b, count, onProgress, progressive))
+      if (!pack) continue
+      for (const wait of [0, 2500, 6000, 12000]) {
+        if (wait) await new Promise((r) => setTimeout(r, wait))
+        try {
+          return await FrameStore.loadPack(pack, onProgress, progressive)
+        } catch {}
+      }
+      return null
     }
     for (const b of bases) {
       const ok = await fetch(`${b}/0001.webp`, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)

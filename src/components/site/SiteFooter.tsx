@@ -51,7 +51,7 @@ export function SiteFooter() {
           <ul className="mt-3 grid gap-2">
             {POLICIES.map((p) => (
               <li key={p.href}>
-                <Link href={p.href}>{p.label}</Link>
+                <Link prefetch={false} href={p.href}>{p.label}</Link>
               </li>
             ))}
           </ul>

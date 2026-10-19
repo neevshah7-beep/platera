@@ -29,7 +29,7 @@ export default async function PolicyPage({ params }: Props) {
       <p className="mt-14 text-step--1 text-ink-muted">Last updated {policy.updated}.</p>
       <nav aria-label="Other policies" className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
         {POLICIES.filter((p) => p.slug !== policy.slug).map((p) => (
-          <Link key={p.slug} href={`/policies/${p.slug}`} className="link">{p.title}</Link>
+          <Link prefetch={false} key={p.slug} href={`/policies/${p.slug}`} className="link">{p.title}</Link>
         ))}
       </nav>
     </Prose>

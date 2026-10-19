@@ -8,7 +8,7 @@ import { scroller } from './SmoothScroll'
 export function HomeLink({ className, children = 'Home' }: { className?: string; children?: React.ReactNode }) {
   const path = usePathname()
   return (
-    <Link
+    <Link prefetch={false}
       href="/"
       className={className}
       aria-current={path === '/' ? 'page' : undefined}

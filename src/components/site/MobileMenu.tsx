@@ -56,7 +56,7 @@ export function MobileMenu() {
           <ul className="space-y-1">
             {LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="block border-b border-rule py-4 font-display text-step-3">
+                <Link prefetch={false} href={l.href} className="block border-b border-rule py-4 font-display text-step-3">
                   {l.label}
                 </Link>
               </li>
