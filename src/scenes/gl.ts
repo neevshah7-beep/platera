@@ -2,6 +2,8 @@
  * Minimal WebGL2 for full-screen composited scenes: one program, one triangle, a few
  * textures. Scenes that are photoreal frame sequences need nothing heavier.
  */
+import packs from './packs.json'
+
 const VERT = `#version 300 es
 in vec2 aPos;
 out vec2 vUv;
@@ -94,11 +96,69 @@ export class FrameStore {
 
   /** Load the first available of several sequences (e.g. the portrait render, then the landscape one). */
   static async loadFirst(bases: string[], count: number, onProgress: (p: number) => void, progressive = false): Promise<FrameStore | null> {
+    // A packed sequence is one download (scripts/pack-frames.mjs); single frames are the fallback.
+    for (const b of bases) {
+      const pack = (packs as Record<string, string>)[b.replace(/^\/scenes\//, '')]
+      if (pack) return FrameStore.loadPack(pack, onProgress, progressive).catch(() => FrameStore.load(b, count, onProgress, progressive))
+    }
     for (const b of bases) {
       const ok = await fetch(`${b}/0001.webp`, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)
       if (ok) return FrameStore.load(b, count, onProgress, progressive)
     }
     return null
+  }
+
+  /**
+   * Fetches a packed sequence in one request and splits it into frames as the bytes
+   * stream in, so a progressive scene still appears with its first frame.
+   */
+  static async loadPack(url: string, onProgress: (p: number) => void, progressive = false): Promise<FrameStore> {
+    const res = await fetch(url)
+    if (!res.ok || !res.body) throw new Error(`pack ${res.status}`)
+    const reader = res.body.getReader()
+    const store = new FrameStore()
+    let buf = new Uint8Array(0)
+    let lens: number[] | null = null
+    let blobs: Blob[] = []
+    let next = 0
+    let firstIn: () => void = () => {}
+    let failed: (e: unknown) => void = () => {}
+    const first0 = new Promise<void>((resolve, reject) => ((firstIn = resolve), (failed = reject)))
+    const all = (async () => {
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const joined = new Uint8Array(buf.length + value.length)
+        joined.set(buf)
+        joined.set(value, buf.length)
+        buf = joined
+        if (!lens) {
+          if (buf.length < 8) continue
+          const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
+          const count = view.getUint32(4, true)
+          if (buf.length < 8 + 4 * count) continue
+          lens = Array.from({ length: count }, (_, i) => view.getUint32(8 + 4 * i, true))
+          blobs = new Array(count)
+          store.blobs = blobs
+          buf = buf.slice(8 + 4 * count)
+        }
+        while (next < lens.length && buf.length >= lens[next]) {
+          blobs[next] = new Blob([buf.slice(0, lens[next])], { type: 'image/webp' })
+          buf = buf.slice(lens[next])
+          if (next === 0) firstIn()
+          next++
+          onProgress(next / lens.length)
+        }
+      }
+      if (!lens || next < lens.length) throw new Error('pack cut short')
+    })()
+    all.catch(failed)
+    await (progressive ? first0 : all)
+    const first = await createImageBitmap(blobs[0])
+    store.width = first.width
+    store.height = first.height
+    store.cache.set(0, first)
+    return store
   }
 
   /**
