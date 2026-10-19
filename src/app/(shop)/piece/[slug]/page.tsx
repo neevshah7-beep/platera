@@ -161,7 +161,7 @@ export default async function PiecePage({ params }: Props) {
 
             <p className="mt-8 text-step--1 text-ink-muted">
               Insured delivery across India, arranged on WhatsApp. Returns within {STORE.returnWindowDays} days under our{' '}
-              <Link href="/policies/returns" className="link">returns policy</Link>; making charges and GST are not refundable.
+              <Link href="/policies/returns" className="link">returns policy</Link>; {Number(product.makingPct) > 0 ? 'making charges and GST are' : 'GST is'} not refundable.
               {product.returnNote ? ` ${product.returnNote}` : ''}
             </p>
           </div>
@@ -193,7 +193,7 @@ export default async function PiecePage({ params }: Props) {
         </div>
         <ol className="how-steps">
           <li><span className="how-n font-display">1</span><h3>Send us the piece</h3><p>Tap Buy on WhatsApp. The piece arrives at our counter with its photograph and reference.</p></li>
-          <li><span className="how-n font-display">2</span><h3>We confirm the price</h3><p>Weighed at the counter and priced at the day’s silver rate, with the making charge and GST shown.</p></li>
+          <li><span className="how-n font-display">2</span><h3>We confirm the price</h3><p>Weighed at the counter and priced at the day’s silver rate,{Number(product.makingPct) > 0 ? ' with the making charge and GST shown.' : ' with GST shown.'}</p></li>
           <li><span className="how-n font-display">3</span><h3>Packed and sent</h3><p>Pay by UPI or bank transfer, or collect it at Gorai 1. We send it insured, anywhere in India.</p></li>
         </ol>
         {!sold && (
