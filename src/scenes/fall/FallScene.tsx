@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { createGL, FrameStore, frameTier, makeTexture, pixelRatio, uploadImage } from '../gl'
+import { FrameStore, createGL, frameTier, isPhone, makeTexture, pixelRatio, uploadImage } from '../gl'
 import { entry, useEntry } from '@/site/entry'
 import frag from './fall.frag.glsl'
 
@@ -88,6 +88,8 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
     addEventListener('pointerdown', onDown, { passive: true })
     addEventListener('pointerup', onUp, { passive: true })
 
+    const phone = isPhone()
+    let lastKey = ''
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop)
       if (!visible || !frames) {
@@ -120,14 +122,15 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       if (bmp && bmp !== shownBmp) {
         uploadImage(gl, tex, bmp)
         shownBmp = bmp
-        c.dataset.live = '1'
+        if (g.ready()) c.dataset.live = '1'
       }
       if (!shownBmp) return
+      if (c.dataset.live !== '1' && g.ready()) c.dataset.live = '1'
 
       // The lamp: follows the pointer on a soft spring; when the pointer rests (or on touch)
       // it drifts on its own slow path so the scene is never still.
       const idle = now - ptr.lastMove > 2600
-      if (idle) {
+      if (idle && !phone) {
         ptr.tx = 0.5 + Math.sin(t * 0.23) * 0.22
         ptr.ty = 0.5 + Math.sin(t * 0.17 + 1.2) * 0.14
       }
@@ -138,15 +141,21 @@ export function FallScene({ onLanded, children }: { onLanded?: () => void; child
       ptr.lamp += (ptr.lampT - ptr.lamp) * k * 0.5
       ptr.press += (ptr.pressT - ptr.press) * (ptr.pressT > ptr.press ? 0.25 : 0.05)
 
-      gl.uniform1i(uniform('uFrame'), 0)
-      gl.uniform2f(uniform('uRes'), c.width, c.height)
-      gl.uniform2f(uniform('uImg'), frames.width, frames.height)
-      gl.uniform2f(uniform('uPointer'), ptr.x, ptr.y)
-      gl.uniform1f(uniform('uLamp'), enteredRef.current ? ptr.lamp : 0)
-      gl.uniform1f(uniform('uPress'), ptr.press)
-      gl.uniform1f(uniform('uTime'), t)
-      gl.uniform1f(uniform('uFade'), 1)
-      draw()
+      // Phones redraw only when the picture changes (frame, hold, strike, size); a
+      // full-screen redraw 60 times a second for grain and drift is what a phone feels.
+      const drawKey = `${g.ready()}|${idx}|${Math.round(ptr.x * 300)}|${Math.round(ptr.y * 300)}|${Math.round(ptr.lamp * 100)}|${Math.round(ptr.press * 100)}|${c.width}`
+      if (!phone || drawKey !== lastKey) {
+        lastKey = drawKey
+        gl.uniform1i(uniform('uFrame'), 0)
+        gl.uniform2f(uniform('uRes'), c.width, c.height)
+        gl.uniform2f(uniform('uImg'), frames.width, frames.height)
+        gl.uniform2f(uniform('uPointer'), ptr.x, ptr.y)
+        gl.uniform1f(uniform('uLamp'), enteredRef.current ? ptr.lamp : 0)
+        gl.uniform1f(uniform('uPress'), ptr.press)
+        gl.uniform1f(uniform('uTime'), t)
+        gl.uniform1f(uniform('uFade'), 1)
+        draw()
+      }
     }
     raf = requestAnimationFrame(loop)
 

@@ -1,4 +1,4 @@
-import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { halfRate, isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
@@ -184,6 +184,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(pixelRatio(1.5, 1))
+  const skip = halfRate()
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.12
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -338,7 +339,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
     group.rotation.y = Math.sin(t * 0.35) * 0.12 + ptr.sx * 0.35 + lifted * 0.5
     group.rotation.x = Math.sin(t * 0.27) * 0.05 - ptr.sy * 0.2
     group.position.y = Math.sin(t * 0.6) * 0.15
-    if (warmed) renderer.render(scene, camera)
+    if (warmed && !skip()) renderer.render(scene, camera)
   }
 
   const resize = () => {

@@ -1,4 +1,4 @@
-import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { halfRate, isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { sliced, studioEnvironment, studioSource, uploadWhenIdle, warmUp } from '../env'
 import { visibleGate } from '../visible'
@@ -64,6 +64,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(pixelRatio(1.5, 1))
+  const skip = halfRate()
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.05
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -107,6 +108,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     ctx.fillRect(0, bandH * 0.88, tc.width, 3)
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
+    const narrow = innerWidth / innerHeight < 0.9
     marks.forEach((m, k) => {
       // Seen from inside the band the lathe's u runs right to left, so the engraving is
       // drawn mirrored, and mark k sits at u = 1 − k/n (the ring then turns forward).
@@ -123,7 +125,9 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
         let size = bandH * 0.34
         ctx.font = `400 ${Math.round(size)}px ${family()}`
         ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${Math.round(size * 0.15)}px`
-        const maxW = tc.width * 0.085
+        // A portrait phone sees a narrower arc of the wall: its marks are set smaller, so a
+        // word never runs past the screen's edges as the ring turns.
+        const maxW = tc.width * (narrow ? 0.048 : 0.085)
         const w = ctx.measureText(m.line).width
         if (w > maxW) {
           size *= maxW / w
@@ -131,9 +135,13 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
           ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${Math.round(size * 0.15)}px`
         }
         ctx.fillText(m.line, 0, bandH * 0.46)
-        ctx.font = `500 ${Math.round(bandH * 0.075)}px ${sans()}`
-        ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${Math.round(bandH * 0.03)}px`
-        ctx.fillText(m.sub.toUpperCase(), 0, bandH * 0.74)
+        // The small second line repeats the chapter's name, which a phone already shows in
+        // the index below; there it would sit behind the title, so phones leave it out.
+        if (!narrow) {
+          ctx.font = `500 ${Math.round(bandH * 0.075)}px ${sans()}`
+          ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${Math.round(bandH * 0.03)}px`
+          ctx.fillText(m.sub.toUpperCase(), 0, bandH * 0.74)
+        }
         ctx.restore()
         // A small diamond between marks.
         const xd = x + dx + (tc.width / marks.length) / 2
@@ -265,7 +273,7 @@ export function createJourney(canvas: HTMLCanvasElement, marks: JourneyMark[]): 
     const facing = -Math.PI - (camera.aspect < 0.9 ? 0 : 0.3)
     group.rotation.y = (1 - dive) * (t * 0.18) + dive * (facing + held * step) + ptr.sx * 0.05
     group.rotation.x = (1 - dive) * 0.18
-    if (warmed && engraved) renderer.render(scene, camera)
+    if (warmed && engraved && !skip()) renderer.render(scene, camera)
   }
 
   const resize = () => {

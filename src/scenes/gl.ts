@@ -27,6 +27,16 @@ export function jewelMaterial(p: THREE.MeshPhysicalMaterialParameters = {}): THR
   return new THREE.MeshStandardMaterial(standard) as unknown as THREE.MeshPhysicalMaterial
 }
 
+/**
+ * Phones draw a live 3D room every other frame (30 a second): half the GPU work, while the
+ * page itself still scrolls at full speed on the compositor. Each scene keeps its own counter.
+ */
+export function halfRate(): () => boolean {
+  if (!isPhone()) return () => false
+  let n = 0
+  return () => (n++ & 1) === 1
+}
+
 /** Which rendered size of a frame sequence to load: 'm' (960 px) on phones. */
 export function frameTier() {
   if (isPhone()) return 'm'
@@ -42,6 +52,8 @@ export type GL = {
   gl: WebGL2RenderingContext
   program: WebGLProgram
   uniform: (name: string) => WebGLUniformLocation | null
+  /** True once the shader has compiled and the scene can really draw. */
+  ready: () => boolean
   draw: () => void
   dispose: () => void
 }
@@ -53,35 +65,55 @@ export function createGL(canvas: HTMLCanvasElement, frag: string): GL | null {
     const s = gl.createShader(type)!
     gl.shaderSource(s, src)
     gl.compileShader(s)
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) ?? 'shader')
     return s
   }
   const program = gl.createProgram()!
-  gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT))
+  const vs = compile(gl.VERTEX_SHADER, VERT)
   // Phones compile the LITE variant of a scene shader: the same look with fewer samples.
-  const src = isPhone() ? frag.replace(/^(#version[^\n]*\n)/, '$1#define LITE\n') : frag
-  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, src))
+  const fs = compile(gl.FRAGMENT_SHADER, isPhone() ? frag.replace(/^(#version[^\n]*\n)/, '$1#define LITE\n') : frag)
+  gl.attachShader(program, vs)
+  gl.attachShader(program, fs)
   gl.linkProgram(program)
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) ?? 'link')
-  gl.useProgram(program)
   // Champagne, never black, before the first frame has arrived.
   gl.clearColor(0.91, 0.83, 0.65, 1)
   gl.clear(gl.COLOR_BUFFER_BIT)
   const buf = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, buf)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
-  const loc = gl.getAttribLocation(program, 'aPos')
-  gl.enableVertexAttribArray(loc)
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+  // The shader compiles in the background where the driver allows (KHR_parallel_shader_compile).
+  // Asking for its status, or for a uniform, before it is done would hold the whole page
+  // until the compile finished; so the scene draws nothing until the program reports ready.
+  const parallel = gl.getExtension('KHR_parallel_shader_compile')
+  let ready = false
+  let failed = false
+  const isReady = () => {
+    if (ready || failed) return ready
+    if (parallel && !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR)) return false
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      failed = true
+      console.error(gl.getShaderInfoLog(fs) || gl.getProgramInfoLog(program))
+      return false
+    }
+    gl.useProgram(program)
+    const loc = gl.getAttribLocation(program, 'aPos')
+    gl.enableVertexAttribArray(loc)
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+    ready = true
+    return true
+  }
   const cache = new Map<string, WebGLUniformLocation | null>()
   return {
     gl,
     program,
+    ready: isReady,
     uniform: (name) => {
+      if (!isReady()) return null
       if (!cache.has(name)) cache.set(name, gl.getUniformLocation(program, name))
       return cache.get(name)!
     },
-    draw: () => gl.drawArrays(gl.TRIANGLES, 0, 3),
+    draw: () => {
+      if (isReady()) gl.drawArrays(gl.TRIANGLES, 0, 3)
+    },
     dispose: () => {
       gl.deleteBuffer(buf)
       gl.deleteProgram(program)

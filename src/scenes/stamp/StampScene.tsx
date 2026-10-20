@@ -105,6 +105,8 @@ export function StampScene() {
       io.observe(section.current!)
 
       let last = performance.now()
+      const phone = isPhone()
+      let lastKey = ''
       const loop = (now: number) => {
         raf = requestAnimationFrame(loop)
         // Real elapsed time (not frame count), so the charge feels the same on any device.
@@ -165,18 +167,25 @@ export function StampScene() {
         if (bmp && bmp !== shownBmp) {
           uploadImage(gl, tex, bmp)
           shownBmp = bmp
-          if (c.dataset.shown !== '1') c.dataset.shown = '1'
+          if (c.dataset.shown !== '1' && g.ready()) c.dataset.shown = '1'
         }
-        gl.uniform1i(uniform('uFrame'), 0)
-        gl.uniform2f(uniform('uRes'), c.width, c.height)
-        gl.uniform2f(uniform('uImg'), frames.width, frames.height)
-        gl.uniform2f(uniform('uImpact'), impact[0], impact[1])
-        gl.uniform1f(uniform('uHold'), state === 'striking' || state === 'struck' ? 0 : hold)
-
-        gl.uniform1f(uniform('uStrike'), strikeAt < 0 ? -1 : t - strikeAt)
-        gl.uniform1f(uniform('uTime'), t)
-        gl.uniform1f(uniform('uDieRadius'), portrait ? 0.07 : 0.085)
-        draw()
+        // Phones redraw only when the picture changes (frame, hold, strike, size); a
+        // full-screen redraw 60 times a second for grain and drift is what a phone feels.
+        if (c.dataset.shown !== '1' && shownBmp && g.ready()) c.dataset.shown = '1'
+        const drawKey = `${g.ready()}|${idx}|${Math.round(hold * 240)}|${strikeAt < 0 || t - strikeAt > 2.2 ? -1 : Math.round((t - strikeAt) * 40)}|${c.width}`
+        if (!phone || drawKey !== lastKey) {
+          lastKey = drawKey
+          gl.uniform1i(uniform('uFrame'), 0)
+          gl.uniform2f(uniform('uRes'), c.width, c.height)
+          gl.uniform2f(uniform('uImg'), frames.width, frames.height)
+          gl.uniform2f(uniform('uImpact'), impact[0], impact[1])
+          gl.uniform1f(uniform('uHold'), state === 'striking' || state === 'struck' ? 0 : hold)
+  
+          gl.uniform1f(uniform('uStrike'), strikeAt < 0 ? -1 : t - strikeAt)
+          gl.uniform1f(uniform('uTime'), t)
+          gl.uniform1f(uniform('uDieRadius'), portrait ? 0.07 : 0.085)
+          draw()
+        }
 
         // After the strike settles, a further press strikes again from the top.
         if (state === 'struck' && ctl.hold) {

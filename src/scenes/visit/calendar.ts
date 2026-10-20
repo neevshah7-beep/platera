@@ -1,4 +1,4 @@
-import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { halfRate, isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
@@ -105,6 +105,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(pixelRatio(1.5, 1))
+  const skip = halfRate()
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.9
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -288,7 +289,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
       else if (k === 3) shape(p, Math.PI, 0)
       else shape(p, 0, 2 - k)
     })
-    if (warmed) renderer.render(scene, camera)
+    if (warmed && !skip()) renderer.render(scene, camera)
   }
 
   const resize = () => {

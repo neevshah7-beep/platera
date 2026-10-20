@@ -1,4 +1,4 @@
-import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { halfRate, isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
@@ -41,6 +41,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(pixelRatio(1.5, 1))
+  const skip = halfRate()
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.78
   renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -333,7 +334,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     const focus = hovered ?? best
     if (focus) focusAt.copy(focus.group.position)
     if (!renderer.shadowMap.autoUpdate) renderer.shadowMap.needsUpdate = shadowTick++ % 3 === 0
-    if (warmed) renderer.render(scene, camera)
+    if (warmed && !skip()) renderer.render(scene, camera)
   }
 
   const resize = () => {

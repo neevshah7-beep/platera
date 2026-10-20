@@ -86,6 +86,8 @@ export function GiftScene() {
       io.observe(section.current!)
 
       let last = performance.now()
+      const phone = isPhone()
+      let lastKey = ''
       const loop = (now: number) => {
         raf = requestAnimationFrame(loop)
         const dt = Math.min(0.1, (now - last) / 1000)
@@ -117,13 +119,19 @@ export function GiftScene() {
           uploadImage(gl, tex, bmp)
           shownBmp = bmp
         }
-        gl.uniform1i(uniform('uFrame'), 0)
-        gl.uniform2f(uniform('uRes'), c.width, c.height)
-        gl.uniform2f(uniform('uImg'), frames.width, frames.height)
-        gl.uniform1f(uniform('uPull'), Math.sign(drag.current.pull || 1) * pull)
-        gl.uniform2f(uniform('uBow'), bow[0], bow[1])
-        gl.uniform1f(uniform('uTime'), now / 1000)
-        draw()
+        // Phones redraw only when the picture changes (frame, hold, strike, size); a
+        // full-screen redraw 60 times a second for grain and drift is what a phone feels.
+        const drawKey = `${g.ready()}|${Math.round(frame)}|${Math.round(pull * 200)}|${c.width}`
+        if (!phone || drawKey !== lastKey) {
+          lastKey = drawKey
+          gl.uniform1i(uniform('uFrame'), 0)
+          gl.uniform2f(uniform('uRes'), c.width, c.height)
+          gl.uniform2f(uniform('uImg'), frames.width, frames.height)
+          gl.uniform1f(uniform('uPull'), Math.sign(drag.current.pull || 1) * pull)
+          gl.uniform2f(uniform('uBow'), bow[0], bow[1])
+          gl.uniform1f(uniform('uTime'), now / 1000)
+          draw()
+        }
       }
       raf = requestAnimationFrame(loop)
       return () => {

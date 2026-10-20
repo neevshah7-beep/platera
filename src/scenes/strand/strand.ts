@@ -1,4 +1,4 @@
-import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { halfRate, isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
@@ -70,6 +70,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
   renderer.setPixelRatio(pixelRatio(1.5, 1))
+  const skip = halfRate()
   // Khronos PBR Neutral: keeps the gold's hue and the page's champagne true (AgX greys both).
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.95
@@ -283,7 +284,7 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
     // Focus on the promise bead being read; the rest of the strand falls into bokeh.
     const u = bokeh.uniforms as Record<string, THREE.IUniform>
     u.focus.value = THREE.MathUtils.lerp(u.focus.value as number, camera.position.distanceTo(focusPoint.lengthSq() ? focusPoint : fb), 0.15)
-    if (warmed) composer.render(dt)
+    if (warmed && !skip()) composer.render(dt)
   }
 
   const resize = () => {

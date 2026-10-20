@@ -27,6 +27,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
 
   useEffect(() => {
     let raf = 0
+    const docked = matchMedia('(max-width: 767px), (orientation: landscape) and (max-height: 540px)').matches
     const tick = () => {
       raf = requestAnimationFrame(tick)
       const r = section.current!.getBoundingClientRect()
@@ -40,7 +41,9 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
       }
       if (viewingRef.current) return
       const s = api.current?.hoveredScreen() ?? null
-      setLabel((l) => (l?.slug === s?.slug && Math.abs((l?.x ?? 0) - (s?.x ?? 0)) < 1 && Math.abs((l?.y ?? 0) - (s?.y ?? 0)) < 1 ? l : s))
+      // On phones the label is docked, so only a change of piece needs a re-render; following
+      // the piece's position re-rendered the label on nearly every frame of a scroll.
+      setLabel((l) => (l?.slug === s?.slug && (docked || (Math.abs((l?.x ?? 0) - (s?.x ?? 0)) < 1 && Math.abs((l?.y ?? 0) - (s?.y ?? 0)) < 1)) ? l : s))
     }
     raf = requestAnimationFrame(tick)
     const onMove = (e: PointerEvent) => {
