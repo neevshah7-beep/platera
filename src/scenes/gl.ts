@@ -2,6 +2,7 @@
  * Minimal WebGL2 for full-screen composited scenes: one program, one triangle, a few
  * textures. Scenes that are photoreal frame sequences need nothing heavier.
  */
+import * as THREE from 'three'
 import packs from './packs.json'
 
 /** A phone or small touch tablet: draws less and loads the phone-sized frames. */
@@ -10,8 +11,20 @@ export function isPhone() {
 }
 
 /** The drawing resolution: sharp on a desktop, capped low on phones where the GPU is the limit. */
-export function pixelRatio(max = 2) {
-  return Math.min(devicePixelRatio, isPhone() ? 1.25 : max)
+export function pixelRatio(max = 2, phoneMax = 1.25) {
+  return Math.min(devicePixelRatio, isPhone() ? phoneMax : max)
+}
+
+/**
+ * A physical material (clear coat, sheen) on desktops; on phones the standard material with
+ * the same colour, metal and roughness, which compiles and draws several times faster.
+ * Typed as physical, so scenes may still set physical-only fields (ignored on phones).
+ */
+const PHYSICAL_ONLY = ['clearcoat', 'clearcoatRoughness', 'clearcoatMap', 'clearcoatNormalMap', 'clearcoatNormalScale', 'clearcoatRoughnessMap', 'sheen', 'sheenColor', 'sheenColorMap', 'sheenRoughness', 'sheenRoughnessMap', 'ior', 'reflectivity', 'specularIntensity', 'specularIntensityMap', 'specularColor', 'specularColorMap', 'iridescence', 'iridescenceIOR', 'iridescenceMap', 'iridescenceThicknessMap', 'iridescenceThicknessRange', 'anisotropy', 'anisotropyRotation', 'anisotropyMap', 'transmission', 'transmissionMap', 'thickness', 'thicknessMap', 'attenuationDistance', 'attenuationColor', 'dispersion']
+export function jewelMaterial(p: THREE.MeshPhysicalMaterialParameters = {}): THREE.MeshPhysicalMaterial {
+  if (!isPhone()) return new THREE.MeshPhysicalMaterial(p)
+  const standard = Object.fromEntries(Object.entries(p).filter(([k]) => !PHYSICAL_ONLY.includes(k)))
+  return new THREE.MeshStandardMaterial(standard) as unknown as THREE.MeshPhysicalMaterial
 }
 
 /** Which rendered size of a frame sequence to load: 'm' (960 px) on phones. */

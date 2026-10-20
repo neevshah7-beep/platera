@@ -1,4 +1,4 @@
-import { isPhone, pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
@@ -40,11 +40,14 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.78
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
+  // Phones keep the cases' shadows on the silk but refresh them every third frame.
+  renderer.shadowMap.autoUpdate = !isPhone()
+  let shadowTick = 0
   // PCF soft shadows: VSM smears the thin outlines of cut-out jewellery into blocks.
   renderer.shadowMap.type = THREE.PCFShadowMap
 
@@ -78,7 +81,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   silkGeo.computeVertexNormals()
     silk = new THREE.Mesh(
     silkGeo,
-    new THREE.MeshPhysicalMaterial({
+    jewelMaterial({
       color: new THREE.Color(0.6, 0.4, 0.19),
       roughness: 0.3,
       sheen: 1,
@@ -114,9 +117,9 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   // ── The case materials, shared ──
   // Champagne leatherette outside, a fine gold trim, espresso velvet inside (silver and
   // stones glow against dark velvet), and a cream satin lid lining foiled with the name.
-  const shell = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.95, 0.88, 0.74), roughness: 0.42, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.28, 0.28), sheen: 0.5, sheenRoughness: 0.4, sheenColor: new THREE.Color(1, 0.95, 0.85), clearcoat: 1, clearcoatRoughness: 0.07, envMapIntensity: 1.3 })
-  const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.12, 0.065, 0.035), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.55, 0.36, 0.22) })
-  const trim = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.78, 0.36), metalness: 1, roughness: 0.12, envMapIntensity: 1.6 })
+  const shell = jewelMaterial({ color: new THREE.Color(0.95, 0.88, 0.74), roughness: 0.42, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.28, 0.28), sheen: 0.5, sheenRoughness: 0.4, sheenColor: new THREE.Color(1, 0.95, 0.85), clearcoat: 1, clearcoatRoughness: 0.07, envMapIntensity: 1.3 })
+  const velvet = jewelMaterial({ color: new THREE.Color(0.12, 0.065, 0.035), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.55, 0.36, 0.22) })
+  const trim = jewelMaterial({ color: new THREE.Color(1.0, 0.78, 0.36), metalness: 1, roughness: 0.12, envMapIntensity: 1.6 })
   const liningCanvas = document.createElement('canvas')
   liningCanvas.width = 1024
   liningCanvas.height = 640
@@ -138,7 +141,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
   }
   const liningTex = new THREE.CanvasTexture(liningCanvas)
   liningTex.colorSpace = THREE.SRGBColorSpace
-  const lining = new THREE.MeshPhysicalMaterial({ map: liningTex, roughness: 0.35, sheen: 1, sheenColor: new THREE.Color(1, 0.96, 0.88) })
+  const lining = jewelMaterial({ map: liningTex, roughness: 0.35, sheen: 1, sheenColor: new THREE.Color(1, 0.96, 0.88) })
   const geos: THREE.BufferGeometry[] = []
 
   type Item = { group: THREE.Group; mesh: THREE.Mesh; lid: THREE.Group; open: number; openV: number; lift: number; home: THREE.Vector3; slug: string; mats: THREE.Material[] }
@@ -216,7 +219,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     map.anisotropy = 8
     const normal = photoTexture(renderer, `${p.base}-normal.webp`, false)
     const dr = photoTexture(renderer, `${p.base}-dr.webp`, false)
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = jewelMaterial({
       map,
       normalMap: normal,
       normalScale: new THREE.Vector2(1.1, 1.1),
@@ -329,6 +332,7 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
     for (const it of items) if (best && Math.abs(it.home.x - look.x) < Math.abs(best.home.x - look.x)) best = it
     const focus = hovered ?? best
     if (focus) focusAt.copy(focus.group.position)
+    if (!renderer.shadowMap.autoUpdate) renderer.shadowMap.needsUpdate = shadowTick++ % 3 === 0
     if (warmed) renderer.render(scene, camera)
   }
 

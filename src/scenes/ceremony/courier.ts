@@ -1,3 +1,4 @@
+import { jewelMaterial } from '../gl'
 import * as THREE from 'three'
 
 /**
@@ -77,11 +78,11 @@ export function buildCarton(): Carton {
     ctx.fillText('JEWELLERS  ·  GORAI 1, BORIVALI WEST  ·  925', 780, 318)
     ctx.fillRect(560, 268, 440, 2)
   })
-  const kraftMat = (map: THREE.Texture) => new THREE.MeshPhysicalMaterial({ map, roughness: 0.92, sheen: 0.25, sheenColor: new THREE.Color(1, 0.9, 0.75) })
+  const kraftMat = (map: THREE.Texture) => jewelMaterial({ map, roughness: 0.92, sheen: 0.25, sheenColor: new THREE.Color(1, 0.9, 0.75) })
   const mPlain = kraftMat(plain.tex)
   const mInner = kraftMat(inner.tex)
   const mPrint = kraftMat(printed.tex)
-  const edge = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.8, 0.64, 0.44), roughness: 0.95 })
+  const edge = jewelMaterial({ color: new THREE.Color(0.8, 0.64, 0.44), roughness: 0.95 })
 
   const group = new THREE.Group()
   const add = (geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Material[], x: number, y: number, z: number, parent: THREE.Object3D = group) => {
@@ -122,7 +123,7 @@ export function buildCarton(): Carton {
   left.rotation.z = OPEN
 
   // Ivory tissue, softly crinkled, standing open over the long walls.
-  const tissueMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.97, 0.94, 0.87), roughness: 0.75, sheen: 0.8, sheenColor: new THREE.Color(1, 1, 1), side: THREE.DoubleSide })
+  const tissueMat = jewelMaterial({ color: new THREE.Color(0.97, 0.94, 0.87), roughness: 0.75, sheen: 0.8, sheenColor: new THREE.Color(1, 1, 1), side: THREE.DoubleSide })
   const sheet = (seed: number) => {
     const g = new THREE.PlaneGeometry(W - 3.2, FL + 3.5, 40, 14)
     const p = g.attributes.position as THREE.BufferAttribute
@@ -159,7 +160,7 @@ export function buildCarton(): Carton {
     ctx.font = `500 150px ${family()}`
     ctx.fillText('P', 128, 140)
   })
-  const sticker = add(new THREE.CylinderGeometry(2.6, 2.6, 0.12, 48), [new THREE.MeshPhysicalMaterial({ color: 0xc99a3e, metalness: 1, roughness: 0.3 }), new THREE.MeshPhysicalMaterial({ map: seal.tex, metalness: 0.85, roughness: 0.28 }), new THREE.MeshPhysicalMaterial({ color: 0xc99a3e })], 0, H - 0.2, 1.5)
+  const sticker = add(new THREE.CylinderGeometry(2.6, 2.6, 0.12, 48), [jewelMaterial({ color: 0xc99a3e, metalness: 1, roughness: 0.3 }), jewelMaterial({ map: seal.tex, metalness: 0.85, roughness: 0.28 }), jewelMaterial({ color: 0xc99a3e })], 0, H - 0.2, 1.5)
   sticker.visible = false
 
   // House tape: espresso, the name repeated in gold.
@@ -176,7 +177,7 @@ export function buildCarton(): Carton {
     ctx.fillRect(0, 88, 1024, 2)
   })
   tape.tex.wrapS = THREE.RepeatWrapping
-  const tapeMat = new THREE.MeshPhysicalMaterial({ map: tape.tex, roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2, clippingPlanes: [new THREE.Plane(new THREE.Vector3(-1, 0, 0), -1e4)] })
+  const tapeMat = jewelMaterial({ map: tape.tex, roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2, clippingPlanes: [new THREE.Plane(new THREE.Vector3(-1, 0, 0), -1e4)] })
   const topY = H + T + T / 2 + 0.06
   const tapeTex = tape.tex.clone()
   tapeTex.repeat.set((W + 0.4) / 26, 1)
@@ -242,7 +243,7 @@ export function buildCarton(): Carton {
     ctx.fillText('WITH CARE', 694, 440)
     ctx.textAlign = 'left'
   })
-  const label = add(new THREE.PlaneGeometry(16, 10.7), new THREE.MeshPhysicalMaterial({ map: lab.tex, roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -2 }), -12, topY + 0.02, 11)
+  const label = add(new THREE.PlaneGeometry(16, 10.7), jewelMaterial({ map: lab.tex, roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -2 }), -12, topY + 0.02, 11)
   label.rotation.x = -Math.PI / 2
   label.rotation.z = 0.05
   label.visible = false

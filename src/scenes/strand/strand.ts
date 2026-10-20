@@ -1,4 +1,4 @@
-import { isPhone, pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
@@ -69,12 +69,13 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   // Khronos PBR Neutral: keeps the gold's hue and the page's champagne true (AgX greys both).
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.95
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.shadowMap.enabled = true
+  // Phones skip real-time shadows: a depth pass every frame is the cost they feel most.
+  renderer.shadowMap.enabled = !isPhone()
   renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
@@ -128,14 +129,14 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   scene.add(key)
 
   // Materials: 18k yellow gold, polished; the faceted beads a touch smoother so every facet flashes.
-  const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.14, envMapIntensity: 1.25 })
-  const goldCut = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.79, 0.38), metalness: 1, roughness: 0.06, envMapIntensity: 1.35, flatShading: true })
+  const gold = jewelMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.14, envMapIntensity: 1.25 })
+  const goldCut = jewelMaterial({ color: new THREE.Color(1.0, 0.79, 0.38), metalness: 1, roughness: 0.06, envMapIntensity: 1.35, flatShading: true })
   const round = new THREE.SphereGeometry(R, 64, 48)
   const cut = new THREE.IcosahedronGeometry(R * 0.94, 2) // 320 facets: a diamond-cut bead
   const rondelle = new THREE.TorusGeometry(R * 0.5, R * 0.16, 16, 40)
 
   const promiseMats = MARKS.map((mark) => {
-    const { normal, rough, color } = engraving(mark)
+    const { normal, rough, color } = engraving(mark, isPhone() ? 256 : 512)
     const m = gold.clone()
     m.setValues({ map: color, normalMap: normal, normalScale: new THREE.Vector2(1.1, 1.1), roughnessMap: rough, roughness: 1 })
     return m
@@ -210,9 +211,12 @@ export function createStrand(canvas: HTMLCanvasElement): StrandApi {
   composer.setPixelRatio(1)
   composer.addPass(new RenderPass(scene, camera))
   const bokeh = new BokehPass(scene, camera, { focus: 20, aperture: 0.0007, maxblur: 0.0032 })
-  composer.addPass(bokeh)
   const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.14, 0.4, 0.95)
-  composer.addPass(bloom)
+  // Phones go without depth of field and bloom: two extra full-screen passes every frame.
+  if (!isPhone()) {
+    composer.addPass(bokeh)
+    composer.addPass(bloom)
+  }
   composer.addPass(new OutputPass())
 
   let progress = 0

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createGL, FrameStore, frameTier, makeTexture, pixelRatio, uploadImage } from '../gl'
+import { FrameStore, createGL, frameTier, isPhone, makeTexture, pixelRatio, uploadImage } from '../gl'
 import frag from './gift.frag.glsl'
 
 const FRAMES = 200
@@ -21,99 +21,118 @@ export function GiftScene() {
   const drag = useRef({ active: false, x0: 0, pull: 0 })
 
   useEffect(() => {
-    const c = canvas.current!
-    const g = createGL(c, frag)
-    if (!g) return
-    const { gl, uniform, draw } = g
-    let tex = makeTexture(gl)
-    let shownBmp: ImageBitmap | null = null
-    c.addEventListener('webglcontextlost', (e) => e.preventDefault())
-    c.addEventListener('webglcontextrestored', () => {
-      tex = makeTexture(gl)
-      shownBmp = null
-    })
-    const portrait = innerWidth / innerHeight < 0.8
-    const bow = portrait ? BOW.portrait : BOW.landscape
-    let frames: FrameStore | null = null
-    let visible = false
-    let started = false
-    let raf = 0
-    let frame = 1
-    let pull = 0 // spring-damped pull amount, 0..1 (how much of the wrap is undone)
-    let pullV = 0
-    let wasTied = false
-    const resize = () => {
-      const dpr = pixelRatio()
-      c.width = Math.round(c.clientWidth * dpr)
-      c.height = Math.round(c.clientHeight * dpr)
-      gl.viewport(0, 0, c.width, c.height)
-    }
-    resize()
-    const ro = new ResizeObserver(resize)
-    ro.observe(c)
-    const io = new IntersectionObserver(
+    // The scene's GL context and shader are made only as the visitor nears the chapter
+    // (compiling a shader holds the page until the GPU driver is done), not at page load.
+    let stop: (() => void) | undefined
+    const near = new IntersectionObserver(
       ([e]) => {
-        visible = e.isIntersecting
-        if (visible && !started) {
-          started = true
-          FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${frameTier()}`), FRAMES, () => {}, true).then((f) => {
-            frames = f
-            if (!f) setMissing(true)
-          })
-        }
+        if (!e.isIntersecting || stop) return
+        near.disconnect()
+        stop = start()
       },
-      // Fetched three screens ahead and shown from its first frame, so it never arrives late.
-      { rootMargin: '300% 0px' },
+      { rootMargin: isPhone() ? '120% 0px' : '250% 0px' },
     )
-    io.observe(section.current!)
-
-    let last = performance.now()
-    const loop = (now: number) => {
-      raf = requestAnimationFrame(loop)
-      const dt = Math.min(0.1, (now - last) / 1000)
-      last = now
-      if (!visible || !frames) {
-        if (!visible && frames && shownBmp) {
-          frames.trim()
-          shownBmp = null
-        }
-        return
-      }
-      const r = section.current!.getBoundingClientRect()
-      const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)))
-      // Scroll wraps the gift over the first 85% of the section; the rest is for pulling.
-      const wrapped = Math.min(1, p / 0.85)
-      const isTied = wrapped >= 0.999
-      if (isTied !== wasTied) {
-        wasTied = isTied
-        setTied(isTied)
-      }
-      // The pull: while dragging, follow the hand; released, spring home (a little overshoot).
-      const target = drag.current.active && isTied ? Math.min(1, Math.abs(drag.current.pull)) : 0
-      pullV += (-120 * (pull - target) - 16 * pullV) * dt
-      pull = Math.max(0, pull + pullV * dt)
-      frame = 1 + (FRAMES - 1) * wrapped * (1 - pull * 0.55)
-
-      const bmp = frames.get(Math.round(frame) - 1)
-      if (bmp && bmp !== shownBmp) {
-        uploadImage(gl, tex, bmp)
-        shownBmp = bmp
-      }
-      gl.uniform1i(uniform('uFrame'), 0)
-      gl.uniform2f(uniform('uRes'), c.width, c.height)
-      gl.uniform2f(uniform('uImg'), frames.width, frames.height)
-      gl.uniform1f(uniform('uPull'), Math.sign(drag.current.pull || 1) * pull)
-      gl.uniform2f(uniform('uBow'), bow[0], bow[1])
-      gl.uniform1f(uniform('uTime'), now / 1000)
-      draw()
-    }
-    raf = requestAnimationFrame(loop)
+    near.observe(section.current!)
     return () => {
-      cancelAnimationFrame(raf)
-      ro.disconnect()
-      io.disconnect()
-      frames?.dispose()
-      g.dispose()
+      near.disconnect()
+      stop?.()
+    }
+
+    function start(): (() => void) | undefined {
+      const c = canvas.current!
+      const g = createGL(c, frag)
+      if (!g) return
+      const { gl, uniform, draw } = g
+      let tex = makeTexture(gl)
+      let shownBmp: ImageBitmap | null = null
+      c.addEventListener('webglcontextlost', (e) => e.preventDefault())
+      c.addEventListener('webglcontextrestored', () => {
+        tex = makeTexture(gl)
+        shownBmp = null
+      })
+      const portrait = innerWidth / innerHeight < 0.8
+      const bow = portrait ? BOW.portrait : BOW.landscape
+      let frames: FrameStore | null = null
+      let visible = false
+      let started = false
+      let raf = 0
+      let frame = 1
+      let pull = 0 // spring-damped pull amount, 0..1 (how much of the wrap is undone)
+      let pullV = 0
+      let wasTied = false
+      const resize = () => {
+        const dpr = pixelRatio()
+        c.width = Math.round(c.clientWidth * dpr)
+        c.height = Math.round(c.clientHeight * dpr)
+        gl.viewport(0, 0, c.width, c.height)
+      }
+      resize()
+      const ro = new ResizeObserver(resize)
+      ro.observe(c)
+      const io = new IntersectionObserver(
+        ([e]) => {
+          visible = e.isIntersecting
+          if (visible && !started) {
+            started = true
+            FrameStore.loadFirst((portrait ? ['gift_portrait', 'gift'] : ['gift']).map((d) => `/scenes/${d}/${frameTier()}`), FRAMES, () => {}, true).then((f) => {
+              frames = f
+              if (!f) setMissing(true)
+            })
+          }
+        },
+        // Fetched three screens ahead and shown from its first frame, so it never arrives late.
+        { rootMargin: '300% 0px' },
+      )
+      io.observe(section.current!)
+
+      let last = performance.now()
+      const loop = (now: number) => {
+        raf = requestAnimationFrame(loop)
+        const dt = Math.min(0.1, (now - last) / 1000)
+        last = now
+        if (!visible || !frames) {
+          if (!visible && frames && shownBmp) {
+            frames.trim()
+            shownBmp = null
+          }
+          return
+        }
+        const r = section.current!.getBoundingClientRect()
+        const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)))
+        // Scroll wraps the gift over the first 85% of the section; the rest is for pulling.
+        const wrapped = Math.min(1, p / 0.85)
+        const isTied = wrapped >= 0.999
+        if (isTied !== wasTied) {
+          wasTied = isTied
+          setTied(isTied)
+        }
+        // The pull: while dragging, follow the hand; released, spring home (a little overshoot).
+        const target = drag.current.active && isTied ? Math.min(1, Math.abs(drag.current.pull)) : 0
+        pullV += (-120 * (pull - target) - 16 * pullV) * dt
+        pull = Math.max(0, pull + pullV * dt)
+        frame = 1 + (FRAMES - 1) * wrapped * (1 - pull * 0.55)
+
+        const bmp = frames.get(Math.round(frame) - 1)
+        if (bmp && bmp !== shownBmp) {
+          uploadImage(gl, tex, bmp)
+          shownBmp = bmp
+        }
+        gl.uniform1i(uniform('uFrame'), 0)
+        gl.uniform2f(uniform('uRes'), c.width, c.height)
+        gl.uniform2f(uniform('uImg'), frames.width, frames.height)
+        gl.uniform1f(uniform('uPull'), Math.sign(drag.current.pull || 1) * pull)
+        gl.uniform2f(uniform('uBow'), bow[0], bow[1])
+        gl.uniform1f(uniform('uTime'), now / 1000)
+        draw()
+      }
+      raf = requestAnimationFrame(loop)
+      return () => {
+        cancelAnimationFrame(raf)
+        ro.disconnect()
+        io.disconnect()
+        frames?.dispose()
+        g.dispose()
+      }
     }
   }, [])
 

@@ -1,4 +1,4 @@
-import { pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -41,11 +41,12 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   // finish on the spot, which turns background compilation into a stall.
   renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.92
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.shadowMap.enabled = true
+  // Phones skip real-time shadows: a depth pass every frame is the cost they feel most.
+  renderer.shadowMap.enabled = !isPhone()
   renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
@@ -58,9 +59,9 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   })
 
   // The tray: espresso velvet in leather, a fine gold rim.
-  const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.2, 0.11, 0.045), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.62, 0.42, 0.22), envMapIntensity: 0.3 })
-  const leather = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.2, 0.11, 0.05), roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.3 })
-  const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.766, 0.336), metalness: 1, roughness: 0.14 })
+  const velvet = jewelMaterial({ color: new THREE.Color(0.2, 0.11, 0.045), roughness: 0.95, sheen: 1, sheenRoughness: 0.45, sheenColor: new THREE.Color(0.62, 0.42, 0.22), envMapIntensity: 0.3 })
+  const leather = jewelMaterial({ color: new THREE.Color(0.2, 0.11, 0.05), roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.3 })
+  const gold = jewelMaterial({ color: new THREE.Color(1.0, 0.766, 0.336), metalness: 1, roughness: 0.14 })
   const TW = 52, TD = 40
   const frame = new THREE.Mesh(new RoundedBoxGeometry(TW, 2.2, TD, 4, 1), leather)
   frame.position.y = -1.1
@@ -94,7 +95,7 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
   const map = loader.load(`${piece.base}-1600.webp`)
   map.colorSpace = THREE.SRGBColorSpace
   map.anisotropy = 8
-  const mat = new THREE.MeshPhysicalMaterial({
+  const mat = jewelMaterial({
     map,
     roughness: 0.35,
     metalness: 0.4,

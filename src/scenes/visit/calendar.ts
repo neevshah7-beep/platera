@@ -1,4 +1,4 @@
-import { pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { leatherNormals } from '../textures'
 import { visibleGate } from '../visible'
@@ -104,11 +104,12 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   canvas.style.opacity = '0'
   canvas.style.transition = 'opacity 700ms ease'
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.9
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.shadowMap.enabled = true
+  // Phones skip real-time shadows: a depth pass every frame is the cost they feel most.
+  renderer.shadowMap.enabled = !isPhone()
   renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
@@ -122,14 +123,14 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   let alive = true
 
   // The desk: champagne silk-wrapped surface far behind; a leather pad under the stand.
-  const desk = new THREE.Mesh(new THREE.PlaneGeometry(600, 400), new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.86, 0.68, 0.4), roughness: 0.5, sheen: 0.8, sheenColor: new THREE.Color(1, 0.9, 0.7) }))
+  const desk = new THREE.Mesh(new THREE.PlaneGeometry(600, 400), jewelMaterial({ color: new THREE.Color(0.86, 0.68, 0.4), roughness: 0.5, sheen: 0.8, sheenColor: new THREE.Color(1, 0.9, 0.7) }))
   desk.rotation.x = -Math.PI / 2
   desk.receiveShadow = true
   scene.add(desk)
 
   // Espresso calf over the stand: a fine pebbled grain under a soft polish.
-  const leather = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.12, 0.065, 0.03), roughness: 0.48, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.45, 0.45), sheen: 0.7, sheenRoughness: 0.4, sheenColor: new THREE.Color(0.62, 0.42, 0.24), clearcoat: 0.55, clearcoatRoughness: 0.22 })
-  const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.16 })
+  const leather = jewelMaterial({ color: new THREE.Color(0.12, 0.065, 0.03), roughness: 0.48, normalMap: leatherNormals(), normalScale: new THREE.Vector2(0.45, 0.45), sheen: 0.7, sheenRoughness: 0.4, sheenColor: new THREE.Color(0.62, 0.42, 0.24), clearcoat: 0.55, clearcoatRoughness: 0.22 })
+  const gold = jewelMaterial({ color: new THREE.Color(1.0, 0.77, 0.34), metalness: 1, roughness: 0.16 })
 
   // The stand: an easel back leaning behind, a base in front, both leather.
   const stand = new THREE.Group()
@@ -159,7 +160,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   // flip angle a (0 = hanging at the front, π = over the top and down the back); the
   // segments bend progressively along the page so it curls like card, most mid-flip.
   type Page = { mesh: THREE.Mesh; geo: THREE.PlaneGeometry; mat: THREE.MeshPhysicalMaterial; dayIndex: number }
-  const back2 = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.95, 0.91, 0.84), roughness: 0.75, side: THREE.BackSide })
+  const back2 = jewelMaterial({ color: new THREE.Color(0.95, 0.91, 0.84), roughness: 0.75, side: THREE.BackSide })
   const POOL = 4
   const pages: Page[] = []
   // Pages start on a plain cream placeholder and are printed one per frame (see below).
@@ -172,7 +173,7 @@ export function createCalendar(canvas: HTMLCanvasElement, days: CalendarDay[], o
   blank.colorSpace = THREE.SRGBColorSpace
   for (let i = 0; i < POOL; i++) {
     const geo = new THREE.PlaneGeometry(W, H, 1, SEG)
-    const mat = new THREE.MeshPhysicalMaterial({ map: blank, roughness: 0.7, sheen: 0.3, sheenColor: new THREE.Color(1, 1, 1), side: THREE.FrontSide })
+    const mat = jewelMaterial({ map: blank, roughness: 0.7, sheen: 0.3, sheenColor: new THREE.Color(1, 1, 1), side: THREE.FrontSide })
     const front = new THREE.Mesh(geo, mat)
     front.castShadow = front.receiveShadow = true
     const reverse = new THREE.Mesh(geo, back2)

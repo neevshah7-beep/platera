@@ -1,4 +1,4 @@
-import { isPhone, pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { sliced, studioEnvironment, studioSource, warmUp } from '../env'
 import { visibleGate } from '../visible'
@@ -183,11 +183,12 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   canvas.style.transition = 'opacity 700ms ease'
   renderer.setClearColor(0x000000, 0)
   const gate = visibleGate(canvas)
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.12
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.shadowMap.enabled = true
+  // Phones skip real-time shadows: a depth pass every frame is the cost they feel most.
+  renderer.shadowMap.enabled = !isPhone()
   renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
@@ -211,7 +212,7 @@ export function createThread(canvas: HTMLCanvasElement): ThreadApi {
   scene.add(key)
 
   // Polished silver, reflecting the studio light tent.
-  const silver = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.98, 0.975, 0.97), metalness: 1, roughness: 0.09, clearcoat: 0.8, clearcoatRoughness: 0.05, envMapIntensity: 2.1 })
+  const silver = jewelMaterial({ color: new THREE.Color(0.98, 0.975, 0.97), metalness: 1, roughness: 0.09, clearcoat: 0.8, clearcoatRoughness: 0.05, envMapIntensity: 2.1 })
   const pmrem = new THREE.PMREMGenerator(renderer)
   let envTex: THREE.Texture | null = null
   let warmed = false

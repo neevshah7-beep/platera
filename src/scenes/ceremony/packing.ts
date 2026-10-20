@@ -1,4 +1,4 @@
-import { pixelRatio } from '../gl'
+import { isPhone, jewelMaterial, pixelRatio } from '../gl'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -29,11 +29,12 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
   renderer.debug.checkShaderErrors = false
   const gate = visibleGate(canvas)
   renderer.localClippingEnabled = true
-  renderer.setPixelRatio(pixelRatio(1.5))
+  renderer.setPixelRatio(pixelRatio(1.5, 1))
   renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 0.85
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.shadowMap.enabled = true
+  // Phones skip real-time shadows: a depth pass every frame is the cost they feel most.
+  renderer.shadowMap.enabled = !isPhone()
   renderer.shadowMap.type = THREE.PCFShadowMap
 
   const scene = new THREE.Scene()
@@ -50,15 +51,15 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     envReady = true
   })
 
-  const counter = new THREE.Mesh(new THREE.PlaneGeometry(800, 500), new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.86, 0.68, 0.4), roughness: 0.5, sheen: 0.6, sheenColor: new THREE.Color(1, 0.9, 0.7) }))
+  const counter = new THREE.Mesh(new THREE.PlaneGeometry(800, 500), jewelMaterial({ color: new THREE.Color(0.86, 0.68, 0.4), roughness: 0.5, sheen: 0.6, sheenColor: new THREE.Color(1, 0.9, 0.7) }))
   counter.rotation.x = -Math.PI / 2
   counter.receiveShadow = true
   scene.add(counter)
 
-  const shell = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.9, 0.78, 0.58), roughness: 0.55, sheen: 0.6, sheenColor: new THREE.Color(1, 0.93, 0.8), clearcoat: 0.2 })
-  const velvet = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.08, 0.04, 0.02), roughness: 0.95, sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.4, 0.25, 0.14), envMapIntensity: 0.3 })
-  const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1.0, 0.766, 0.336), metalness: 1, roughness: 0.16 })
-  const satin = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.96, 0.92, 0.84), roughness: 0.35, sheen: 1, sheenColor: new THREE.Color(1, 1, 1) })
+  const shell = jewelMaterial({ color: new THREE.Color(0.9, 0.78, 0.58), roughness: 0.55, sheen: 0.6, sheenColor: new THREE.Color(1, 0.93, 0.8), clearcoat: 0.2 })
+  const velvet = jewelMaterial({ color: new THREE.Color(0.08, 0.04, 0.02), roughness: 0.95, sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.4, 0.25, 0.14), envMapIntensity: 0.3 })
+  const gold = jewelMaterial({ color: new THREE.Color(1.0, 0.766, 0.336), metalness: 1, roughness: 0.16 })
+  const satin = jewelMaterial({ color: new THREE.Color(0.96, 0.92, 0.84), roughness: 0.35, sheen: 1, sheenColor: new THREE.Color(1, 1, 1) })
 
   const CW = 44, CD = 34, DEPTH = 4
   const caseGroup = new THREE.Group()
@@ -105,7 +106,7 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     const h = aspect >= 1 ? s / aspect : s
     const map = loader.load(`${p.base}-1600.webp`)
     map.colorSpace = THREE.SRGBColorSpace
-    const mat = new THREE.MeshPhysicalMaterial({ map, roughness: 0.35, metalness: 0.4, envMapIntensity: 1.8, clearcoat: 0.8, clearcoatRoughness: 0.08, alphaTest: 0.5, side: THREE.DoubleSide })
+    const mat = jewelMaterial({ map, roughness: 0.35, metalness: 0.4, envMapIntensity: 1.8, clearcoat: 0.8, clearcoatRoughness: 0.08, alphaTest: 0.5, side: THREE.DoubleSide })
     if (p.maps) {
       mat.normalMap = loader.load(`${p.base}-normal.webp`)
       mat.roughnessMap = loader.load(`${p.base}-dr.webp`)

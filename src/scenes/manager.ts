@@ -9,12 +9,14 @@
  *   · if the GPU drops a scene's context, the scene is disposed and rebuilt cleanly.
  */
 import { isPhone } from './gl'
+import { entry } from '@/site/entry'
 
 export type Live = { dispose: () => void }
 type Entry = { el: HTMLElement; build: () => Live | null; live: Live | null; dist: number; failedAt: number }
 
 const MAX_LIVE = 2
 const phone = isPhone()
+let enteredAt = -1
 const entries = new Set<Entry>()
 let raf = 0
 let lastY = 0
@@ -54,7 +56,11 @@ function loop(now: number) {
     const next = ranked.find((e) => wanted.has(e) && !e.live && now - e.failedAt > 3000)
     // Phones build a scene ahead only in a pause (reading, or holding the hammer), or once it
     // is nearly here, so the work never lands in the middle of a moving scroll.
-    const calm = phone ? velocity < 0.12 || next?.dist !== undefined && next.dist < 0.5 : velocity < 1.2
+    // And on phones nothing is built ahead while the visitor is still arriving: the gate, the
+    // clouds and the falling ring have the phone to themselves for their first seconds.
+    if (enteredAt < 0 && entry.get().entered) enteredAt = now
+    const arrived = !phone || (enteredAt >= 0 && now - enteredAt > 4000)
+    const calm = phone ? arrived && (velocity < 0.12 || (next?.dist !== undefined && next.dist < 0.5)) : velocity < 1.2
     if (next && (next.dist === 0 || calm)) {
       lastBuild = now
       try {

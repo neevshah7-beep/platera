@@ -1,16 +1,58 @@
 import * as THREE from 'three'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
+import { isPhone } from './gl'
 
 /**
  * The studio light (public/env/studio.exr), fetched and parsed once for the whole visit and
  * shared by every scene; each scene still prefilters it for its own renderer (PMREM).
  */
+let prefiltered: { data: Uint16Array; width: number; height: number } | null = null
 let source: Promise<THREE.DataTexture> | null = null
+/**
+ * Phones: the light already prefiltered (public/env/studio-phone-pmrem.png, made by
+ * scripts/bake-phone-environment.mjs), so no phone runs PMREM. The image holds RGBE: the
+ * top half the colour, the bottom half the shared exponent. Resolves a placeholder source,
+ * which studioEnvironment then ignores in favour of the baked light.
+ */
+async function bakedPhoneLight(): Promise<THREE.DataTexture> {
+  const res = await fetch('/env/studio-phone-pmrem.png')
+  if (!res.ok) throw new Error('no baked light')
+  const bmp = await createImageBitmap(await res.blob(), { colorSpaceConversion: 'none', premultiplyAlpha: 'none' })
+  const w = bmp.width, h = bmp.height / 2
+  const cv = document.createElement('canvas')
+  cv.width = bmp.width
+  cv.height = bmp.height
+  const cx = cv.getContext('2d', { willReadFrequently: true, colorSpace: 'srgb' })!
+  cx.drawImage(bmp, 0, 0)
+  bmp.close()
+  const px = cx.getImageData(0, 0, w, h * 2).data
+  const data = new Uint16Array(w * h * 4)
+  const one = THREE.DataUtils.toHalfFloat(1)
+  for (let i = 0; i < w * h; i++) {
+    const e = px[(w * h + i) * 4]
+    const scale = e ? 2 ** (e - 128 - 8) : 0
+    for (let c = 0; c < 3; c++) data[i * 4 + c] = THREE.DataUtils.toHalfFloat(e ? (px[i * 4 + c] + 0.5) * scale : 0)
+    data[i * 4 + 3] = one
+  }
+  prefiltered = { data, width: w, height: h }
+  return new THREE.DataTexture(new Uint8Array(4), 1, 1)
+}
+
+/** For scripts/bake-phone-environment.mjs: the prefiltered light once a scene has made it. */
+if (typeof window !== 'undefined') (window as unknown as { __plateraEnv?: () => unknown }).__plateraEnv = () => prefiltered
+
 export function studioSource(): Promise<THREE.DataTexture> {
-  source ??= new EXRLoader().loadAsync('/env/studio.exr').then((t) => {
+  // Phones load a 512 x 256 copy of the studio light (public/env/studio-phone.hdr): it
+  // decodes almost at once, where the full EXR took seconds on a phone, and it prefilters
+  // at a sixteenth of the cost. Reflections on jewellery at phone size look the same.
+  const done = (t: THREE.DataTexture) => {
     t.mapping = THREE.EquirectangularReflectionMapping
     return t
-  })
+  }
+  source ??= isPhone()
+    ? bakedPhoneLight().catch(() => new HDRLoader().loadAsync('/env/studio-phone.hdr').then(done))
+    : new EXRLoader().loadAsync('/env/studio.exr').then(done)
   return source
 }
 
@@ -20,7 +62,6 @@ export function studioSource(): Promise<THREE.DataTexture> {
  * visit: the first scene prefilters it and reads the result back, and every later scene is
  * handed a copy to upload (a few milliseconds), with no shaders to compile.
  */
-let prefiltered: { data: Uint16Array; width: number; height: number } | null = null
 export function studioEnvironment(renderer: THREE.WebGLRenderer, tex: THREE.DataTexture): THREE.Texture {
   if (prefiltered) {
     const t = new THREE.DataTexture(prefiltered.data, prefiltered.width, prefiltered.height, THREE.RGBAFormat, THREE.HalfFloatType)

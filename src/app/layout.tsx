@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { siteUrl } from '@/lib/store'
+import { PerfMeter } from '@/site/PerfMeter'
 import './globals.css'
 import './viewing.css'
 import './sitting.css'
@@ -59,7 +60,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Returning visitors skip the entry veil: marked before first paint. */}
         <script dangerouslySetInnerHTML={{ __html: "try{if(sessionStorage.getItem('platera:entered')==='1')document.documentElement.dataset.returning='1'}catch(e){}" }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PerfMeter />
+      </body>
     </html>
   )
 }

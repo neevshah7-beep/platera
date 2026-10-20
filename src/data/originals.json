@@ -77,6 +77,37 @@
   "PLT-NKS-019-01",
   "PLT-NKS-019-02"
  ],
+ "PLT-PND-001": [
+  "PLT-PND-001-01"
+ ],
+ "PLT-PND-002": [
+  "PLT-PND-002-01"
+ ],
+ "PLT-PND-003": [
+  "PLT-PND-003-01"
+ ],
+ "PLT-PND-004": [
+  "PLT-PND-004-01"
+ ],
+ "PLT-PND-005": [
+  "PLT-PND-005-01",
+  "PLT-PND-005-02"
+ ],
+ "PLT-PND-006": [
+  "PLT-PND-006-01"
+ ],
+ "PLT-PND-007": [
+  "PLT-PND-007-01"
+ ],
+ "PLT-PND-008": [
+  "PLT-PND-008-01"
+ ],
+ "PLT-PND-009": [
+  "PLT-PND-009-01"
+ ],
+ "PLT-PND-010": [
+  "PLT-PND-010-01"
+ ],
  "PLT-PYL-001": [
   "PLT-PYL-001-01",
   "PLT-PYL-001-02"
@@ -187,5 +218,15 @@
  ],
  "PLT-RNG-021": [
   "PLT-RNG-021-01"
+ ],
+ "PLT-RNG-022": [
+  "PLT-RNG-022-01",
+  "PLT-RNG-022-02",
+  "PLT-RNG-022-03"
+ ],
+ "PLT-RNG-023": [
+  "PLT-RNG-023-01",
+  "PLT-RNG-023-02",
+  "PLT-RNG-023-03"
  ]
 }

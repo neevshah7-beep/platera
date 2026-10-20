@@ -73,8 +73,8 @@ export default async function PiecePage({ params }: Props) {
     ['Net weight', product.netWeightMg && product.weightVerified ? formatGrams(product.netWeightMg) : 'Being weighed'],
     ['Gross weight', product.grossWeightMg && product.weightVerified ? formatGrams(product.grossWeightMg) : 'Being weighed'],
     ['Weight tolerance', 'None. The weight shown is the weight of this piece.'],
-    // Rings are listed without a stone description, at the owner's request.
-    ...(product.category.slug === 'rings' ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
+    // Rings and pendants are listed without a stone description, at the owner's request.
+    ...(['rings', 'pendants'].includes(product.category.slug) ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
     ...(product.stoneDetails ? ([['Stone details', product.stoneDetails]] as [string, string][]) : []),
     ['Hallmark', product.hallmarked ? `BIS hallmarked, 925${product.huid ? `, HUID ${product.huid}` : ''}` : 'Not hallmarked'],
     ...(product.lengthInches ? ([['Length', `${product.lengthInches.toString()} in`]] as [string, string][]) : []),
@@ -215,7 +215,7 @@ export default async function PiecePage({ params }: Props) {
           </p>
           <p className="cert-links">
             <Link href="/hallmark" className="link">How to read a hallmark</Link>
-            {product.category.slug !== 'rings' && <Link href="/size-guide" className="link">Size guide</Link>}
+            {!['rings', 'pendants'].includes(product.category.slug) && <Link href="/size-guide" className="link">Size guide</Link>}
           </p>
         </div>
         <Certificate name={product.name} sku={product.sku} purity="925" huid={product.huid} specs={specs.map(([k, v]) => [k, String(v)] as [string, string])} />

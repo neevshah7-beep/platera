@@ -8,6 +8,7 @@ const LEFT = [
   { href: '/collection', label: 'Collection' },
   { href: '/necklaces', label: 'Necklaces' },
   { href: '/earrings', label: 'Earrings' },
+  { href: '/pendants', label: 'Pendants' },
 ]
 const RIGHT = [
   { href: '/rings', label: 'Rings' },

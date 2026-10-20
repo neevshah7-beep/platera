@@ -179,6 +179,66 @@
     "reshoot": false,
     "maps": true
   },
+  "PLT-PND-001-01": {
+    "sourceWidth": 2722,
+    "sourceHeight": 3630,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-002-01": {
+    "sourceWidth": 2151,
+    "sourceHeight": 2869,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-003-01": {
+    "sourceWidth": 2313,
+    "sourceHeight": 3084,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-004-01": {
+    "sourceWidth": 1500,
+    "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-005-01": {
+    "sourceWidth": 2476,
+    "sourceHeight": 3300,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-006-01": {
+    "sourceWidth": 2185,
+    "sourceHeight": 2913,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-007-01": {
+    "sourceWidth": 1500,
+    "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-008-01": {
+    "sourceWidth": 2102,
+    "sourceHeight": 2801,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-009-01": {
+    "sourceWidth": 2958,
+    "sourceHeight": 3943,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-PND-010-01": {
+    "sourceWidth": 2353,
+    "sourceHeight": 3139,
+    "reshoot": false,
+    "maps": true
+  },
   "PLT-PYL-001-01": {
     "sourceWidth": 3146,
     "sourceHeight": 4159,
@@ -356,6 +416,18 @@
   "PLT-RNG-021-01": {
     "sourceWidth": 1500,
     "sourceHeight": 2000,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-022-01": {
+    "sourceWidth": 3024,
+    "sourceHeight": 4032,
+    "reshoot": false,
+    "maps": true
+  },
+  "PLT-RNG-023-01": {
+    "sourceWidth": 2395,
+    "sourceHeight": 3193,
     "reshoot": false,
     "maps": true
   }

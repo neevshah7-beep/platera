@@ -83,7 +83,7 @@ export async function CollectionView({ basePath, category, search }: { basePath:
       <div className="mt-10" role="group" aria-label="Filter and sort">
         <IndexRow label="Finish" options={FINISH} current={filters.finish} param="finish" basePath={basePath} search={search} />
         {/* Rings say nothing about their stones (the owner's wish), so they have no stones filter. */}
-        {category !== 'rings' && <IndexRow label="Stones" options={STONE} current={filters.stone} param="stone" basePath={basePath} search={search} />}
+        {category !== 'rings' && category !== 'pendants' && <IndexRow label="Stones" options={STONE} current={filters.stone} param="stone" basePath={basePath} search={search} />}
         <IndexRow label="Order" options={SORT} current={filters.sort} param="sort" basePath={basePath} search={search} />
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-t border-rule pt-3">
           <p className="num text-step--1 text-ink-muted" aria-live="polite">

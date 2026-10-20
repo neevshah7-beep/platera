@@ -1,5 +1,5 @@
 /**
- * The ring shoot of 2026-10-17 (21 rings; a 22nd is still to be photographed).
+ * The ring shoot of 2026-10-17 (21 rings), and two rings shot on 2026-10-16 (022, 023).
  * Added by scripts/add-rings.ts, never by the seed.
  *
  * Owner's instructions: 925 silver, hallmarked, no HUID; live rate with no making
@@ -140,5 +140,15 @@ export const RINGS: SeedRing[] = [
     sku: 'PLT-RNG-021', slug: 'pave-bar-ring', name: 'Pavé Bar Ring', netWeightMg: 1_720, photos: 1,
     summary: 'A rounded bar across the top, closely set in two neat rows.',
     description: 'Minimal and modern, with the bar set low on a slim band. An easy ring for every day.',
+  },
+  {
+    sku: 'PLT-RNG-022', slug: 'cushion-halo-ring', name: 'Cushion Halo Ring', netWeightMg: 3_420, photos: 3,
+    summary: 'A large round centre in a double cushion halo, with a smaller halo cluster on either shoulder.',
+    description: 'Two rows of sparkle frame the centre and the shoulders carry their own small halos, so the ring catches light from every angle. A statement ring for occasions.',
+  },
+  {
+    sku: 'PLT-RNG-023', slug: 'scarlet-halo-ring', name: 'Scarlet Halo Ring', netWeightMg: 3_650, photos: 3,
+    summary: 'An oval scarlet centre inside a starburst of sparkling points and tapered bars.',
+    description: 'The deep red centre is ringed by a fine halo and then a burst of pointed and baguette-shaped sparkle, on an open split band. A cocktail ring with real colour.',
   },
 ]

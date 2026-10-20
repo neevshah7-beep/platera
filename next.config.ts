@@ -73,6 +73,11 @@ const nextConfig: NextConfig = {
         source: '/scenes/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' }],
       },
+      // The studio light for reflections changes only with a new render.
+      {
+        source: '/env/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=86400' }],
+      },
       // Packed sequences carry a content hash in their name, so they never change.
       {
         source: '/scenes/:scene/:file(.+\\.pack)',

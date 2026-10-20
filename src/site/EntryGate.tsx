@@ -104,7 +104,8 @@ function GoldDust() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const c = canvas.current!
     const ctx = c.getContext('2d')!
-    const dpr = Math.min(devicePixelRatio, 2)
+    // Phones draw the dust at 1x: fine motes need no more, and the gate opens the visit.
+    const dpr = Math.min(devicePixelRatio, matchMedia('(pointer: coarse)').matches ? 1 : 2)
     const size = () => {
       c.width = innerWidth * dpr
       c.height = innerHeight * dpr
