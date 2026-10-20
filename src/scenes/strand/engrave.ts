@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { isPhone } from '../gl'
 
 /**
  * Engravings for the promise beads. A mark (numerals or a symbol) is drawn into a canvas
@@ -11,9 +12,67 @@ const cache = new Map<string, ReturnType<typeof build>>()
 /** Cached: the six promise marks are drawn once per visit, however often the scene is built. */
 export function engraving(mark: string, size = 512) {
   const k = `${mark}:${size}`
-  if (!cache.has(k)) cache.set(k, build(mark, size))
+  if (!cache.has(k)) cache.set(k, isPhone() && BAKED[mark] ? baked(mark) : build(mark, size))
   return cache.get(k)!
 }
+
+/**
+ * Phones load the marks already engraved (public/media/tex/engrave-<name>.png, made by
+ * scripts/bake-engravings.mjs at 256 px): the normal, roughness and colour maps side by
+ * side in one opaque image. Building them here took a phone about a second of JavaScript at
+ * the first scroll. The textures start as a plain polished face and fill in once decoded.
+ */
+const BAKED: Record<string, string> = { '925': '925', mg: 'mg', '₹': 'rupee', '15': '15', '7': '7', '◇': 'diamond' }
+function baked(mark: string): ReturnType<typeof build> {
+  const flat = (r: number, g: number, b: number) => {
+    const c = document.createElement('canvas')
+    c.width = c.height = 1
+    const x = c.getContext('2d')!
+    x.fillStyle = `rgb(${r},${g},${b})`
+    x.fillRect(0, 0, 1, 1)
+    return c
+  }
+  const normal = new THREE.Texture(flat(128, 128, 255))
+  const rough = new THREE.Texture(flat(26, 26, 26))
+  const color = new THREE.Texture(flat(255, 255, 255))
+  color.colorSpace = THREE.SRGBColorSpace
+  for (const t of [normal, rough, color]) {
+    t.wrapS = THREE.RepeatWrapping
+    t.anisotropy = 4
+    t.needsUpdate = true
+  }
+  fetch(`/media/tex/engrave-${BAKED[mark]}.png`)
+    .then((r) => (r.ok ? r.blob() : Promise.reject(new Error('no baked engraving'))))
+    .then(async (blob) => {
+      const probe = await createImageBitmap(blob)
+      const w = probe.width / 3
+      const h = probe.height
+      probe.close()
+      // Decoded off the main thread, one tile per map, flipped as a canvas texture would be.
+      const opts: ImageBitmapOptions = { imageOrientation: 'flipY', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }
+      const tiles = await Promise.all([0, 1, 2].map((i) => createImageBitmap(blob, i * w, 0, w, h, opts)))
+      ;[normal, rough, color].forEach((t, i) => {
+        t.image = tiles[i] as unknown as HTMLCanvasElement
+        t.flipY = false
+        t.needsUpdate = true
+      })
+    })
+    .catch(() => {
+      const made = build(mark, 256)
+      ;[normal, rough, color].forEach((t, i) => {
+        t.image = [made.normal, made.rough, made.color][i].image
+        t.needsUpdate = true
+      })
+    })
+  return { normal, rough, color } as unknown as ReturnType<typeof build>
+}
+
+/** For scripts/bake-engravings.mjs: a mark's three maps as PNG data URLs. */
+if (typeof window !== 'undefined')
+  (window as unknown as { __plateraEngrave?: (m: string, s: number) => string[] }).__plateraEngrave = (m, sz) => {
+    const r = build(m, sz)
+    return [r.normal, r.rough, r.color].map((t) => (t.image as HTMLCanvasElement).toDataURL('image/png'))
+  }
 
 function build(mark: string, size: number): { normal: THREE.CanvasTexture; rough: THREE.CanvasTexture; color: THREE.CanvasTexture } {
   const c = document.createElement('canvas')

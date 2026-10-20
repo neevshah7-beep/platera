@@ -180,7 +180,12 @@ export function photoTexture(renderer: THREE.WebGLRenderer, url: string, color =
     if (color) t.colorSpace = THREE.SRGBColorSpace
     return t
   }
-  bitmaps ??= new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none' })
+  // Phones decode every photo map at no more than 512 px (off the main thread, while it is
+  // decoded): a phone screen shows a case's piece at a few hundred pixels, and each full-size
+  // map cost a long upload to its GPU.
+  bitmaps ??= new THREE.ImageBitmapLoader().setOptions(
+    isPhone() ? { imageOrientation: 'flipY', premultiplyAlpha: 'none', resizeWidth: 512, resizeQuality: 'medium' } : { imageOrientation: 'flipY', premultiplyAlpha: 'none' },
+  )
   const tex = new THREE.Texture()
   tex.flipY = false
   if (color) tex.colorSpace = THREE.SRGBColorSpace
