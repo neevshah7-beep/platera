@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { studioEnvironment, studioSource } from '../env'
+import { reliefGeometry, relieve } from '../relief'
 
 /**
  * THE LAMP (piece page). The piece lies on an espresso velvet pad in a gold-rimmed tray,
@@ -105,14 +106,17 @@ export function createLamp(canvas: HTMLCanvasElement, piece: { base: string; wid
     alphaTest: 0.5,
     side: THREE.DoubleSide,
   })
+  const depthMat = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
   if (piece.maps) {
     mat.normalMap = loader.load(`${piece.base}-normal.webp`)
     mat.normalScale.set(1.2, 1.2)
-    mat.roughnessMap = loader.load(`${piece.base}-dr.webp`)
+    const dr = loader.load(`${piece.base}-dr.webp`)
+    mat.roughnessMap = dr
     mat.roughness = 1
+    // In relief: the piece's own depth raises it off the tray (see relief.ts).
+    relieve(dr, Math.max(w, h), mat, depthMat)
   }
-  const depthMat = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat)
+  const mesh = new THREE.Mesh(piece.maps ? reliefGeometry(w, h) : new THREE.PlaneGeometry(w, h), mat)
   mesh.customDepthMaterial = depthMat
   mesh.castShadow = true
   mesh.rotation.x = -Math.PI / 2

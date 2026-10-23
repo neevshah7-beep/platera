@@ -9,7 +9,8 @@ Per-photo surface maps (Experience Bible §9). For every prepared cut-out in ass
   ROUGHNESS bright, saturated or high-contrast pixels (polish, stone facets) are smooth;
             flat mid-tones are rougher.
 
-Writes public/media/products/<name>-normal.webp and <name>-dr.webp (R = depth, G = roughness,
+Writes public/media/products/<name>-normal.webp and <name>-dr.webp (R = relief: the depth eased
+to zero at every edge, G = roughness,
 B = 0), at most 1024 px on the long side, and src/data/maps-manifest.json with each photo's
 source resolution and a re-shoot flag when the original is below 1600 px on its long side.
 
@@ -89,7 +90,15 @@ def process(path: str, manifest: dict):
     smooth = np.clip(lum ** 1.6 * 0.7 + sat * 0.6 + local_contrast * 6, 0, 1)
     rough = np.clip(0.75 - smooth * 0.65, 0.08, 0.8)
 
-    dr = np.dstack([form * 255, rough * 255 * alpha, np.zeros_like(form)]).astype(np.uint8)
+    # Relief (R): the form, eased to nothing over the last few percent before every edge and
+    # hole, so the displaced surface in the 3D rooms (src/scenes/relief.ts) never stands up in
+    # a cliff at the outline, which would stretch the photograph across openwork.
+    edt = ndimage.distance_transform_edt(mask)
+    T = max(3.0, 0.035 * max(mask.shape))
+    taper = np.clip(edt / T, 0, 1)
+    taper = taper * taper * (3 - 2 * taper)
+    relief = np.clip(ndimage.gaussian_filter(form, 1.5) * taper, 0, 1)
+    dr = np.dstack([relief * 255, rough * 255 * alpha, np.zeros_like(form)]).astype(np.uint8)
     Image.fromarray(normal, 'RGB').save(os.path.join(OUT, f'{name}-normal.webp'), quality=88, method=6)
     Image.fromarray(dr, 'RGB').save(os.path.join(OUT, f'{name}-dr.webp'), quality=90, method=6)
 

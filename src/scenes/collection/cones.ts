@@ -4,6 +4,7 @@ import { visibleGate } from '../visible'
 import { silkNormals } from '../textures'
 import { photoTexture, sliced, studioEnvironment, studioSource, uploadSteps, warmUp } from '../env'
 import type { CollectionApi, CollectionPiece } from './collection'
+import { reliefGeometry, relieve } from '../relief'
 
 /**
  * THE RING ROOM. A row of velvet ring cones on champagne silk, each holding one ring the way
@@ -186,9 +187,10 @@ export function createCones(canvas: HTMLCanvasElement, pieces: CollectionPiece[]
     map.anisotropy = 8
     const normal = photoTexture(renderer, `${p.base}-normal.webp`, false)
     const dr = photoTexture(renderer, `${p.base}-dr.webp`, false)
-    const mat = jewelMaterial({ map, normalMap: normal, normalScale: new THREE.Vector2(1.0, 1.0), roughnessMap: dr, roughness: 1, metalness: 0.3, envMapIntensity: 1.9, clearcoat: 0.8, clearcoatRoughness: 0.08, alphaTest: 0.5, side: THREE.DoubleSide })
+    const mat = jewelMaterial({ map, normalMap: normal, normalScale: new THREE.Vector2(0.6, 0.6), roughnessMap: dr, roughness: 1, metalness: 0.12, envMapIntensity: 1.5, clearcoat: 0.8, clearcoatRoughness: 0.08, alphaTest: 0.5 })
     const depth = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
-    const ringGeo = new THREE.PlaneGeometry(w, h)
+    // The ring in relief, front and back: a solid you can see turn, not a card.
+    const ringGeo = reliefGeometry(w, h)
     // Origin at the bottom edge: the ring is placed by where its band meets the velvet.
     ringGeo.translate(0, h / 2, 0)
     geos.push(ringGeo)
@@ -196,6 +198,12 @@ export function createCones(canvas: HTMLCanvasElement, pieces: CollectionPiece[]
     mesh.customDepthMaterial = depth
     mesh.castShadow = true
     mesh.userData.slug = p.slug
+    relieve(dr, Math.max(w, h), mat, depth)
+    const back = new THREE.Mesh(ringGeo, mat)
+    back.rotation.y = Math.PI
+    back.customDepthMaterial = depth
+    back.castShadow = true
+    mesh.add(back)
     // The ring's lower band sits down inside the pillow's slit.
     const seat = top - h * SINK
     mesh.position.y = seat
@@ -272,9 +280,9 @@ export function createCones(canvas: HTMLCanvasElement, pieces: CollectionPiece[]
       const target = it === hovered ? 1 : it === here && Math.abs(it.home.x - look.x) < SPACING * 0.5 ? 0.45 : 0
       it.lift += (target - it.lift) * (1 - Math.exp(-dt * 5))
       it.mesh.position.y = it.seat + it.lift * 2.6
-      // Always turned toward the eye (never seen edge-on), with a slow sway as if just set down.
+      // Turned toward the eye, and turning slowly to and fro so its depth shows (never edge-on).
       const toCam = Math.atan2(camera.position.x - it.group.position.x, camera.position.z - it.group.position.z)
-      it.mesh.rotation.y = toCam * (0.85 + 0.15 * it.lift) + Math.sin(now * 0.0007 + it.home.x) * 0.06 * (1 - it.lift)
+      it.mesh.rotation.y = toCam * (0.85 + 0.15 * it.lift) + Math.sin(now * 0.00045 + it.home.x * 0.07) * 0.42 * (1 - 0.6 * it.lift)
     }
     if (!renderer.shadowMap.autoUpdate) renderer.shadowMap.needsUpdate = shadowTick++ % 3 === 0
     if (warmed && !skip()) renderer.render(scene, camera)

@@ -1,4 +1,5 @@
 import { isPhone, jewelMaterial, pixelRatio } from '../gl'
+import { reliefGeometry, relieve } from '../relief'
 import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -107,13 +108,17 @@ export function createPacking(canvas: HTMLCanvasElement, pieces: PackPiece[], on
     const map = loader.load(`${p.base}-1600.webp`)
     map.colorSpace = THREE.SRGBColorSpace
     const mat = jewelMaterial({ map, roughness: 0.35, metalness: 0.4, envMapIntensity: 1.8, clearcoat: 0.8, clearcoatRoughness: 0.08, alphaTest: 0.5, side: THREE.DoubleSide })
+    const depthMat = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
     if (p.maps) {
       mat.normalMap = loader.load(`${p.base}-normal.webp`)
-      mat.roughnessMap = loader.load(`${p.base}-dr.webp`)
+      const dr = loader.load(`${p.base}-dr.webp`)
+      mat.roughnessMap = dr
       mat.roughness = 1
+      // In relief, as in the rooms (relief.ts).
+      relieve(dr, Math.max(w, h), mat, depthMat)
     }
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat)
-    m.customDepthMaterial = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
+    const m = new THREE.Mesh(p.maps ? reliefGeometry(w, h) : new THREE.PlaneGeometry(w, h), mat)
+    m.customDepthMaterial = depthMat
     m.castShadow = true
     m.rotation.x = -Math.PI / 2
     m.position.set(-CW / 2 + 3 + slotW * (i + 0.5), 60, 0)

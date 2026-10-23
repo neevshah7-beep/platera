@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { visibleGate } from '../visible'
 import { leatherNormals, silkNormals } from '../textures'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
+import { reliefGeometry, relieve } from '../relief'
 import { photoTexture, sliced, studioEnvironment, studioSource, uploadSteps, warmUp } from '../env'
 
 /**
@@ -234,7 +235,9 @@ export function createCollection(canvas: HTMLCanvasElement, pieces: CollectionPi
       side: THREE.DoubleSide,
     })
     const depth = new THREE.MeshDepthMaterial({ map, alphaTest: 0.5, depthPacking: THREE.RGBADepthPacking })
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat)
+    // In relief: the piece's own depth raises it off the plane, so it has form under the lamp.
+    const mesh = new THREE.Mesh(reliefGeometry(w, h), mat)
+    relieve(dr, Math.max(w, h), mat, depth)
     mesh.customDepthMaterial = depth
     mesh.castShadow = true
     mesh.rotation.x = -Math.PI / 2
