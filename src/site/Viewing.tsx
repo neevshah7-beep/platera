@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { whatsappLink } from '@/lib/store'
 import { scroller } from './SmoothScroll'
 
-export type ViewingPiece = { slug: string; name: string; price: string; href: string; cutout: string; photos: string[]; productId?: string; start?: number }
+export type ViewingPiece = { slug: string; name: string; price: string; href: string; cutout: string; photos: string[]; studio?: string[]; productId?: string; start?: number }
 
 const LOUPE = 200 // px
 const ZOOM = 2.6
@@ -26,7 +26,11 @@ export function Viewing({ piece, onClose }: { piece: ViewingPiece | null; onClos
 }
 
 function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => void }) {
-  const photos = [...piece.photos.map((p) => ({ src: `${p}-1600.webp`, thumb: `${p}-800.webp`, label: 'As photographed at the store' })), { src: `${piece.cutout}-1600.webp`, thumb: `${piece.cutout}-960.webp`, label: 'The piece, on its own' }]
+  const photos = [
+    ...(piece.studio ?? []).map((p) => ({ src: `${p}-1600.webp`, thumb: `${p}-800.webp`, label: 'Studio image' })),
+    ...piece.photos.map((p) => ({ src: `${p}-1600.webp`, thumb: `${p}-800.webp`, label: 'As photographed at the store' })),
+    { src: `${piece.cutout}-1600.webp`, thumb: `${piece.cutout}-960.webp`, label: 'The piece, on its own' },
+  ]
   const [i, setI] = useState(piece.start ?? 0)
   const [closing, setClosing] = useState(false)
   const print = useRef<HTMLDivElement>(null)
@@ -139,7 +143,7 @@ function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => 
         <p className="eyebrow">The viewing</p>
         <h2 className="viewing-name">{piece.name}</h2>
         <p className="num viewing-price">{piece.price}</p>
-        <p className="viewing-note">Every photograph here is as taken at our counter in Gorai 1. Move over a photograph to look through the loupe.</p>
+        <p className="viewing-note">{piece.studio?.length ? (piece.photos.length ? 'Studio images are made from our photographs to show the design clearly; store photographs are as taken at our counter in Gorai 1. ' : 'Studio images, made from our photographs to show the design clearly. ') : 'Every photograph here is as taken at our counter in Gorai 1. '}Move over a photograph to look through the loupe.</p>
         <div className="viewing-actions">
           {piece.price !== 'Sold' && (
             <>

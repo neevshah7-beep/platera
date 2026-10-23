@@ -6,13 +6,14 @@ import { useManagedScene } from '../useManagedScene'
 import { useEffect, useRef, useState } from 'react'
 import { Viewing, type ViewingPiece } from '@/site/Viewing'
 import { createCollection, type CollectionPiece } from './collection'
+import { createCones } from './cones'
 
 /**
  * SCENE 4 · THE COLLECTION (collection.ts). Pinned while the camera travels the length of
  * the silk. A hovered piece rises toward you and its name and today's price set beside it;
  * click to open it. Every piece is also a plain link below, for keyboards and readers.
  */
-export function CollectionScene({ pieces, total, title, eyebrow = 'The collection', allHref = '/collection', chapterId = 'chapter-collection' }: { pieces: (CollectionPiece & { href: string })[]; total: number; title?: React.ReactNode; eyebrow?: string; allHref?: string; chapterId?: string }) {
+export function CollectionScene({ pieces, total, title, eyebrow = 'The collection', allHref = '/collection', chapterId = 'chapter-collection', display = 'cases' }: { pieces: (CollectionPiece & { href: string })[]; total: number; title?: React.ReactNode; eyebrow?: string; allHref?: string; chapterId?: string; display?: 'cases' | 'cones' }) {
   const section = useRef<HTMLElement>(null)
   const host = useRef<HTMLDivElement>(null)
   const head = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
   const [viewing, setViewing] = useState<ViewingPiece | null>(null)
   const viewingRef = useRef(false)
   viewingRef.current = viewing !== null
-  const api = useManagedScene(section, host, (c) => createCollection(c, pieces), [pieces])
+  const api = useManagedScene(section, host, (c) => (display === 'cones' ? createCones : createCollection)(c, pieces), [pieces, display])
 
   useEffect(() => {
     let raf = 0
@@ -71,7 +72,7 @@ export function CollectionScene({ pieces, total, title, eyebrow = 'The collectio
           <div key={piece.slug} className="collection-label pointer-events-none absolute" style={{ left: Math.min(label.x, (typeof window !== "undefined" ? innerWidth : 1440) - 300), top: Math.max(label.y, 200) }}>
             <p className="font-display text-step-2 leading-tight">{piece.name}</p>
             <p className="num mt-1.5 text-step-0 font-medium text-gold-shadow">{piece.price}</p>
-            <button type="button" className="collection-view pointer-events-auto" onClick={() => setViewing({ slug: piece.slug, name: piece.name, price: piece.price, href: piece.href, cutout: piece.base, photos: piece.originals ?? [], productId: piece.productId })}>
+            <button type="button" className="collection-view pointer-events-auto" onClick={() => setViewing({ slug: piece.slug, name: piece.name, price: piece.price, href: piece.href, cutout: piece.base, photos: piece.originals ?? [], studio: piece.studio, productId: piece.productId })}>
               View product
             </button>
           </div>

@@ -9,7 +9,7 @@ import { Originals } from '@/components/pdp/Originals'
 import { StickyActions } from '@/components/pdp/StickyActions'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
-import { originalsFor } from '@/lib/originals'
+import { originalsFor, studioFor } from '@/lib/originals'
 import { ViewButton } from '@/site/ViewButton'
 import maps from '@/data/maps-manifest.json'
 import { toPieceRef } from '@/lib/world-data'
@@ -117,7 +117,7 @@ export default async function PiecePage({ params }: Props) {
             />
           ) : null}
           <p className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
-            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku) }} />}
+            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />}
             <a href="#originals" className="link">All photographs</a>
           </p>
         </section>
@@ -171,8 +171,22 @@ export default async function PiecePage({ params }: Props) {
 
       <StickyActions slug={product.slug} name={product.name} sold={sold} ask={sold ? enquiry : ask} />
 
-      {/* I · The originals: the store photographs, large, on an espresso wall. */}
-      {pieceRef && (
+      {/* I · The studio images, when the piece has them: always labelled as studio images. */}
+      {pieceRef && studioFor(product.sku).length > 0 && (
+        <section id="studio" aria-labelledby="studio-heading" className="orig">
+          <div className="orig-inner">
+            <div className="orig-head">
+              <p className="eyebrow">In the studio</p>
+              <h2 id="studio-heading" className="orig-title">Every angle, <em className="accent">in studio light.</em></h2>
+              <p className="orig-note">Studio images, made from our photographs to show the design clearly. The ring you receive is the one at our counter. Open any image to look through the loupe.</p>
+            </div>
+            <Originals kind="studio" piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />
+          </div>
+        </section>
+      )}
+
+      {/* II · The originals: the store photographs, large, on an espresso wall. */}
+      {pieceRef && (originalsFor(product.sku).length > 0 || studioFor(product.sku).length === 0) && (
         <section id="originals" aria-labelledby="originals-heading" className="orig">
           <div className="orig-inner">
             <div className="orig-head">
@@ -180,12 +194,12 @@ export default async function PiecePage({ params }: Props) {
               <h2 id="originals-heading" className="orig-title">As photographed <em className="accent">at the counter.</em></h2>
               <p className="orig-note">Exactly as taken in Gorai 1: no retouching, no background removed. Open any photograph to look through the loupe.</p>
             </div>
-            <Originals piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku) }} />
+            <Originals piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />
           </div>
         </section>
       )}
 
-      {/* II · How to make it yours. */}
+      {/* III · How to make it yours. */}
       <section id="ledger" aria-labelledby="how-heading" className="how-sec">
         <div className="price-head">
           <p className="eyebrow">On WhatsApp</p>
@@ -203,7 +217,7 @@ export default async function PiecePage({ params }: Props) {
         )}
       </section>
 
-      {/* III · In the hand, and the certificate. */}
+      {/* IV · In the hand, and the certificate. */}
       <section aria-labelledby="hand-heading" className="cert-sec">
         <div className="cert-copy">
           <p className="eyebrow">In the hand</p>
@@ -221,7 +235,7 @@ export default async function PiecePage({ params }: Props) {
         <Certificate name={product.name} sku={product.sku} purity="925" huid={product.huid} specs={specs.map(([k, v]) => [k, String(v)] as [string, string])} />
       </section>
 
-      {/* IV · Made for you. */}
+      {/* V · Made for you. */}
       <section aria-labelledby="bespoke-heading" className="bespoke">
         <div className="bespoke-inner">
           <p className="eyebrow">Made for you</p>
@@ -231,7 +245,7 @@ export default async function PiecePage({ params }: Props) {
         </div>
       </section>
 
-      {/* V · From the same tray. */}
+      {/* VI · From the same tray. */}
       {related.length > 0 && (
         <section aria-labelledby="related-heading" className="tray-sec">
           <div className="tray-head">

@@ -2,7 +2,7 @@ import { bookableDates } from '@/lib/appointments'
 import { isSold, getCurrentRates, getSetting, listProducts, priceProduct } from '@/lib/catalogue'
 import { mediaBase } from '@/components/media/PieceImage'
 import { toPieceRef } from '@/lib/world-data'
-import { originalsFor } from '@/lib/originals'
+import { originalsFor, studioFor } from '@/lib/originals'
 import { STORE, whatsappLink } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
 import type { Metadata } from 'next'
@@ -30,7 +30,7 @@ export default async function HomePage() {
   const featured = [...showcase.filter((p) => p.featured), ...showcase.filter((p) => !p.featured)]
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), studio: studioFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
     .slice(0, 8)
   return (

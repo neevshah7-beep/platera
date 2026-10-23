@@ -6,7 +6,7 @@ import { mediaBase } from '@/components/media/PieceImage'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { isSold, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
-import { originalsFor } from '@/lib/originals'
+import { originalsFor, studioFor } from '@/lib/originals'
 
 export const revalidate = 300
 
@@ -16,7 +16,7 @@ function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: A
     .filter((p) => !/peacock/i.test(p.slug)) // kept out of the case showcase
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), studio: studioFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
     .slice(0, 8)
 }

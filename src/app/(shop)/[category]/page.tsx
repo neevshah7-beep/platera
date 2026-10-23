@@ -6,20 +6,20 @@ import { mediaBase } from '@/components/media/PieceImage'
 import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { isSold, getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
-import { originalsFor } from '@/lib/originals'
+import { originalsFor, studioFor } from '@/lib/originals'
 import { JsonLd, breadcrumbJsonLd, itemListJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
 
 /** The first pieces of a room, as the case room presents them. */
-function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: Awaited<ReturnType<typeof getCurrentRates>>) {
+function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: Awaited<ReturnType<typeof getCurrentRates>>, count = 8) {
   return products
     .filter((p) => !/peacock/i.test(p.slug)) // kept out of the case showcase
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
-      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
+      return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), studio: studioFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
-    .slice(0, 8)
+    .slice(0, count)
 }
 
 type Props = {
@@ -58,7 +58,12 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: c.name, path: `/${c.slug}` }])} />
       <JsonLd data={itemListJsonLd(c.name, `/${c.slug}`, products)} />
       <h1 className="sr-only">{c.seoTitle.split('|')[0].trim()}</h1>
-      <CollectionScene pieces={casePieces(products, rates)} total={products.length} eyebrow={c.name} title={<>{c.name}, <em className="accent">case by case.</em></>} allHref="#list" chapterId={`room-${c.slug}`} />
+      {c.slug === 'rings' ? (
+        // Rings stand on velvet cones (the client's choice over jewellery cases).
+        <CollectionScene display="cones" pieces={casePieces(products, rates, 10)} total={products.length} eyebrow={c.name} title={<>{c.name}, <em className="accent">each on its own cone.</em></>} allHref="#list" chapterId={`room-${c.slug}`} />
+      ) : (
+        <CollectionScene pieces={casePieces(products, rates)} total={products.length} eyebrow={c.name} title={<>{c.name}, <em className="accent">case by case.</em></>} allHref="#list" chapterId={`room-${c.slug}`} />
+      )}
       <div id="list" className="relative bg-cream">
       <div className="mx-auto max-w-[1440px] px-[var(--gutter)] pt-16">
       <h2 className="text-step-4">Every piece in the room</h2>

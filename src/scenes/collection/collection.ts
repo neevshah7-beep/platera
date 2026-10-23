@@ -16,7 +16,7 @@ import { photoTexture, sliced, studioEnvironment, studioSource, uploadSteps, war
  *
  * Units are centimetres.
  */
-export type CollectionPiece = { slug: string; name: string; price: string; base: string; width: number; height: number; originals?: string[]; productId?: string }
+export type CollectionPiece = { slug: string; name: string; price: string; base: string; width: number; height: number; originals?: string[]; studio?: string[]; productId?: string }
 
 export type CollectionApi = {
   setProgress: (p: number) => void // 0 → 1 along the run

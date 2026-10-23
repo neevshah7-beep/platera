@@ -430,5 +430,365 @@
     "sourceHeight": 3193,
     "reshoot": false,
     "maps": true
+  },
+  "PLT-RNG-024-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-025-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-026-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-027-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-028-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-029-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-030-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-031-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-032-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-033-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-034-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-035-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-036-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-037-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-038-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-039-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-040-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-041-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-042-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-043-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-044-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-045-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-046-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-047-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-048-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-049-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-050-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-051-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-052-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-053-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-054-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-055-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-056-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-057-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-058-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-059-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-060-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-061-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-062-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-063-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-064-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-065-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-066-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-067-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-068-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-069-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-070-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-071-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-072-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-073-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-074-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-075-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-076-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-077-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-078-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-079-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-080-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-081-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-082-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
+  },
+  "PLT-RNG-083-01": {
+    "sourceWidth": 0,
+    "sourceHeight": 0,
+    "reshoot": true,
+    "maps": true
   }
 }
