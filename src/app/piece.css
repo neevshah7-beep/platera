@@ -141,3 +141,49 @@
 .sticky-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: 1.1rem; }
 @media (min-width: 1024px) { .sticky-actions { display: none; } }
 .viewing-open { justify-self: center; margin-top: 0.4rem; color: #f1d488; font-size: 0.95rem; }
+
+/* ── Pieces shown in their photographs (rings, pendants, bangles): photo-pieces.ts ── */
+/* The piece page: the photograph in a cream mat with a gold fillet, prints beneath. */
+.stage-main { position: relative; display: block; width: 100%; padding: clamp(10px, 0.4rem + 0.6vw, 16px); background: #f6efe0; box-shadow: 0 0 0 1px rgb(201 154 62 / 0.7), 0 40px 80px -44px rgb(74 50 22 / 0.65); cursor: zoom-in; }
+.stage-main img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: transform 1200ms var(--ease-entry); }
+.stage-main:hover img { transform: scale(1.025); }
+.stage-hint { position: absolute; right: 1.6rem; bottom: 1.6rem; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--espresso); background: rgb(251 247 238 / 0.88); backdrop-filter: blur(6px); }
+.stage-prints { display: flex; gap: 0.7rem; margin-top: 1rem; overflow-x: auto; padding: 0.3rem 0.1rem 0.6rem; scrollbar-width: thin; }
+.stage-prints li { flex: none; }
+.stage-prints button { display: block; width: 4.6rem; padding: 4px; background: #f6efe0; box-shadow: 0 0 0 1px rgb(201 154 62 / 0.45); transition: transform 500ms var(--ease-entry), box-shadow 500ms var(--ease-entry); }
+.stage-prints button:hover { transform: translateY(-3px); box-shadow: 0 0 0 1px var(--gold); }
+.stage-prints img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+@media (min-width: 768px) { .stage-prints button { width: 5.4rem; } }
+
+/* The room: a grid of cream-matted prints; tap to look closer. */
+.room-head { padding-top: clamp(2.5rem, 1rem + 4vw, 5rem); }
+.room-title { margin-top: 0.8rem; font-family: var(--font-gambetta), serif; font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.6rem); line-height: 1.02; letter-spacing: -0.02em; color: var(--espresso); }
+.room-lede { max-width: 38rem; margin-top: 1.2rem; font-size: clamp(1.05rem, 0.95rem + 0.3vw, 1.2rem); color: var(--espresso-muted); }
+.room-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid var(--rule, rgb(43 29 14 / 0.12)); }
+.room-count { font-size: 0.95rem; color: var(--espresso-muted); }
+.room-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.room-chips button { padding: 0.5rem 1.05rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--espresso-muted); border: 1px solid rgb(201 154 62 / 0.45); border-radius: 999px; transition: background-color 300ms, color 300ms, border-color 300ms; }
+.room-chips button[aria-pressed='true'] { background: var(--espresso); border-color: var(--espresso); color: #fbf3e2; }
+.room-grid { display: grid; gap: clamp(1.1rem, 0.5rem + 1.6vw, 2.4rem) clamp(0.9rem, 0.4rem + 1.4vw, 2rem); margin-top: 2rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 768px) { .room-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1200px) { .room-grid { grid-template-columns: repeat(4, 1fr); } }
+.room-tile { display: flex; flex-direction: column; animation: room-in 900ms var(--ease-entry) both; }
+.room-print { position: relative; display: block; width: 100%; padding: clamp(6px, 0.2rem + 0.5vw, 12px); background: #f6efe0; box-shadow: 0 0 0 1px rgb(201 154 62 / 0.55), 0 30px 60px -42px rgb(74 50 22 / 0.7); cursor: zoom-in; transition: transform 800ms var(--ease-entry), box-shadow 800ms var(--ease-entry); }
+.room-print picture { display: block; overflow: hidden; }
+.room-print img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: transform 1100ms var(--ease-entry); }
+.room-print:hover { transform: translateY(-5px); box-shadow: 0 0 0 1px var(--gold), 0 44px 70px -40px rgb(74 50 22 / 0.75); }
+.room-print:hover img { transform: scale(1.045); }
+.room-look { position: absolute; left: 50%; bottom: 1.2rem; transform: translate(-50%, 6px); padding: 0.4rem 0.85rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; color: var(--espresso); background: rgb(251 247 238 / 0.9); opacity: 0; transition: opacity 400ms, transform 400ms var(--ease-entry); }
+.room-print:hover .room-look, .room-print:focus-visible .room-look { opacity: 1; transform: translate(-50%, 0); }
+@media (pointer: coarse) { .room-look { opacity: 1; transform: translate(-50%, 0); bottom: 0.8rem; font-size: 0.66rem; } }
+.room-sold { position: absolute; left: 1.2rem; top: 1.2rem; padding: 0.3rem 0.6rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; background: rgb(251 247 238 / 0.92); color: var(--espresso-muted); }
+.room-tile[data-sold='true'] .room-print img { opacity: 0.6; }
+.room-name { display: block; margin-top: 1rem; font-size: clamp(1.1rem, 0.95rem + 0.45vw, 1.4rem); line-height: 1.15; color: var(--espresso); }
+.room-name:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 5px; }
+.room-meta { margin-top: 0.3rem; font-size: 0.92rem; color: var(--espresso-muted); }
+@keyframes room-in { from { opacity: 0; transform: translateY(18px); } }
+@media (prefers-reduced-motion: reduce) { .room-tile { animation: none; } }
+
+/* The tray grid elsewhere (related pieces, the collection): photographs fill their mat. */
+.tray-card[data-photo='true'] .tray-img { inset: 0; }
+.tray-card[data-photo='true'] .tray-img img { object-fit: cover; }

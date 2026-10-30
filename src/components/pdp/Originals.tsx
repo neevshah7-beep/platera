@@ -24,11 +24,12 @@ export function Originals({ piece, kind = 'store' }: { piece: Omit<ViewingPiece,
     return () => io.disconnect()
   }, [])
   const studio = piece.studio ?? []
+  const lead = piece.plain ? 1 : 0
   const cutout = { src: `${piece.cutout}-1600.webp`, label: 'The piece, on its own', cutout: true, at: studio.length + piece.photos.length }
   const tiles =
     kind === 'studio'
-      ? [...studio.map((p, k) => ({ src: `${p}-1600.webp`, label: 'Studio image', cutout: false, at: k })), ...(piece.photos.length ? [] : [cutout])]
-      : [...piece.photos.map((p, k) => ({ src: `${p}-1600.webp`, label: 'As photographed at the counter', cutout: false, at: studio.length + k })), cutout]
+      ? [...studio.map((p, k) => ({ src: `${p}-1600.webp`, label: 'Studio image', cutout: false, at: lead + k })), ...(piece.photos.length || piece.plain ? [] : [cutout])]
+      : [...piece.photos.map((p, k) => ({ src: `${p}-1600.webp`, label: 'As photographed at the counter', cutout: false, at: lead + studio.length + k })), ...(piece.plain ? [] : [cutout])]
   return (
     <>
       <ul ref={list} className="orig-grid" data-count={tiles.length}>

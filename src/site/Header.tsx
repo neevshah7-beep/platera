@@ -12,6 +12,7 @@ const LEFT = [
 ]
 const RIGHT = [
   { href: '/rings', label: 'Rings' },
+  { href: '/bangles', label: 'Bangles' },
   { href: '/payals', label: 'Payals' },
   { href: '/mangalsutras', label: 'Bridal' },
   { href: '/visit', label: 'Visit' },

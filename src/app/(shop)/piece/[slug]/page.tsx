@@ -9,6 +9,8 @@ import { Originals } from '@/components/pdp/Originals'
 import { StickyActions } from '@/components/pdp/StickyActions'
 import { mediaBase } from '@/components/media/PieceImage'
 import { PieceLamp } from '@/scenes/lamp/PieceLamp'
+import { PhotoStage } from '@/components/pdp/PhotoStage'
+import { isPhotoCategory } from '@/lib/photo-pieces'
 import { originalsFor, studioFor } from '@/lib/originals'
 import { ViewButton } from '@/site/ViewButton'
 import maps from '@/data/maps-manifest.json'
@@ -74,7 +76,7 @@ export default async function PiecePage({ params }: Props) {
     ['Gross weight', product.grossWeightMg && product.weightVerified ? formatGrams(product.grossWeightMg) : 'Being weighed'],
     ['Weight tolerance', 'None. The weight shown is the weight of this piece.'],
     // Rings and pendants are listed without a stone description, at the owner's request.
-    ...(['rings', 'pendants'].includes(product.category.slug) ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
+    ...(['rings', 'pendants', 'bangles'].includes(product.category.slug) ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
     ...(product.stoneDetails ? ([['Stone details', product.stoneDetails]] as [string, string][]) : []),
     ['Hallmark', product.hallmarked ? `BIS hallmarked, 925${product.huid ? `, HUID ${product.huid}` : ''}` : 'Not hallmarked'],
     ...(product.lengthInches ? ([['Length', `${product.lengthInches.toString()} in`]] as [string, string][]) : []),
@@ -106,7 +108,10 @@ export default async function PiecePage({ params }: Props) {
       {/* The Lamp: the piece on a velvet pad. The visitor carries the light. */}
       <div className="mx-auto grid max-w-[1440px] gap-10 px-[var(--gutter)] pt-4 lg:grid-cols-12">
         <section aria-label="The piece under the lamp" className="lg:col-span-7">
-          {pieceRef && product.images[0] ? (
+          {pieceRef && product.images[0] && isPhotoCategory(product.category.slug) ? (
+            // Shown in its photographs: no lamp, no cut-out.
+            <PhotoStage main={mediaBase(product.images[0].src)} alt={product.images[0].alt} piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku), plain: true }} />
+          ) : pieceRef && product.images[0] ? (
             <PieceLamp
               slug={product.slug}
               base={mediaBase(pieceRef.src)}
@@ -117,7 +122,7 @@ export default async function PiecePage({ params }: Props) {
             />
           ) : null}
           <p className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-step--1">
-            {pieceRef && <ViewButton piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />}
+            {pieceRef && !isPhotoCategory(product.category.slug) && <ViewButton piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />}
             <a href="#originals" className="link">All photographs</a>
           </p>
         </section>
@@ -180,7 +185,7 @@ export default async function PiecePage({ params }: Props) {
               <h2 id="studio-heading" className="orig-title">Every angle, <em className="accent">in studio light.</em></h2>
               <p className="orig-note">Studio images, made from our photographs to show the design clearly. The ring you receive is the one at our counter. Open any image to look through the loupe.</p>
             </div>
-            <Originals kind="studio" piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />
+            <Originals kind="studio" piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku), plain: isPhotoCategory(product.category.slug) }} />
           </div>
         </section>
       )}
@@ -194,7 +199,7 @@ export default async function PiecePage({ params }: Props) {
               <h2 id="originals-heading" className="orig-title">As photographed <em className="accent">at the counter.</em></h2>
               <p className="orig-note">Exactly as taken in Gorai 1: no retouching, no background removed. Open any photograph to look through the loupe.</p>
             </div>
-            <Originals piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku) }} />
+            <Originals piece={{ slug: product.slug, name: product.name, price: sold ? 'Sold' : PRICE_ON_REQUEST, href: `/piece/${product.slug}`, cutout: mediaBase(pieceRef.src), photos: originalsFor(product.sku), studio: studioFor(product.sku), plain: isPhotoCategory(product.category.slug) }} />
           </div>
         </section>
       )}

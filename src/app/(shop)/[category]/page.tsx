@@ -7,6 +7,9 @@ import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { isSold, getCategories, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor, studioFor } from '@/lib/originals'
+import { isPhotoCategory, ringGroup } from '@/lib/photo-pieces'
+import { PhotoRoom, type PhotoPiece } from '@/components/tray/PhotoRoom'
+import { PRICE_ON_REQUEST } from '@/lib/whatsapp'
 import { JsonLd, breadcrumbJsonLd, itemListJsonLd } from '@/lib/seo/jsonld'
 
 export const revalidate = 300
@@ -20,6 +23,16 @@ function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: A
       return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), studio: studioFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []
     })
     .slice(0, count)
+}
+
+/** Every piece of a photograph room (rings, pendants, bangles), for the tap-to-view grid. */
+function photoPieces(products: Awaited<ReturnType<typeof listProducts>>): PhotoPiece[] {
+  return products.flatMap((p) => {
+    const img = p.images[0]
+    if (!img) return []
+    const sold = isSold(p)
+    return [{ slug: p.slug, name: p.name, price: PRICE_ON_REQUEST, href: `/piece/${p.slug}`, base: mediaBase(img.src), alt: img.alt, photos: originalsFor(p.sku), studio: studioFor(p.sku), group: ringGroup(p.sku), sold, productId: sold ? undefined : p.id }]
+  })
 }
 
 type Props = {
@@ -52,6 +65,34 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   if (!c) notFound()
   const search = await searchParams
   const [rates, products] = await Promise.all([getCurrentRates(), listProducts({ category: c.slug })])
+
+  if (isPhotoCategory(c.slug)) {
+    // Shown in their photographs: no 3D room, a grid of prints to tap and look closer.
+    return (
+      <>
+        <JsonLd data={breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: c.name, path: `/${c.slug}` }])} />
+        <JsonLd data={itemListJsonLd(c.name, `/${c.slug}`, products)} />
+        <div id="list" className="relative bg-cream">
+          <div className="mx-auto max-w-[1440px] px-[var(--gutter)]">
+            <header className="room-head">
+              <p className="eyebrow">{c.name}</p>
+              <h1 className="room-title">{c.seoTitle.split('|')[0].trim()}</h1>
+              <p className="room-lede">{c.summary} Tap any piece to look closer, see every photograph, and ask for it on WhatsApp.</p>
+            </header>
+            <PhotoRoom pieces={photoPieces(products)} label={c.name} />
+            <section aria-labelledby="guide-heading" className="mt-32 grid gap-10 border-t border-rule pt-12 pb-8 md:grid-cols-12">
+              <h2 id="guide-heading" className="text-step-4 md:col-span-4">Buying {c.name.toLowerCase()}: what to look for</h2>
+              <div className="measure space-y-5 text-ink-muted md:col-span-7 md:col-start-6">
+                {c.guide.split(/\n\n+/).map((para) => (
+                  <p key={para.slice(0, 24)}>{para}</p>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <>

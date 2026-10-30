@@ -1,0 +1,70 @@
+084|crossed-pave-bar-ring|Crossed Pave Bar Ring|A broad pave bar crossed with a silver X, held between two open posts.|A bold, architectural men's ring: the sparkling bar sits between squared posts on a solid band, with fine pave carried down the shoulders.
+085|blackened-lattice-pave-ring|Blackened Lattice Pave Ring|Three columns of sparkle between blackened lattice shoulders with a silver scroll.|The dark crosshatched shoulders frame the bright centre, so the pave stands out sharply. A strong everyday men's ring.
+086|sai-baba-portrait-ring|Sai Baba Portrait Ring|An oval portrait of Sai Baba, finely detailed, framed in a dark outline.|The portrait is raised in polished silver against a textured ground, and the shoulders are cut with a lattice pattern. A devotional ring for daily wear.
+087|sai-baba-oval-signet-ring|Sai Baba Oval Signet Ring|Sai Baba in raised silver on a dark oval, on a ring with lattice shoulders.|The darkened background makes the bright portrait stand forward. A devotional signet with a classic, solid build.
+088|blue-accent-pave-rectangle-ring|Blue Accent Pave Rectangle Ring|A wide rectangle of sparkle with two small blue points at its centre.|The pave panel is edged in polished silver, and the shoulders are cut in a diamond pattern. A refined men's ring.
+089|twin-accent-pave-rectangle-ring|Twin Accent Pave Rectangle Ring|A rectangle of fine sparkle with a pair of dark accents at the centre.|Even rows of pave fill the face, framed by a polished edge and patterned shoulders. Smart and easy to wear.
+090|black-dot-pave-ring|Black Dot Pave Ring|Rows of black enamel dots beside sparkling diamond shapes.|The black dots and bright pave alternate across a squared face, giving the ring a crisp, graphic look.
+091|square-solitaire-mens-ring|Square Solitaire Men's Ring|A large square centre set in a solid band with patterned shoulders.|The centre is held square and high, with small diamond motifs on each side. A classic men's solitaire.
+092|dot-and-stripe-pave-ring|Dot and Stripe Pave Ring|A grid of sparkle between dotted and striped blackened shoulders.|One shoulder is worked in dots and the other in stripes, both darkened so the bright centre stands out. A bold statement ring.
+093|starred-shoulder-pave-ring|Starred Shoulder Pave Ring|A pave grid between textured, blackened shoulders set with small stars.|The dark shoulders give the ring depth and contrast, framing a clean rectangle of sparkle.
+094|offset-solitaire-step-ring|Offset Solitaire Step Ring|A square centre set to one side, with steps of pave beside it.|An asymmetric men's ring: the solitaire sits off-centre, balanced by rows of sparkle on a broad polished band.
+095|oval-solitaire-pave-panel-ring|Oval Solitaire Pave Panel Ring|An oval centre beside a tapering panel of pave.|The oval is set upright on a strong band, with a sparkling panel sweeping along one side.
+096|oval-step-pave-ring|Oval Step Pave Ring|An oval centre in a polished collar, with stepped bars of pave along the band.|The pave steps lead the eye to the bright oval centre. A modern, sporty men's ring.
+097|solitaire-pave-block-ring|Solitaire Pave Block Ring|A round solitaire beside a block of pave on a broad band.|A clean, confident design: one bright centre, one panel of sparkle, and polished silver around them.
+098|pave-flank-solitaire-ring|Pave Flank Solitaire Ring|A round centre flanked by angled panels of pave.|The panels taper into the band on either side, so the ring sits comfortably and catches light from every angle.
+099|sculpted-pave-band-ring|Sculpted Pave Band Ring|A sculpted band with small panels of pave set into its face.|A smooth, contoured men's ring with sparkle set flush into the polished silver.
+100|cross-motif-pave-ring|Cross Motif Pave Ring|A pave face with small crosses on each side and a fine dark outline.|The crosses are set in sparkle on the shoulders, framing the bright centre panel.
+101|bezel-solitaire-grooved-ring|Bezel Solitaire Grooved Ring|A round centre in a polished bezel, with grooved shoulders.|A slim, understated ring: the bezel holds the centre flush and the grooves run into the band.
+102|beaded-oval-bezel-ring|Beaded Oval Bezel Ring|An oval centre in a bezel, between lines of fine beading.|The beaded lines run along the band on both sides of the oval. A neat, minimal ring.
+103|slim-bezel-band|Slim Bezel Band|A slim double band with a small bezel-set centre.|Two fine bands meet at a single bright point. Light and simple for everyday wear.
+104|square-centre-panel-ring|Square Centre Panel Ring|A square centre between pave panels with crossed motifs.|The panels are edged in polished silver, giving the ring a strong, structured front.
+105|hexagon-pave-ring|Hexagon Pave Ring|A hexagon of sparkle framed in polished silver on a broad band.|Lines of pave follow the hexagon's edges, with a bright row at the centre. A sharp, modern men's ring.
+106|ribbed-pave-plaque-ring|Ribbed Pave Plaque Ring|Rows of pave across a plaque, with round engraved shoulders.|The plaque is divided by polished bars, and each shoulder carries a circle motif.
+107|black-block-pave-ring|Black Block Pave Ring|Black enamel blocks and panels of pave set side by side.|The black and bright panels alternate like a chequer, on a solid, squared band.
+108|lion-head-signet-ring|Lion Head Signet Ring|A detailed lion's head in a round frame, with ornate engraved shoulders.|The lion is cast in deep relief and the shoulders are worked with flowing ornament. A striking statement ring.
+109|diamond-cross-pave-ring|Diamond Cross Pave Ring|A diamond-shaped centre of pave with crossing bands on either side.|The crossing lines lead into the centre, which is set high and catches the light.
+110|knot-motif-pave-ring|Knot Motif Pave Ring|Rows of pave beside an engraved knot motif on a polished band.|The knot is cut into the shoulder and the sparkle sits on the face. A quiet, distinctive men's ring.
+111|pave-cushion-signet-ring|Pave Cushion Signet Ring|A domed cushion of pave framed by a polished border.|The whole face is set with sparkle, giving the ring a rich, full look on the hand.
+112|pave-plaque-ring|Pave Plaque Ring|A flat rectangle of pave with ribbed shoulders.|An even field of sparkle on a squared face, with grooves running into the band.
+113|square-solitaire-frame-ring|Square Solitaire Frame Ring|A square centre in a polished frame, with grooved shoulders.|The frame holds the centre flush with the band. A strong, clean design.
+114|offset-square-lined-ring|Offset Square Lined Ring|A square centre to one side, with engraved lines beside it.|The lines and a small panel of pave balance the offset centre on a broad band.
+115|plain-band-square-solitaire|Plain Band Square Solitaire|A square centre set into a smooth, plain band.|Nothing but polished silver and one bright square. Simple, modern and comfortable.
+116|turquoise-panther-ring|Turquoise Panther Ring|A silver panther on a square framed in turquoise blue, with textured shoulders.|The panther leaps across the face, edged by a row of turquoise and a darkened border. A bold signature ring.
+117|om-signet-ring|Om Signet Ring|A round signet with a raised Om, on a band with lattice shoulders.|The Om is raised in polished silver against a darkened ground. A devotional ring to wear every day.
+118|grooved-square-solitaire-ring|Grooved Square Solitaire Ring|A square centre between grooved, split shoulders.|The grooves run out from the centre along the band. A classic men's solitaire with a strong profile.
+119|crescent-pave-signet-ring|Crescent Pave Signet Ring|A rectangle of textured sparkle with a raised crescent, and scrollwork shoulders.|The crescent stands out on one side of the face, with a sweep of pave across the rest.
+120|pave-bow-ring|Pave Bow Ring|A bow shape filled with pave, on ribbed shoulders.|The bow sits across the front of a strong band. A smart, distinctive ring.
+121|ruby-red-dome-ring|Ruby Red Dome Ring|A round red centre on a domed face of fine sparkle.|The deep red centre is set in a polished collar, surrounded by pave and pierced shoulders.
+122|lion-face-ring|Lion Face Ring|A bold lion's face with red eyes and a flowing mane.|The lion is cast in full relief and polished on its high points. A powerful statement ring.
+123|crown-pave-signet-ring|Crown Pave Signet Ring|A gold-tone crown on a field of pave, framed in polished silver.|The crown stands on a bright oval panel, with patterned shoulders on either side.
+124|engraved-octagon-signet-ring|Engraved Octagon Signet Ring|An octagonal signet engraved with lines of script.|The engraved face is framed by ribbed shoulders. A traditional, meaningful ring.
+125|black-enamel-solitaire-ring|Black Enamel Solitaire Ring|A round centre on a black enamel panel with shaped cut-outs.|The black panel makes the bright centre stand out. A sharp, contrasting men's ring.
+126|vertical-bar-pave-ring|Vertical Bar Pave Ring|An upright bar of pave beside engraved lines.|The bar runs across the band like a tablet, with fine lines and pave on the shoulders.
+127|ribbed-solitaire-band|Ribbed Solitaire Band|A round centre set into a band ribbed all the way round.|The ribs give the band texture and grip, with one bright centre at the front.
+128|anchor-signet-ring|Anchor Signet Ring|A black signet with a raised anchor in a gold-tone ring.|The anchor is raised in silver on a dark textured face, with a matching motif on each side.
+129|oval-solitaire-pave-ring|Oval Solitaire Pave Ring|An oval centre between shoulders of pave.|A classic men's design: a bright oval held high with sparkle running into the band.
+130|black-oval-signet-ring|Black Oval Signet Ring|A black oval face on a dark textured signet, with a gold-tone emblem on the side.|The deep black face is framed in polished silver. A strong, modern signet.
+131|pave-rows-signet-ring|Pave Rows Signet Ring|Rows of pave across a squared face, with engraved motifs on the shoulders.|Polished bars divide the rows of sparkle. A smart, detailed ring.
+132|diamond-motif-solitaire-ring|Diamond Motif Solitaire Ring|A square centre with engraved diamond motifs on both shoulders.|The motifs are set with small points of sparkle, framing the bright centre.
+133|pave-grid-ring|Pave Grid Ring|A grid of pave squares across a broad, ribbed face.|Neat squares of sparkle in polished frames. A bold, structured men's ring.
+134|blue-cluster-fan-ring|Blue Cluster Fan Ring|A cluster of blue points in an oval, with fan-shaped shoulders.|The fan shoulders open out from the oval centre. A ring with colour and character.
+135|panther-plaque-ring|Panther Plaque Ring|A silver panther on a plaque bordered with warm brown accents.|The panther leaps across a textured face, framed by dotted borders and patterned shoulders.
+136|black-chevron-ring|Black Chevron Ring|Black and sparkling chevrons across a squared face.|The chevrons point across the band with black enamel bars at the ends. A bold, graphic ring.
+137|framed-chevron-ring|Framed Chevron Ring|Three black chevrons on a pave panel, inside a fine dotted frame.|A neat, framed version of the chevron design, with pierced shoulders.
+138|paisley-diagonal-pave-ring|Paisley Diagonal Pave Ring|A diagonal band of pave with black paisley shapes on either side.|The black and bright elements sweep across the face. A ring with movement.
+139|oval-black-frame-ring|Oval Black Frame Ring|An oval centre in a black enamel frame, with pave shoulders.|The black frame sharpens the oval centre. A refined, contrasting men's ring.
+140|heart-engraved-solitaire-band|Heart Engraved Solitaire Band|A round centre with engraved hearts on either side.|A smooth band with a bright centre and two small hearts. A gentle, giftable ring.
+141|black-enamel-diamond-ring|Black Enamel Diamond Ring|A diamond-set square on a black enamel face with silver dots.|The black panels sweep in from the sides to frame the bright centre.
+142|circle-engraved-solitaire-ring|Circle Engraved Solitaire Ring|A square centre between engraved circles.|The circles are cut into the shoulders like ripples, framing the centre.
+143|black-polka-solitaire-band|Black Polka Solitaire Band|A band of black enamel dots with a single bright centre.|The polka dots run around the band. A playful, modern ring.
+144|ganesha-ring|Ganesha Ring|Lord Ganesha cast in deep relief, on a split band.|A devotional ring with fine detail in every fold, polished on the high points.
+145|star-engraved-solitaire-band|Star Engraved Solitaire Band|A bright centre between two engraved stars on a smooth band.|The stars are cut into the polished silver. A simple, cheerful ring.
+146|split-shank-solitaire-ring|Split Shank Solitaire Ring|A round solitaire on a split band lined with sparkle.|The band divides on either side of the centre, both arms set with pave. A classic, elegant ring.
+147|dad-pave-ring|DAD Pave Ring|"DAD" raised in silver on a field of pave.|A ring made for a father: the letters stand proud of a bright pave face.
+148|heart-signet-ring|Heart Signet Ring|A smooth, polished heart on a split band.|A plain silver heart with clean lines. Simple and personal.
+149|blue-accent-open-pave-ring|Blue Accent Open Pave Ring|An open rectangle of pave with four small blue points.|The face is pierced at the sides, giving the ring a light, open look.
+150|fluted-bezel-solitaire-ring|Fluted Bezel Solitaire Ring|A round centre in a bezel, with fluted shoulders.|The flutes run along the band like columns. A neat, classic men's ring.
+151|shiva-ring|Shiva Ring|Lord Shiva in raised relief on an oval face, with ornate shoulders.|A devotional ring with fine detail, polished on the high points.
+152|plain-oval-signet-ring|Plain Oval Signet Ring|A smooth oval signet in polished silver.|A blank, classic signet face, ready to wear as it is.
+153|square-step-cut-solitaire-ring|Square Step-Cut Solitaire Ring|A large square step-cut centre on a solid band.|The step-cut centre shows deep, mirror-like reflections. A bold men's solitaire.

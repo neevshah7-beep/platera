@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { whatsappLink } from '@/lib/store'
 import { scroller } from './SmoothScroll'
 
-export type ViewingPiece = { slug: string; name: string; price: string; href: string; cutout: string; photos: string[]; studio?: string[]; productId?: string; start?: number }
+export type ViewingPiece = { slug: string; name: string; price: string; href: string; cutout: string; photos: string[]; studio?: string[]; productId?: string; start?: number; plain?: boolean }
 
 const LOUPE = 200 // px
 const ZOOM = 2.6
@@ -27,9 +27,13 @@ export function Viewing({ piece, onClose }: { piece: ViewingPiece | null; onClos
 
 function ViewingInner({ piece, onClose }: { piece: ViewingPiece; onClose: () => void }) {
   const photos = [
+    // Pieces shown in their photographs open on the close framing of the first photograph.
+    ...(piece.plain ? [{ src: `${piece.cutout}-1600.webp`, thumb: `${piece.cutout}-960.webp`, label: 'Close up' }] : []),
     ...(piece.studio ?? []).map((p) => ({ src: `${p}-1600.webp`, thumb: `${p}-800.webp`, label: 'Studio image' })),
     ...piece.photos.map((p) => ({ src: `${p}-1600.webp`, thumb: `${p}-800.webp`, label: 'As photographed at the store' })),
-    { src: `${piece.cutout}-1600.webp`, thumb: `${piece.cutout}-960.webp`, label: 'The piece, on its own' },
+    // Pieces shown in their photographs (photo-pieces.ts) have no cut-out: their main image
+    // is a crop of a photograph already in the list.
+    ...(piece.plain ? [] : [{ src: `${piece.cutout}-1600.webp`, thumb: `${piece.cutout}-960.webp`, label: 'The piece, on its own' }]),
   ]
   const [i, setI] = useState(piece.start ?? 0)
   const [closing, setClosing] = useState(false)

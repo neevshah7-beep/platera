@@ -7,13 +7,14 @@ import { CollectionScene } from '@/scenes/collection/CollectionScene'
 import { isSold, getCurrentRates, listProducts, priceProduct } from '@/lib/catalogue'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor, studioFor } from '@/lib/originals'
+import { isPhotoCategory } from '@/lib/photo-pieces'
 
 export const revalidate = 300
 
 /** The first pieces of a room, as the case room presents them. */
 function casePieces(products: Awaited<ReturnType<typeof listProducts>>, rates: Awaited<ReturnType<typeof getCurrentRates>>) {
   return products
-    .filter((p) => !/peacock/i.test(p.slug)) // kept out of the case showcase
+    .filter((p) => !/peacock/i.test(p.slug) && !isPhotoCategory(p.category.slug)) // kept out of the case showcase (photo pieces have no 3D)
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
       return r ? [{ slug: r.slug, name: r.name, price: r.price, base: mediaBase(r.src), width: r.width, height: r.height, href: `/piece/${r.slug}`, originals: originalsFor(p.sku), studio: studioFor(p.sku), productId: isSold(p) ? undefined : p.id }] : []

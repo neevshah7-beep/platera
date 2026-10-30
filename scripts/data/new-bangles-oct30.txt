@@ -1,0 +1,26 @@
+001|wave-link-pave-bangles|Wave Link Pave Bangles|Wavy bangles of fine pave, linked by small open loops.|Each bangle flows in a gentle wave lined with sparkle, with polished links along its length. Graceful worn as a pair or stacked.
+002|green-accent-wave-bangles|Green Accent Wave Bangles|Wavy pave bangles set with small green accents.|The waves of sparkle are punctuated with points of green. A festive pair with colour.
+003|flower-stud-double-line-bangles|Flower Stud Double Line Bangles|Twin lines of polished silver joined by small sparkling flowers.|Open between the lines, so the bangles look light on the wrist. Elegant for everyday or occasions.
+004|green-flower-stud-bangles|Green Flower Stud Bangles|Twin-line bangles with sparkling flowers and green accents.|The green points alternate with the flowers along the bangle. A pair with a touch of colour.
+005|green-clover-bangles|Green Clover Bangles|A green clover at the centre of each bangle, with pave on either side.|The clover sits proud of a slim polished bangle. A bright, cheerful pair.
+006|slim-green-clover-bangles|Slim Green Clover Bangles|Slim bangles with a green clover and a line of pave.|A lighter version of the clover design, comfortable to wear every day.
+007|green-square-stud-bangles|Green Square Stud Bangles|Faceted bangles with framed green studs along their length.|Each green stud is framed in sparkle on a polished, angled band.
+008|pave-plate-faceted-bangles|Pave Plate Faceted Bangles|Faceted bangles with a long plate of pave at the front.|The pave plate catches the light while the faceted sides keep a crisp outline.
+009|red-dot-cutwork-bangles|Red Dot Cutwork Bangles|Cutwork bangles with a panel of pave and a line of red points.|Pierced flower patterns, sparkle and red accents along one polished band. A rich, festive pair.
+010|engraved-cutwork-bangles|Engraved Cutwork Bangles|Slim bangles with an engraved and pierced pattern all the way round.|Fine cutwork gives the pair a delicate, traditional look.
+011|segmented-block-bangles|Segmented Block Bangles|Polished segments with small motifs and a block of pave at the front.|The bangle is built of squared links, with sparkle at the centre. A modern, structured pair.
+012|slim-pave-line-bangles|Slim Pave Line Bangles|Slim bangles lined with a single row of sparkle.|Light, simple and easy to stack with other bangles.
+013|baguette-accent-bangles|Baguette Accent Bangles|Polished bangles with small baguette accents set along the front.|Clean lines of silver with points of sparkle. Smart for everyday wear.
+014|lattice-oval-accent-bangles|Lattice Oval Accent Bangles|Lattice-cut bangles with oval accents at the front.|The pierced lattice lightens the bangle, and the ovals add a soft highlight.
+015|baguette-row-bangles|Baguette Row Bangles|A row of baguettes at the centre of each polished bangle.|The baguettes sit in a short line across the front. Neat and elegant.
+016|pave-panel-bangles|Pave Panel Bangles|Polished bangles with a panel of pave and stepped baguettes.|Two kinds of sparkle on one bangle: a fine pave panel and a row of baguettes.
+017|square-stud-polished-bangles|Square Stud Polished Bangles|Smooth polished bangles with square sparkling studs.|The studs are set at intervals around the band. Simple and refined.
+018|pink-pear-halo-bangles|Pink Pear Halo Bangles|A pink pear in a halo of sparkle at the front of each bangle.|A pair with real colour, the pink centres framed by fine sparkle on polished silver.
+019|open-window-pave-bangles|Open Window Pave Bangles|Polished bangles with open windows and lines of pave.|The cut-out windows give the bangles a modern, architectural look.
+020|sunburst-oval-bangles|Sunburst Oval Bangles|A sunburst oval of sparkle at the front of each bangle.|The oval centre is set like a flower opening, on a smooth polished band.
+021|half-pave-polished-bangles|Half Pave Polished Bangles|Polished bangles with a long stretch of pave across the front.|Half sparkle, half smooth silver. Easy to wear every day.
+022|chain-link-bangles|Chain Link Bangles|Bangles shaped like a curb chain, with sparkle on each link.|A pair with the look of a chain and the shape of a bangle.
+023|polished-pave-end-bangles|Polished Pave End Bangles|Smooth polished bangles with panels of pave at the ends.|Clean and modern, with sparkle where the bangle opens.
+024|leaf-braid-bangles|Leaf Braid Bangles|Bangles worked in a braided leaf pattern all the way round.|The leaves overlap like a plait, polished on the high points. A traditional, textured pair.
+025|pave-stack-bangles|Pave Stack Bangles|Slim bangles with bands of pave, shown as a stack.|Wear them together for a full sparkle, or one at a time.
+026|two-tone-flower-stud-bangles|Two-Tone Flower Stud Bangles|Twin-line bangles with sparkling flowers and a warm two-tone finish.|The flower studs sit between two polished lines with a soft rose tone.

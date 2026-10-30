@@ -11,6 +11,7 @@ const LINKS = [
   { href: '/earrings', label: 'Earrings' },
   { href: '/rings', label: 'Rings' },
   { href: '/pendants', label: 'Pendants' },
+  { href: '/bangles', label: 'Bangles' },
   { href: '/mangalsutras', label: 'Mangalsutras' },
   { href: '/collection', label: 'The whole collection' },
   { href: '/appointment', label: 'Book a viewing' },

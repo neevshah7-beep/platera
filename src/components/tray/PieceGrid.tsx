@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PieceImage } from '@/components/media/PieceImage'
 import { isSold, metalLine, type Pricing, type ProductWithMedia } from '@/lib/catalogue'
+import { isPhotoCategory } from '@/lib/photo-pieces'
 
 /**
  * Pieces laid out as a jeweller lays a tray: every piece on the same cream display mat,
@@ -14,7 +15,7 @@ export function PieceGrid({ items, label, priorityFirst = false }: { items: { pr
         const sold = isSold(product)
         return (
           <li key={product.id}>
-            <Link href={`/piece/${product.slug}`} className="tray-card" data-sold={sold}>
+            <Link href={`/piece/${product.slug}`} className="tray-card" data-sold={sold} data-photo={isPhotoCategory(product.category.slug)}>
               <span className="tray-mat">
                 {img && <PieceImage image={img} sizes="(min-width: 1024px) 24vw, 46vw" fit="contain" priority={priorityFirst && i < 4} className="tray-img" />}
                 {sold && <span className="tray-sold">Sold</span>}

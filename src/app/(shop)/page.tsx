@@ -3,6 +3,7 @@ import { isSold, getCurrentRates, getSetting, listProducts, priceProduct } from 
 import { mediaBase } from '@/components/media/PieceImage'
 import { toPieceRef } from '@/lib/world-data'
 import { originalsFor, studioFor } from '@/lib/originals'
+import { isPhotoCategory } from '@/lib/photo-pieces'
 import { STORE, whatsappLink } from '@/lib/store'
 import { HomeExperience } from '@/site/HomeExperience'
 import type { Metadata } from 'next'
@@ -26,7 +27,7 @@ export default async function HomePage() {
     return { value: d.value, day: f({ day: 'numeric' }), weekday: f({ weekday: 'long' }), month: f({ month: 'long', year: 'numeric' }), long: f({ weekday: 'long', day: 'numeric', month: 'long' }) }
   })
   // The peacock pieces stay in the catalogue but are kept out of the jewellery-box showcase.
-  const showcase = products.filter((p) => !/peacock/i.test(p.slug))
+  const showcase = products.filter((p) => !/peacock/i.test(p.slug) && !isPhotoCategory(p.category.slug))
   const featured = [...showcase.filter((p) => p.featured), ...showcase.filter((p) => !p.featured)]
     .flatMap((p) => {
       const r = toPieceRef(p, priceProduct(p, rates))
