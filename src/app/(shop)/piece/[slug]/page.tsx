@@ -76,7 +76,7 @@ export default async function PiecePage({ params }: Props) {
     ['Gross weight', product.grossWeightMg && product.weightVerified ? formatGrams(product.grossWeightMg) : 'Being weighed'],
     ['Weight tolerance', 'None. The weight shown is the weight of this piece.'],
     // Rings and pendants are listed without a stone description, at the owner's request.
-    ...(['rings', 'pendants', 'bangles'].includes(product.category.slug) ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
+    ...(['rings', 'pendants', 'bangles', 'leg-rings'].includes(product.category.slug) ? [] : ([['Stones', STONE_LABEL[product.stoneType]]] as [string, string][])),
     ...(product.stoneDetails ? ([['Stone details', product.stoneDetails]] as [string, string][]) : []),
     ['Hallmark', product.hallmarked ? `BIS hallmarked, 925${product.huid ? `, HUID ${product.huid}` : ''}` : 'Not hallmarked'],
     ...(product.lengthInches ? ([['Length', `${product.lengthInches.toString()} in`]] as [string, string][]) : []),

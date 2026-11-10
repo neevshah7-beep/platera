@@ -655,5 +655,350 @@
  ],
  "PLT-RNG-153": [
   "PLT-RNG-153-s01"
+ ],
+ "PLT-LGR-001": [
+  "PLT-LGR-001-s01",
+  "PLT-LGR-001-s02",
+  "PLT-LGR-001-s03"
+ ],
+ "PLT-LGR-002": [
+  "PLT-LGR-002-s01",
+  "PLT-LGR-002-s02"
+ ],
+ "PLT-LGR-003": [
+  "PLT-LGR-003-s01",
+  "PLT-LGR-003-s02"
+ ],
+ "PLT-LGR-004": [
+  "PLT-LGR-004-s01",
+  "PLT-LGR-004-s02"
+ ],
+ "PLT-LGR-005": [
+  "PLT-LGR-005-s01",
+  "PLT-LGR-005-s02"
+ ],
+ "PLT-LGR-006": [
+  "PLT-LGR-006-s01",
+  "PLT-LGR-006-s02"
+ ],
+ "PLT-LGR-007": [
+  "PLT-LGR-007-s01",
+  "PLT-LGR-007-s02"
+ ],
+ "PLT-LGR-008": [
+  "PLT-LGR-008-s01"
+ ],
+ "PLT-LGR-009": [
+  "PLT-LGR-009-s01",
+  "PLT-LGR-009-s02"
+ ],
+ "PLT-LGR-010": [
+  "PLT-LGR-010-s01",
+  "PLT-LGR-010-s02",
+  "PLT-LGR-010-s03"
+ ],
+ "PLT-LGR-011": [
+  "PLT-LGR-011-s01",
+  "PLT-LGR-011-s02"
+ ],
+ "PLT-LGR-012": [
+  "PLT-LGR-012-s01",
+  "PLT-LGR-012-s02"
+ ],
+ "PLT-LGR-013": [
+  "PLT-LGR-013-s01",
+  "PLT-LGR-013-s02"
+ ],
+ "PLT-LGR-014": [
+  "PLT-LGR-014-s01",
+  "PLT-LGR-014-s02"
+ ],
+ "PLT-LGR-015": [
+  "PLT-LGR-015-s01",
+  "PLT-LGR-015-s02"
+ ],
+ "PLT-LGR-016": [
+  "PLT-LGR-016-s01",
+  "PLT-LGR-016-s02",
+  "PLT-LGR-016-s03",
+  "PLT-LGR-016-s04"
+ ],
+ "PLT-LGR-017": [
+  "PLT-LGR-017-s01",
+  "PLT-LGR-017-s02"
+ ],
+ "PLT-LGR-018": [
+  "PLT-LGR-018-s01",
+  "PLT-LGR-018-s02"
+ ],
+ "PLT-LGR-019": [
+  "PLT-LGR-019-s01",
+  "PLT-LGR-019-s02"
+ ],
+ "PLT-LGR-020": [
+  "PLT-LGR-020-s01",
+  "PLT-LGR-020-s02"
+ ],
+ "PLT-LGR-021": [
+  "PLT-LGR-021-s01",
+  "PLT-LGR-021-s02"
+ ],
+ "PLT-LGR-022": [
+  "PLT-LGR-022-s01",
+  "PLT-LGR-022-s02"
+ ],
+ "PLT-LGR-023": [
+  "PLT-LGR-023-s01",
+  "PLT-LGR-023-s02"
+ ],
+ "PLT-LGR-024": [
+  "PLT-LGR-024-s01",
+  "PLT-LGR-024-s02"
+ ],
+ "PLT-LGR-025": [
+  "PLT-LGR-025-s01",
+  "PLT-LGR-025-s02"
+ ],
+ "PLT-LGR-026": [
+  "PLT-LGR-026-s01",
+  "PLT-LGR-026-s02"
+ ],
+ "PLT-LGR-027": [
+  "PLT-LGR-027-s01",
+  "PLT-LGR-027-s02"
+ ],
+ "PLT-LGR-028": [
+  "PLT-LGR-028-s01",
+  "PLT-LGR-028-s02"
+ ],
+ "PLT-LGR-029": [
+  "PLT-LGR-029-s01",
+  "PLT-LGR-029-s02"
+ ],
+ "PLT-LGR-030": [
+  "PLT-LGR-030-s01",
+  "PLT-LGR-030-s02",
+  "PLT-LGR-030-s03"
+ ],
+ "PLT-LGR-031": [
+  "PLT-LGR-031-s01",
+  "PLT-LGR-031-s02"
+ ],
+ "PLT-LGR-032": [
+  "PLT-LGR-032-s01"
+ ],
+ "PLT-LGR-033": [
+  "PLT-LGR-033-s01",
+  "PLT-LGR-033-s02"
+ ],
+ "PLT-LGR-034": [
+  "PLT-LGR-034-s01",
+  "PLT-LGR-034-s02"
+ ],
+ "PLT-LGR-035": [
+  "PLT-LGR-035-s01",
+  "PLT-LGR-035-s02"
+ ],
+ "PLT-LGR-036": [
+  "PLT-LGR-036-s01",
+  "PLT-LGR-036-s02"
+ ],
+ "PLT-LGR-037": [
+  "PLT-LGR-037-s01",
+  "PLT-LGR-037-s02"
+ ],
+ "PLT-LGR-038": [
+  "PLT-LGR-038-s01",
+  "PLT-LGR-038-s02"
+ ],
+ "PLT-LGR-039": [
+  "PLT-LGR-039-s01",
+  "PLT-LGR-039-s02"
+ ],
+ "PLT-LGR-040": [
+  "PLT-LGR-040-s01",
+  "PLT-LGR-040-s02"
+ ],
+ "PLT-LGR-041": [
+  "PLT-LGR-041-s01",
+  "PLT-LGR-041-s02"
+ ],
+ "PLT-LGR-042": [
+  "PLT-LGR-042-s01",
+  "PLT-LGR-042-s02"
+ ],
+ "PLT-LGR-043": [
+  "PLT-LGR-043-s01",
+  "PLT-LGR-043-s02"
+ ],
+ "PLT-LGR-044": [
+  "PLT-LGR-044-s01",
+  "PLT-LGR-044-s02"
+ ],
+ "PLT-LGR-045": [
+  "PLT-LGR-045-s01",
+  "PLT-LGR-045-s02"
+ ],
+ "PLT-LGR-046": [
+  "PLT-LGR-046-s01",
+  "PLT-LGR-046-s02",
+  "PLT-LGR-046-s03"
+ ],
+ "PLT-LGR-047": [
+  "PLT-LGR-047-s01",
+  "PLT-LGR-047-s02"
+ ],
+ "PLT-LGR-048": [
+  "PLT-LGR-048-s01",
+  "PLT-LGR-048-s02"
+ ],
+ "PLT-LGR-049": [
+  "PLT-LGR-049-s01",
+  "PLT-LGR-049-s02",
+  "PLT-LGR-049-s03"
+ ],
+ "PLT-LGR-050": [
+  "PLT-LGR-050-s01",
+  "PLT-LGR-050-s02"
+ ],
+ "PLT-LGR-051": [
+  "PLT-LGR-051-s01"
+ ],
+ "PLT-LGR-052": [
+  "PLT-LGR-052-s01"
+ ],
+ "PLT-LGR-053": [
+  "PLT-LGR-053-s01",
+  "PLT-LGR-053-s02"
+ ],
+ "PLT-LGR-054": [
+  "PLT-LGR-054-s01",
+  "PLT-LGR-054-s02"
+ ],
+ "PLT-LGR-055": [
+  "PLT-LGR-055-s01",
+  "PLT-LGR-055-s02"
+ ],
+ "PLT-LGR-056": [
+  "PLT-LGR-056-s01",
+  "PLT-LGR-056-s02"
+ ],
+ "PLT-LGR-057": [
+  "PLT-LGR-057-s01"
+ ],
+ "PLT-LGR-058": [
+  "PLT-LGR-058-s01"
+ ],
+ "PLT-LGR-059": [
+  "PLT-LGR-059-s01",
+  "PLT-LGR-059-s02"
+ ],
+ "PLT-LGR-060": [
+  "PLT-LGR-060-s01"
+ ],
+ "PLT-LGR-061": [
+  "PLT-LGR-061-s01",
+  "PLT-LGR-061-s02"
+ ],
+ "PLT-LGR-062": [
+  "PLT-LGR-062-s01",
+  "PLT-LGR-062-s02"
+ ],
+ "PLT-LGR-063": [
+  "PLT-LGR-063-s01",
+  "PLT-LGR-063-s02"
+ ],
+ "PLT-LGR-064": [
+  "PLT-LGR-064-s01"
+ ],
+ "PLT-LGR-065": [
+  "PLT-LGR-065-s01"
+ ],
+ "PLT-LGR-066": [
+  "PLT-LGR-066-s01",
+  "PLT-LGR-066-s02"
+ ],
+ "PLT-LGR-067": [
+  "PLT-LGR-067-s01",
+  "PLT-LGR-067-s02"
+ ],
+ "PLT-LGR-068": [
+  "PLT-LGR-068-s01",
+  "PLT-LGR-068-s02"
+ ],
+ "PLT-LGR-069": [
+  "PLT-LGR-069-s01",
+  "PLT-LGR-069-s02"
+ ],
+ "PLT-LGR-070": [
+  "PLT-LGR-070-s01"
+ ],
+ "PLT-LGR-071": [
+  "PLT-LGR-071-s01"
+ ],
+ "PLT-LGR-072": [
+  "PLT-LGR-072-s01",
+  "PLT-LGR-072-s02"
+ ],
+ "PLT-LGR-073": [
+  "PLT-LGR-073-s01",
+  "PLT-LGR-073-s02"
+ ],
+ "PLT-LGR-074": [
+  "PLT-LGR-074-s01",
+  "PLT-LGR-074-s02"
+ ],
+ "PLT-LGR-075": [
+  "PLT-LGR-075-s01",
+  "PLT-LGR-075-s02"
+ ],
+ "PLT-LGR-076": [
+  "PLT-LGR-076-s01",
+  "PLT-LGR-076-s02"
+ ],
+ "PLT-LGR-077": [
+  "PLT-LGR-077-s01",
+  "PLT-LGR-077-s02"
+ ],
+ "PLT-LGR-078": [
+  "PLT-LGR-078-s01",
+  "PLT-LGR-078-s02",
+  "PLT-LGR-078-s03"
+ ],
+ "PLT-LGR-079": [
+  "PLT-LGR-079-s01"
+ ],
+ "PLT-LGR-080": [
+  "PLT-LGR-080-s01"
+ ],
+ "PLT-LGR-081": [
+  "PLT-LGR-081-s01"
+ ],
+ "PLT-LGR-082": [
+  "PLT-LGR-082-s01"
+ ],
+ "PLT-LGR-083": [
+  "PLT-LGR-083-s01"
+ ],
+ "PLT-LGR-084": [
+  "PLT-LGR-084-s01"
+ ],
+ "PLT-LGR-085": [
+  "PLT-LGR-085-s01"
+ ],
+ "PLT-LGR-086": [
+  "PLT-LGR-086-s01"
+ ],
+ "PLT-LGR-087": [
+  "PLT-LGR-087-s01"
+ ],
+ "PLT-LGR-088": [
+  "PLT-LGR-088-s01"
+ ],
+ "PLT-LGR-089": [
+  "PLT-LGR-089-s01"
+ ],
+ "PLT-LGR-090": [
+  "PLT-LGR-090-s01"
  ]
 }

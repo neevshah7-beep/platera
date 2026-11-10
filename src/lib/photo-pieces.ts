@@ -4,7 +4,7 @@
  * page shows the photographs instead of the lamp. Their main image (-01) is the first
  * photograph, framed close on the piece (scripts/make_frames.py).
  */
-export const PHOTO_CATEGORIES = ['rings', 'pendants', 'bangles'] as const
+export const PHOTO_CATEGORIES = ['rings', 'pendants', 'bangles', 'leg-rings'] as const
 
 export function isPhotoCategory(slug: string | undefined | null) {
   return !!slug && (PHOTO_CATEGORIES as readonly string[]).includes(slug)

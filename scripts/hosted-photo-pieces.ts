@@ -23,6 +23,7 @@ import manifest from '../src/data/media-manifest.json'
 import { RINGS, RINGS_CATEGORY } from '../prisma/seed-data/rings'
 import { BANGLES, BANGLES_CATEGORY } from '../prisma/seed-data/bangles'
 import { PENDANTS } from '../prisma/seed-data/pendants'
+import { LEG_RINGS, LEG_RINGS_CATEGORY } from '../prisma/seed-data/leg-rings'
 
 const dryRun = process.argv.includes('--dry-run')
 const raw = readFileSync('.env.neon', 'utf8').trim().replace(/^DATABASE_URL=/, '').replace(/^['"]|['"]$/g, '')
@@ -65,7 +66,7 @@ const m = (sku: string) => {
 }
 
 async function main() {
-  for (const r of [...RINGS, ...BANGLES, ...PENDANTS]) m(r.sku) // every image checked first
+  for (const r of [...RINGS, ...BANGLES, ...PENDANTS, ...LEG_RINGS]) m(r.sku) // every image checked first
   await client.connect()
   await client.query('BEGIN')
   try {
@@ -80,12 +81,19 @@ async function main() {
       await client.query('INSERT INTO "Category" (id, slug, name, summary, guide, "seoTitle", "seoDescription", position) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', [cid, BANGLES_CATEGORY.slug, BANGLES_CATEGORY.name, BANGLES_CATEGORY.summary, BANGLES_CATEGORY.guide, BANGLES_CATEGORY.seoTitle, BANGLES_CATEGORY.seoDescription, BANGLES_CATEGORY.position])
       cats.set('bangles', cid)
     } else console.log('category exists, left alone: bangles')
+    if (!cats.has('leg-rings')) {
+      const cid = id()
+      const C = LEG_RINGS_CATEGORY
+      console.log('add category: leg-rings')
+      await client.query('INSERT INTO "Category" (id, slug, name, summary, guide, "seoTitle", "seoDescription", position) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', [cid, C.slug, C.name, C.summary, C.guide, C.seoTitle, C.seoDescription, C.position])
+      cats.set('leg-rings', cid)
+    } else console.log('category exists, left alone: leg-rings')
 
     const existing = new Set((await client.query('SELECT sku FROM "Product"')).rows.map((r: { sku: string }) => r.sku as string))
     const slugs = new Set((await client.query('SELECT slug FROM "Product"')).rows.map((r: { slug: string }) => r.slug as string))
     let position = (await client.query('SELECT COALESCE(MAX(position), 0) AS p FROM "Product"')).rows[0].p as number
     let added = 0
-    for (const [list, cat] of [[RINGS, 'rings'], [BANGLES, 'bangles']] as const) {
+    for (const [list, cat] of [[RINGS, 'rings'], [BANGLES, 'bangles'], [LEG_RINGS, 'leg-rings']] as const) {
       for (const r of list) {
         if (existing.has(r.sku)) continue
         if (slugs.has(r.slug)) throw new Error(`Slug taken by another product: ${r.slug}`)
@@ -104,7 +112,7 @@ async function main() {
     console.log(`${added} pieces to add`)
 
     let updated = 0
-    for (const r of [...RINGS, ...PENDANTS, ...BANGLES]) {
+    for (const r of [...RINGS, ...PENDANTS, ...BANGLES, ...LEG_RINGS]) {
       const e = m(r.sku)
       const res = await client.query(
         `UPDATE "ProductImage" i SET width = $1, height = $2, lqip = $3 FROM "Product" p

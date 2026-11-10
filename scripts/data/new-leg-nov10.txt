@@ -1,0 +1,90 @@
+001|green-star-leg-rings|Green Star Leg Rings|A green star at the tip of each ring, with a trail of small sparkling flowers.|The bright green star sits over a line of tiny flowers that follows the curve of the toe. A cheerful, colourful pair.
+002|pink-lattice-shield-leg-rings|Pink Lattice Shield Leg Rings|A shield of blackened lattice with three small pink points.|The dark lattice makes the pink points glow, on an open, adjustable band. A traditional pair with colour.
+003|scroll-solitaire-leg-rings|Scroll Solitaire Leg Rings|A sparkling centre held in two curling scrolls of silver.|Open silver scrolls frame a single bright stone. Light and graceful on the toe.
+004|scroll-flower-leg-rings|Scroll Flower Leg Rings|A small sparkling flower between curling silver scrolls.|The scrolls open out on either side of the flower, giving the pair a delicate, lacy look.
+005|pave-wave-leg-rings|Pave Wave Leg Rings|A broad wave of silver with a line of sparkle along its edge.|The polished wave wraps across the toe with fine sparkle beneath it. A modern, comfortable pair.
+006|blue-flower-band-leg-rings|Blue Flower Band Leg Rings|A slim band with small blue flowers set between sparkling marquise shapes.|Even and refined, with a touch of blue across the front. Easy to wear every day.
+007|clover-and-leaf-leg-rings|Clover and Leaf Leg Rings|A sparkling clover and a small leaf at the two ends of an open band.|The ends sit one above the other across the toe. A pretty, nature-inspired pair.
+008|keyhole-leg-rings|Keyhole Leg Rings|An open keyhole shape outlined in fine sparkle.|A small, neat design with polished curves on either side. Light and simple.
+009|pave-tulip-leg-rings|Pave Tulip Leg Rings|A small tulip filled with sparkle, on a slim open band.|The petals are set with tiny sparkle and edged in polished silver. Dainty and delicate.
+010|blue-accent-marquise-leg-rings|Blue Accent Marquise Leg Rings|A sparkling marquise centre framed by small blue points.|The blue points sit at each corner of the centre, giving the pair colour and shine.
+011|pave-shield-leg-rings|Pave Shield Leg Rings|A small sparkling shield on a slim band, with leaf shapes beneath it.|A neat, detailed design that sits flat on the toe.
+012|infinity-solitaire-leg-rings|Infinity Solitaire Leg Rings|An infinity loop lined with sparkle, with a small stone at one end.|The loop crosses over itself across the toe. A meaningful, everyday pair.
+013|open-infinity-leg-rings|Open Infinity Leg Rings|A slim open infinity band lined with fine sparkle.|A lighter version of the infinity design, with a small stone where the loops meet.
+014|pave-flower-cluster-leg-rings|Pave Flower Cluster Leg Rings|A round cluster of sparkle like a small flower, on an open band.|The cluster sits proud of a simple polished band. Bright and pretty.
+015|twin-heart-open-leg-rings|Twin Heart Open Leg Rings|An open band ending in two small sparkling hearts.|The hearts face each other across the toe. A sweet, light design.
+016|pave-bar-crossover-leg-rings|Pave Bar Crossover Leg Rings|An upright bar of sparkle where the two ends of the band cross.|A clean, modern design with a little sparkle at the front.
+017|blue-drop-crown-leg-rings|Blue Drop Crown Leg Rings|A deep blue drop under a crown of open silver scrolls.|The blue stone is framed in fine sparkle. A rich, festive pair.
+018|swirl-scroll-leg-rings|Swirl Scroll Leg Rings|Two big silver swirls with a small sparkling centre.|The swirls curl around the toe in a traditional pattern. Polished and graceful.
+019|teal-swirl-leg-rings|Teal Swirl Leg Rings|Silver swirls with a teal stone at the centre, in a warm finish.|The bright teal stone sits among curling scrolls. A colourful, traditional pair.
+020|aqua-swirl-leg-rings|Aqua Swirl Leg Rings|Curling silver scrolls with a soft aqua blue stone.|A gentle colour on a warm-toned scroll design. Elegant for occasions.
+021|open-heart-leg-rings|Open Heart Leg Rings|An open heart outlined in fine sparkle.|A simple, romantic pair on a slim adjustable band.
+022|pave-panel-leg-rings|Pave Panel Leg Rings|A small square panel of sparkle with scrolls at its sides.|A neat, bright design that sits flat on the toe.
+023|red-tulip-leg-rings|Red Tulip Leg Rings|A red oval stone held in a sparkling tulip frame.|The deep red centre stands out against bright silver. A festive, colourful pair.
+024|swan-heart-leg-rings|Swan Heart Leg Rings|Two swans forming a heart, set with sparkle.|The swans' necks meet in an open heart above a sparkling base. A striking, romantic pair.
+025|twin-hexagon-leg-rings|Twin Hexagon Leg Rings|Two sparkling hexagons, one at each end of the band.|The hexagons sit one above the other across the toe. Modern and geometric.
+026|clover-heart-leg-rings|Clover Heart Leg Rings|A four-leaf clover of sparkle with a small heart above it.|A lucky charm design in fine pave on a slim band.
+027|pave-heart-leg-rings|Pave Heart Leg Rings|A small heart filled with sparkle, framed in polished silver.|Sweet and simple, comfortable for every day.
+028|triple-stone-wrap-leg-rings|Triple Stone Wrap Leg Rings|A wrap band with three small stones at each end.|The ends sit one above the other, each with a row of three sparkling stones.
+029|bypass-solitaire-leg-rings|Bypass Solitaire Leg Rings|An open bypass band with a small stone at each end.|The ends pass each other across the toe. Minimal and light.
+030|cutwork-band-leg-rings|Cutwork Band Leg Rings|A plain band with a cut-out pattern all the way round.|A polished, traditional band that suits every day.
+031|leaf-sparkle-leg-rings|Leaf Sparkle Leg Rings|Silver leaves curling around two small sparkling stones.|A light, nature-inspired design that wraps the toe.
+032|crossover-leaf-leg-rings|Crossover Leaf Leg Rings|Two silver leaves crossing at the front, with small stones.|A graceful crossover design in polished silver.
+033|butterfly-wing-leg-rings|Butterfly Wing Leg Rings|A pair of butterfly wings, one blackened, at the front of the band.|The textured wings give the pair depth and contrast. A playful design.
+034|polished-bubble-leg-rings|Polished Bubble Leg Rings|A band of smooth polished bubbles.|Plain silver shaped into soft rounded links. Simple and comfortable.
+035|mermaid-tail-leg-rings|Mermaid Tail Leg Rings|A sparkling mermaid tail and a small stone at the two ends.|A playful, light design on an open band.
+036|open-zigzag-leg-rings|Open Zigzag Leg Rings|A band of open zigzag cutwork.|Light and airy, with a crisp, modern pattern.
+037|scalloped-band-leg-rings|Scalloped Band Leg Rings|A slim band with a scalloped, wavy edge.|Polished silver with a soft, rippled shape. Easy to wear.
+038|pave-strip-leg-rings|Pave Strip Leg Rings|A band with a strip of fine sparkle across the front.|A neat, everyday design with a little shine.
+039|heart-cutwork-leg-rings|Heart Cutwork Leg Rings|A band of open hearts cut through the silver.|A row of little hearts all the way round. Sweet and light.
+040|diamond-lattice-leg-rings|Diamond Lattice Leg Rings|A band cut through with a diamond lattice.|An open, geometric pattern on a slim polished band.
+041|v-heart-leg-rings|V Heart Leg Rings|A pointed V band that forms a heart, with sparkle on one side.|A modern heart design that frames the toe.
+042|blue-dot-hexagon-leg-rings|Blue Dot Hexagon Leg Rings|A row of small hexagons with blue and white stones.|Blue and bright points alternate along the band. A pretty, colourful pair.
+043|pink-centre-pave-leg-rings|Pink Centre Pave Leg Rings|A pink stone at the centre of a sparkling band.|Fine sparkle runs along the band on either side of the pink centre.
+044|wave-solitaire-leg-rings|Wave Solitaire Leg Rings|A double wave band with a small stone at the front.|Two polished waves meet at a single bright point.
+045|pave-butterfly-leg-rings|Pave Butterfly Leg Rings|A small butterfly filled with sparkle.|A dainty, playful design on a slim band.
+046|pave-blossom-leg-rings|Pave Blossom Leg Rings|A round blossom of sparkle on an open band.|The petals are set with tiny stones and edged in silver.
+047|pink-flower-leg-rings|Pink Flower Leg Rings|A flower with pink petals and a sparkling centre.|A colourful flower design that sits flat on the toe.
+048|fan-and-coin-leg-rings|Fan and Coin Leg Rings|A fluted silver fan at one end and a round coin at the other.|A distinctive, traditional design in polished silver.
+049|flower-and-leaf-leg-rings|Flower and Leaf Leg Rings|A sparkling flower and a polished leaf at the two ends.|A light, nature-inspired pair on an open band.
+050|wavy-polished-leg-rings|Wavy Polished Leg Rings|A slim band with a gentle polished wave.|Simple and comfortable for everyday wear.
+051|petal-band-leg-rings|Petal Band Leg Rings|A band of small polished petals.|Soft petal shapes all the way round. Light and pretty.
+052|sparkle-line-band-leg-rings|Sparkle Line Band Leg Rings|A slim band with a line of tiny stones.|A little sparkle on a simple band. Easy to stack.
+053|black-flower-leg-rings|Black Flower Leg Rings|A flower of black stones around a bright centre.|The black petals make a striking contrast on silver.
+054|pink-halo-leg-rings|Pink Halo Leg Rings|A round pink stone in a halo of sparkle.|A bright pink centre on a slim open band. A colourful pair.
+055|diamond-crown-leg-rings|Diamond Crown Leg Rings|A crown-shaped band with diamond motifs and small stones.|The pointed band frames the toe with sparkle at the centre.
+056|twisted-rope-leg-rings|Twisted Rope Leg Rings|A band twisted like a rope at the front.|Polished silver with a twisted texture. Simple and classic.
+057|link-band-leg-rings|Link Band Leg Rings|A band of small polished links.|A chain-like band in smooth silver.
+058|beaded-wave-leg-rings|Beaded Wave Leg Rings|A wavy band with small beaded accents.|A textured, traditional band that catches the light.
+059|figure-eight-twist-leg-rings|Figure Eight Twist Leg Rings|A band of open figure-eight twists.|Light, polished loops all the way round.
+060|oval-link-leg-rings|Oval Link Leg Rings|A band of small oval links.|Neat polished links in a simple, everyday design.
+061|open-oval-band-leg-rings|Open Oval Band Leg Rings|A band of open oval shapes.|An airy, polished design that is light on the toe.
+062|crown-bead-leg-rings|Crown Bead Leg Rings|A band edged with small beads like a crown.|A traditional beaded band in bright silver.
+063|crossover-band-leg-rings|Crossover Band Leg Rings|A plain band with a gentle crossover at the front.|Smooth and minimal for everyday wear.
+064|wave-twist-leg-rings|Wave Twist Leg Rings|A band twisted into soft waves.|Polished silver with a flowing shape.
+065|braided-twist-leg-rings|Braided Twist Leg Rings|A band with a braided twist across the front.|A textured, classic design in polished silver.
+066|star-cutout-leg-rings|Star Cutout Leg Rings|A band with small stars cut through it.|A row of stars all the way round. Playful and light.
+067|braided-band-leg-rings|Braided Band Leg Rings|A band braided all the way round.|A textured, traditional band in bright silver.
+068|pointed-petal-leg-rings|Pointed Petal Leg Rings|A band of pointed polished petals.|Crisp petal shapes in a row. Light and pretty.
+069|round-petal-leg-rings|Round Petal Leg Rings|A band of rounded polished petals.|Soft, rounded shapes all the way round.
+070|bead-and-heart-leg-rings|Bead and Heart Leg Rings|A band of small beads and hearts.|A sweet, traditional band in polished silver.
+071|black-point-petal-leg-rings|Black Point Petal Leg Rings|A petal band with small dark points at the ends.|A textured design with a little contrast.
+072|open-heart-row-leg-rings|Open Heart Row Leg Rings|A row of open hearts across the front.|A romantic band of linked hearts.
+073|engraved-band-leg-rings|Engraved Band Leg Rings|A slim band engraved with fine diagonal lines.|A simple, classic band with a subtle texture.
+074|ribbed-band-leg-rings|Ribbed Band Leg Rings|A plain band with fine ribbing all the way round.|Minimal and comfortable for every day.
+075|bubble-stone-leg-rings|Bubble Stone Leg Rings|A band of open bubbles with small stones.|Rounded shapes with a little sparkle.
+076|spiral-solitaire-leg-rings|Spiral Solitaire Leg Rings|A sparkling stone in a silver spiral.|The spiral wraps the stone in polished silver. Simple and pretty.
+077|curb-pave-leg-rings|Curb Pave Leg Rings|A curb-chain band set with fine sparkle.|A chain look with shine on every link.
+078|rope-twist-band-leg-rings|Rope Twist Band Leg Rings|A full rope twist band in polished silver.|A strong, classic texture all the way round.
+079|infinity-sparkle-leg-rings|Infinity Sparkle Leg Rings|An infinity loop set with sparkle and a small stone.|A graceful, meaningful design on an open band.
+080|open-bar-leg-rings|Open Bar Leg Rings|An open band with two sparkling bars at the ends.|Clean, modern lines with a little shine.
+081|pink-dome-leg-rings|Pink Dome Leg Rings|A domed cluster with small pink stones, in a warm finish.|A rich, festive design with soft colour.
+082|grey-disc-leg-rings|Grey Disc Leg Rings|Two round discs of grey sparkle at the ends of the band.|The discs sit one above the other across the toe. Modern and bold.
+083|pave-loop-leg-rings|Pave Loop Leg Rings|An open loop at the front outlined in sparkle.|A light, pretty design on a slim band.
+084|soft-wave-leg-rings|Soft Wave Leg Rings|A slim band with a soft, rounded wave.|Polished and simple for everyday wear.
+085|clover-swirl-leg-rings|Clover Swirl Leg Rings|A clover of sparkle and a small stone on curling ends.|The ends curl around the toe. Pretty and detailed.
+086|marquise-band-leg-rings|Marquise Band Leg Rings|A band of small marquise shapes set with stones.|Sparkle in neat leaf shapes all the way across.
+087|diamond-row-leg-rings|Diamond Row Leg Rings|A row of sparkling diamond shapes across the front.|Bright, geometric and easy to wear.
+088|heart-end-leg-rings|Heart End Leg Rings|An open band ending in two small hearts.|The hearts face each other across the toe. Sweet and light.
+089|plain-polished-leg-rings|Plain Polished Leg Rings|A smooth, plain polished band.|The simplest design: bright silver with a gentle curve.
+090|small-bubble-leg-rings|Small Bubble Leg Rings|A slim band of small polished bubbles.|Light and simple for everyday wear.
